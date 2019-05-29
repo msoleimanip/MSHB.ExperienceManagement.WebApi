@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.2</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="2.2.0" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="2.2.4" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="2.2.4" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Log4Net.AspNetCore" Version="2.2.11" />
+    <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="5.4.0" />
+    <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="5.4.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\Shared\MSHB.ExperienceManagement.Shared.Common\MSHB.ExperienceManagement.Shared.Common.csproj" />
+    <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L00_BaseModels\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj" />
+    <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L01_Entities\MSHB.ExperienceManagement.Layers.L01_Entities.csproj" />
+    <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L02_DataLayer\MSHB.ExperienceManagement.Layers.L02_DataLayer.csproj" />
+    <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L04_ViewModels\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj" />
+    <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.csproj" />
+  </ItemGroup>
+
+</Project>
