@@ -4,14 +4,16 @@ using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 {
     [DbContext(typeof(ExperienceManagementDbContext))]
-    partial class ExperienceManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190601121249_mig4")]
+    partial class mig4
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder

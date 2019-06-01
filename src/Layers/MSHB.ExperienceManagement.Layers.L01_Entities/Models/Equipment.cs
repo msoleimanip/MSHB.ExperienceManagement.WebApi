@@ -17,6 +17,8 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
 
         public long? ParentId { get; set; }
 
+        public DateTime? LastUpdateDate { get; set; }
+
         [ForeignKey("ParentId")]
         public virtual Equipment Parent { get; set; }
 
