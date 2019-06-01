@@ -200,6 +200,7 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
                 new Claim(ClaimTypes.UserData, user.Id.ToString())
             };
 
+            
             // add roles
             var roles = await _rolesService.FindUserRolesAsync(user.Id);
             foreach (var role in roles)

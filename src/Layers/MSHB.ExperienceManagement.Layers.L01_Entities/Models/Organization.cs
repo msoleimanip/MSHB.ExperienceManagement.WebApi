@@ -14,6 +14,7 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
 
         public string Description { get; set; }
         public DateTime? CreationDate { get; set; }
+        public DateTime? LastUpdateDate { get; set; }
 
         public long? ParentId { get; set; }
 

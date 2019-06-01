@@ -40,7 +40,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
                     Username = context.User.Identity.GetUserName(),
                     FirstName = context.User.Identity.GetUserFirstName(),
                     LastName = context.User.Identity.GetUserLastName(),
-                    Id = context.User.Identity.GetUserId<Guid>(),  
+                    Id = Guid.Parse(context.User.Identity.GetUserId<string>()),  
                     IsPresident=context.User.Identity.GetUserPresident<int>()
                 };
 

@@ -201,37 +201,37 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             app.UseGlobalExceptionHandler(loggerFactory);
 
             app.UseAngularAntiforgeryToken();
-            app.UseExceptionHandler(appBuilder =>
-            {
-                appBuilder.Use(async (context, next) =>
-                {
-                    var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
-                    if (error != null && error.Error is SecurityTokenExpiredException)
-                    {
-                        context.Response.StatusCode = 401;
-                        context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                        {
-                            State = 401,
-                            Msg = "token expired"
-                        }));
-                    }
-                    else if (error != null && error.Error != null)
-                    {
-                        context.Response.StatusCode = 500;
-                        context.Response.ContentType = "application/json";
-                        await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-                        {
-                            State = 500,
-                            Msg = error.Error.Message
-                        }));
-                    }
-                    else
-                    {
-                        await next();
-                    }
-                });
-            });
+            //app.UseExceptionHandler(appBuilder =>
+            //{
+            //    appBuilder.Use(async (context, next) =>
+            //    {
+            //        var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+            //        if (error != null && error.Error is SecurityTokenExpiredException)
+            //        {
+            //            context.Response.StatusCode = 401;
+            //            context.Response.ContentType = "application/json";
+            //            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+            //            {
+            //                State = 401,
+            //                Msg = "token expired"
+            //            }));
+            //        }
+            //        else if (error != null && error.Error != null)
+            //        {
+            //            context.Response.StatusCode = 500;
+            //            context.Response.ContentType = "application/json";
+            //            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+            //            {
+            //                State = 500,
+            //                Msg = error.Error.Message
+            //            }));
+            //        }
+            //        else
+            //        {
+            //            await next();
+            //        }
+            //    });
+            //});
             app.UseAuthentication();
 
           

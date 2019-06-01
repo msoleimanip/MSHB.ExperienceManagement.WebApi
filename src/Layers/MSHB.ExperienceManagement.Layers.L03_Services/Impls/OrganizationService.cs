@@ -2,11 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.Tree;
 using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
@@ -20,6 +23,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _organizationRepository = organizationRepository;
             _organizationRepository.CheckArgumentIsNull(nameof(_organizationRepository));
         }
+      
         public async Task<List<JsTreeNode>> GetOrganizationByUserAsync(User user)
         {
             var organizations =await  _organizationRepository.GetOrganizationByUserAsync(user);
@@ -55,6 +59,46 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 });
             }
             return parentNode;
+        }
+        public async Task<long> AddOrganizationAsync(User user, AddOrgFormModel orgForm)
+        {
+            try
+            {
+                var orgId = await _organizationRepository.AddOrganizationAsync(user, orgForm.OrganizationName,orgForm.Description,orgForm.ParentId);
+                return orgId;
+            }
+            catch(Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(OrganizationServiceErrors.AddOrganizationError, ex);
+            }
+
+           
+        }     
+
+        public async Task<bool> EditOrganizationAsync(User user, EditOrgFormModel orgForm)
+        {
+            try
+            {
+                var res = await _organizationRepository.EditOrganizationAsync(user,orgForm.OrganizationId, orgForm.OrganizationName, orgForm.Description, orgForm.ParentId);
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(OrganizationServiceErrors.EditOrganizationError, ex);
+            }
+        }
+
+        public async Task<bool> DeleteOrganizationAsync(User user, List<long> orgIds)
+        {
+            try
+            {
+                var res = await _organizationRepository.DeleteOrganizationAsync(user,orgIds);
+                return res;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(OrganizationServiceErrors.DeleteOrganizationError, ex);
+            }
         }
     }
 }

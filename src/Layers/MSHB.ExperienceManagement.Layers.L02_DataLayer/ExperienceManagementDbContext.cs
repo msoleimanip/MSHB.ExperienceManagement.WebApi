@@ -117,11 +117,13 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
                   .HasMany(d => d.UserConfigurations).WithOne(d => d.User);
 
 
-            modelBuilder.Entity<Organization>()
+            modelBuilder.Entity<Organization>()                       
                             .HasOne(d => d.Parent)
                             .WithMany(t => t.Children)
-                            .HasForeignKey(t => t.ParentId)
+                            .HasForeignKey(t => t.ParentId)                            
                             .OnDelete(DeleteBehavior.ClientSetNull);
+            modelBuilder.Entity<Organization>()
+                           .HasIndex(d => d.OrganizationName);
 
             modelBuilder.Entity<IssueDetail>()
                             .HasOne(d => d.User)

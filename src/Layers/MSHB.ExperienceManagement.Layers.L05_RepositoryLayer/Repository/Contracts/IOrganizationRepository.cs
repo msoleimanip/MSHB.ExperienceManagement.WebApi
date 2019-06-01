@@ -9,5 +9,8 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contra
     public interface IOrganizationRepository
     {
         Task<List<Organization>> GetOrganizationByUserAsync(User user);
+        Task<bool> DeleteOrganizationAsync(User user, List<long> orgIds);
+        Task<long> AddOrganizationAsync(User user, string organizationName, string description, long? parentId);
+        Task<bool> EditOrganizationAsync(User user, long organizationId, string organizationName, string description, long? parentId);
     }
 }
