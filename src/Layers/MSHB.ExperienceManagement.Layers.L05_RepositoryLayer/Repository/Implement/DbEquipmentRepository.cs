@@ -145,11 +145,23 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Implem
             }
             else
             {
-                return new List<Equipment>();
+                var equipments = await _uow.EquipmentUserSubscriptions.Where(c=>c.UserId==user.Id).Select(c=>c.Equipment).ToListAsync();
+                return equipments;
+               
             }
            
         }
-
-       
+        public async Task<Equipment> GetEquipmentByIdAsync(User user, long equipmentId)
+        {
+            try
+            {
+                var equipment = await _uow.Equipments.FindAsync(equipmentId);
+                return equipment;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(EquipmentRepositoryErrors.DbGetEquipmentError, ex);
+            }
+        }      
     }
 }

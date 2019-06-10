@@ -22,7 +22,9 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("DAEE-1006", "درخواست شما منجر به حذف تجهیزات  می شود که در لیست انتخابی نیست.");
         public static readonly ExperienceManagementErrorMessage DbEditEquipmentNotExistError =
           new ExperienceManagementErrorMessage("DAEE-1007", "تجهیزات مورد نظر وجود ندارد.");
+        public static readonly ExperienceManagementErrorMessage DbGetEquipmentError =
+         new ExperienceManagementErrorMessage("DAEE-1008", "در گرفتن تجهیز مورد نظر خطایی رخ داده است.");
 
-        
+
     }
 }

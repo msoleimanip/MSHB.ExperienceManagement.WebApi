@@ -10,6 +10,7 @@ using MSHB.ExperienceManagement.Layers.L04_ViewModels.Tree;
 using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
@@ -23,7 +24,22 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _equipmentRepository = equipmentRepository;
             _equipmentRepository.CheckArgumentIsNull(nameof(_equipmentRepository));
         }
-      
+        public async Task<EquipmentViewModel> GetAsync(User user, long Id)
+        {
+            var equipment = await _equipmentRepository.GetEquipmentByIdAsync(user, Id);
+            if (equipment != null)
+            {
+                return new EquipmentViewModel()
+                {
+                    Id = equipment.Id,
+                    EquipmentName = equipment.EquipmentName,
+                    Description = equipment.Description,
+                    ParentId = equipment.ParentId
+                };
+            }
+
+            throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EquipmentNotFoundError);
+        }
         public async Task<List<JsTreeNode>> GetEquipmentByUserAsync(User user)
         {
             var equipments = await _equipmentRepository.GetEquipmentByUserAsync(user);

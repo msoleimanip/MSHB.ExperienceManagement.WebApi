@@ -9,7 +9,8 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contra
     public interface IEquipmentRepository
     {       
         Task<List<Equipment>> GetEquipmentByUserAsync(User user);
-        Task<bool> DeleteEquipmentAsync(User user, List<long> orgIds);
+        Task<Equipment> GetEquipmentByIdAsync(User user, long equipmentId);
+        Task<bool> DeleteEquipmentAsync(User user, List<long> equipmentIds);
         Task<long> AddEquipmentAsync(User user, string equipmentName, string description, long? parentId);
         Task<bool> EditEquipmentAsync(User user, long equipmentId, string equipmentName, string description, long? parentId);
     }

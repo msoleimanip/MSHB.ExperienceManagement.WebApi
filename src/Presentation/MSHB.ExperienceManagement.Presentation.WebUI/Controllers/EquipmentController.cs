@@ -26,6 +26,12 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             _equipmentService.CheckArgumentIsNull(nameof(_equipmentService));
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Get([FromQuery] long Id)
+        {
+            return Ok(GetRequestResult(await _equipmentService.GetAsync(HttpContext.GetUser(), Id)));
+        }
+
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> GetEquipmentByUser()
         {           

@@ -12,6 +12,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("AEE-1001", "هنگام تغییر دادن تجهیزات خطایی رخ داده  است.");
         public static readonly ExperienceManagementErrorMessage DeleteEquipmentError =
           new ExperienceManagementErrorMessage("AEE-1002", "هنگام حذف تجهیزات خطایی رخ داده  است.");
+        public static readonly ExperienceManagementErrorMessage EquipmentNotFoundError =
+        new ExperienceManagementErrorMessage("AEE-1003", "تجهیزات مورد نظر یافت نشده است");
 
     }
 }
