@@ -149,5 +149,18 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Implem
                 return organizations;
             }
         }
+
+        public async Task<Organization> GetOrganizationByIdAsync(User user, long orgId)
+        {
+            try
+            {
+                var organization = await _uow.Organizations.FindAsync(orgId);
+                return organization;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(OrganizationRepositoryErrors.DbGetOrganizationError, ex);
+            }
+        }
     }
 }

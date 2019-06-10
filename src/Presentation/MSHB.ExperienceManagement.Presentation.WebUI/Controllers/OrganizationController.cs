@@ -26,6 +26,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             _organizationService.CheckArgumentIsNull(nameof(_organizationService));
         }
 
+        [HttpGet("[action]")]
+        public async Task<IActionResult> Get([FromQuery] long Id)
+        {
+            return Ok(GetRequestResult(await _organizationService.GetAsync(HttpContext.GetUser(),Id)));
+        }
+
+
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> GetOrganizationByUser()
         {           

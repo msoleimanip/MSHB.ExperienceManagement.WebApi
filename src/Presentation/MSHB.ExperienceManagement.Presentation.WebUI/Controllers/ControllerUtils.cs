@@ -19,13 +19,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
             {
                 var res = context.User.Identity.GetUserClaimRoles();
 
-                if (res.Count>0)
+                if (res.Count > 0)
                 {
                     return (List<string>)res;
                 }
 
                 throw new ExperienceManagementGlobalException(ControllerUtilsErrors.UserRolesNotFound);
-            }          
+            }
             catch (Exception e)
             {
                 throw new ExperienceManagementGlobalException(ControllerUtilsErrors.GetUserRoles, e);
@@ -40,13 +40,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
                     Username = context.User.Identity.GetUserName(),
                     FirstName = context.User.Identity.GetUserFirstName(),
                     LastName = context.User.Identity.GetUserLastName(),
-                    Id = Guid.Parse(context.User.Identity.GetUserId<string>()),  
-                    IsPresident=context.User.Identity.GetUserPresident<int>()
+                    Id = context.User.Identity.GetUserId<Guid>(),
+                    IsPresident = context.User.Identity.GetUserPresident<int>()
                 };
 
                 return user;
             }
-         
+
             catch (Exception e)
             {
                 throw new ExperienceManagementGlobalException(ControllerUtilsErrors.GetUserError, e);
@@ -79,7 +79,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
 
 
         }
-  
 
-     }
+
+    }
 }

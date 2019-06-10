@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Globalization;
 using System.Security.Claims;
 using System.Security.Principal;
@@ -46,7 +47,7 @@ namespace SubPro.WebUI.Shared.Common.IdentityToolkit
         {
             var firstValue = identity?.GetUserClaimValue(ClaimTypes.NameIdentifier);
             return firstValue != null
-                ? (T)Convert.ChangeType(firstValue, typeof(T), CultureInfo.InvariantCulture)
+                ? (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(firstValue)
                 : default(T);
         }
 

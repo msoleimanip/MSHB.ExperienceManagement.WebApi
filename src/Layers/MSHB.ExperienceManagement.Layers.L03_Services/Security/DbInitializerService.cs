@@ -81,9 +81,9 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
 
                         var adminUser = new User
                         {
-                            Username = "Vahid",
-                            FirstName = "وحيد",
-                            LastName = "وحيدی",
+                            Username = "MSHB",
+                            FirstName = "Mohammad",
+                            LastName = "Soleimani",
                             IsActive = true,
                             IsPresident = 1,
                             LastLoggedIn = null,

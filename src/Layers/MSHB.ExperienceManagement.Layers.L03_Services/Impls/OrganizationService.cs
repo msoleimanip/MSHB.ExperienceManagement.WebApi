@@ -10,6 +10,7 @@ using MSHB.ExperienceManagement.Layers.L04_ViewModels.Tree;
 using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
@@ -17,23 +18,39 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
     {
         private readonly IOrganizationRepository _organizationRepository;
 
+        public async Task<OrganizationViewModel> GetAsync(User user,long Id)
+        {
+            var organization = await _organizationRepository.GetOrganizationByIdAsync(user,Id);
+            if (organization != null)
+            {
+                return new OrganizationViewModel()
+                {
+                    Id = organization.Id,
+                    OrganizationName = organization.OrganizationName,
+                    Description = organization.Description,
+                    ParentId = organization.ParentId
+                };
+            }
+
+            throw new ExperienceManagementGlobalException(OrganizationServiceErrors.OrganizationNotFoundError);
+        }
 
         public OrganizationService(IOrganizationRepository organizationRepository)
         {
             _organizationRepository = organizationRepository;
             _organizationRepository.CheckArgumentIsNull(nameof(_organizationRepository));
         }
-      
+
         public async Task<List<JsTreeNode>> GetOrganizationByUserAsync(User user)
         {
-            var organizations =await  _organizationRepository.GetOrganizationByUserAsync(user);
+            var organizations = await _organizationRepository.GetOrganizationByUserAsync(user);
             var organizationnodes = new List<JsTreeNode>();
             organizations.ForEach(or =>
             {
                 if (or.ParentId == null)
                 {
                     JsTreeNode parentNode = new JsTreeNode();
-                    parentNode.id = or.Id.ToString();                  
+                    parentNode.id = or.Id.ToString();
                     parentNode.text = or.OrganizationName;
                     parentNode = FillChild(organizations, parentNode, or.Id);
                     organizationnodes.Add(parentNode);
@@ -64,22 +81,22 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var orgId = await _organizationRepository.AddOrganizationAsync(user, orgForm.OrganizationName,orgForm.Description,orgForm.ParentId);
+                var orgId = await _organizationRepository.AddOrganizationAsync(user, orgForm.OrganizationName, orgForm.Description, orgForm.ParentId);
                 return orgId;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(OrganizationServiceErrors.AddOrganizationError, ex);
             }
 
-           
-        }     
+
+        }
 
         public async Task<bool> EditOrganizationAsync(User user, EditOrgFormModel orgForm)
         {
             try
             {
-                var res = await _organizationRepository.EditOrganizationAsync(user,orgForm.OrganizationId, orgForm.OrganizationName, orgForm.Description, orgForm.ParentId);
+                var res = await _organizationRepository.EditOrganizationAsync(user, orgForm.OrganizationId, orgForm.OrganizationName, orgForm.Description, orgForm.ParentId);
                 return res;
             }
             catch (Exception ex)
@@ -92,7 +109,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var res = await _organizationRepository.DeleteOrganizationAsync(user,orgIds);
+                var res = await _organizationRepository.DeleteOrganizationAsync(user, orgIds);
                 return res;
             }
             catch (Exception ex)
@@ -100,5 +117,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(OrganizationServiceErrors.DeleteOrganizationError, ex);
             }
         }
+
     }
 }

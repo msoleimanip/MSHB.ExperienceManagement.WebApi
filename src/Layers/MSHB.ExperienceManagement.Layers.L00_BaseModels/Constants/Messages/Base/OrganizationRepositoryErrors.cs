@@ -22,7 +22,9 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("DAOE-1006", "درخواست شما منجر به حذف رده ای می شود که در لیست انتخابی نیست.");
         public static readonly ExperienceManagementErrorMessage DbEditOrganizationNotExistError =
           new ExperienceManagementErrorMessage("DAOE-1007", "رده مورد نظر وجود ندارد.");
+        public static readonly ExperienceManagementErrorMessage DbGetOrganizationError =
+          new ExperienceManagementErrorMessage("DAOE-1008", "در گرفتن رده مورد نظر خطایی رخ داده است.");
 
-        
+
     }
 }
