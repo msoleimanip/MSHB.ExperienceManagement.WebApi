@@ -7,6 +7,8 @@ using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using MSHB.ExperienceManagement.Layers.L03.Services.Security;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
@@ -29,21 +31,39 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _securityService.CheckArgumentIsNull(nameof(_securityService));
         }
 
-        public Task<User> FindUserAsync(Guid userId)
+        public Task<long> AddUserAsync(User user, AddUserFormModel userForm)
         {
-            return _users.FindAsync(userId);
+            throw new NotImplementedException();
         }
 
-        public Task<User> FindUserAsync(string username, string password)
+        public Task<bool> DeleteUserAsync(User user, List<long> userIds)
         {
-            var passwordHash = _securityService.GetSha256Hash(password);
-            return _users.FirstOrDefaultAsync(x => x.Username == username && x.Password == passwordHash);
+            throw new NotImplementedException();
         }
 
-        public async Task<string> GetSerialNumberAsync(Guid userId)
+        public Task<bool> DeleteUserAsync(User user, List<Guid> userIds)
         {
-            var user = await FindUserAsync(userId);
-            return user.SerialNumber;
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> EditUserAsync(User user, EditUserFormModel userForm)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        public Task<UserViewModel> GetUserById(User user, Guid id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<UserViewModel>> GetUsersAsync()
+        {
+            throw new NotImplementedException();
+        }
+        Task<Guid> IUsersService.AddUserAsync(User user, AddUserFormModel userForm)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task UpdateUserLastActivityDateAsync(Guid userId)
@@ -62,5 +82,25 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             user.LastLoggedIn = DateTimeOffset.UtcNow;
             await _uow.SaveChangesAsync();
         }
+
+
+        public Task<User> FindUserAsync(Guid userId)
+        {
+            return _users.FindAsync(userId);
+        }
+
+        public Task<User> FindUserAsync(string username, string password)
+        {
+            var passwordHash = _securityService.GetSha256Hash(password);
+            return _users.FirstOrDefaultAsync(x => x.Username == username && x.Password == passwordHash);
+        }
+
+        public async Task<string> GetSerialNumberAsync(Guid userId)
+        {
+            var user = await FindUserAsync(userId);
+            return user.SerialNumber;
+        }
+
+
     }
 }

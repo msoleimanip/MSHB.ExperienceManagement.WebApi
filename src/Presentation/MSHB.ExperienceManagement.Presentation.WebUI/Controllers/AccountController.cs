@@ -1,3 +1,6 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
@@ -5,7 +8,9 @@ using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using MSHB.ExperienceManagement.Layers.L03.Services.Security;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
+using MSHB.ExperienceManagement.Presentation.WebCore;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using Newtonsoft.Json.Linq;
 
@@ -50,7 +55,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             var (accessToken, refreshToken) = await _tokenStoreService.CreateJwtTokens(user, refreshTokenSource: null);
             return Ok(GetRequestResult(new { access_token = accessToken, refresh_token = refreshToken }));
         }
-
        
         [AllowAnonymous]
        
@@ -85,6 +89,40 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
           
 
             return Ok(GetRequestResult(true));
+        }
+
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> AddUser([FromBody] AddUserFormModel userForm)
+        {
+            var user = await _usersService.AddUserAsync(HttpContext.GetUser(), userForm);
+            return Ok(GetRequestResult(user));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> EditUser([FromBody]  EditUserFormModel userForm)
+        {
+            var user = await _usersService.EditUserAsync(HttpContext.GetUser(), userForm);
+            return Ok(GetRequestResult(user));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> DeleteUser([FromBody]
+        [Required(ErrorMessage = "لیست کاربران ارسال شده برای حذف نامعتبر است")] List<Guid> userIds)
+        {
+            var users = await _usersService.DeleteUserAsync(HttpContext.GetUser(), userIds);
+            return Ok(GetRequestResult(users));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> GetUsers()
+        {
+            return Ok(GetRequestResult(await _usersService.GetUsersAsync()));
+
+        }
+        [HttpGet("[action]")]
+        public async Task<IActionResult> GetUserById([FromQuery] Guid Id)
+        {
+            return Ok(GetRequestResult(await _usersService.GetUserById(HttpContext.GetUser(), Id)));
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]

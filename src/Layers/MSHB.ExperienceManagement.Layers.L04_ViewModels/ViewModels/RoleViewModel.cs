@@ -4,13 +4,10 @@ using System.Text;
 
 namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
 {
-    public class GroupViewModel
+    public class RoleViewModel
     {
-        public long? Id { get; set; }
-
+        public long RoleId { get; set; }
         public string Name { get; set; }
-
-        public string Description { get; set; }
-
+        public string Title { get; set; }
     }
 }

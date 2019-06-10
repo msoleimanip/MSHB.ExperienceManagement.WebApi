@@ -10,5 +10,7 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Contracts
     public interface IGroupAuthenticationRepository
     {
         Task<List<GroupAuth>> GetGroupAuthenticationAsync();
+        Task<List<Role>> GetRolesAsync();
+        Task<List<Role>> GetGroupRoleAsync();
     }
 }
