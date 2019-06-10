@@ -24,6 +24,14 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Implement
             return groupAuths;
         }
 
-      
+        public Task<List<Role>> GetGroupRoleAsync()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public Task<List<Role>> GetRolesAsync()
+        {
+            throw new System.NotImplementedException();
+        }
     }
 }

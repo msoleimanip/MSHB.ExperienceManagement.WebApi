@@ -138,7 +138,7 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Implem
 
         public async Task<List<Equipment>> GetEquipmentByUserAsync(User user)
         {
-            if (user.IsAdmin())
+            if (user.IsAdmin() )
             {
                 var equipments = await _uow.Equipments.ToListAsync();
                 return equipments;
