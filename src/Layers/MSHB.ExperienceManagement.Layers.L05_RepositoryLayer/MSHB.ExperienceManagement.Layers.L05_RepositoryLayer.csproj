@@ -14,6 +14,7 @@
     <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L00_BaseModels\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj" />
     <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L01_Entities\MSHB.ExperienceManagement.Layers.L01_Entities.csproj" />
     <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L02_DataLayer\MSHB.ExperienceManagement.Layers.L02_DataLayer.csproj" />
+    <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L04_ViewModels\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj" />
   </ItemGroup>
 
 </Project>

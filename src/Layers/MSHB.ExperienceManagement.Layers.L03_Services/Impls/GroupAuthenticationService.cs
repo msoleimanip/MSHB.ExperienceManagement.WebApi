@@ -14,6 +14,7 @@ using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Search.Models;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
@@ -53,26 +54,62 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(GroupServiceErrors.GetRolesError,ex);
             }
         }
-        public Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm)
-        {          
-            throw new NotImplementedException();
+        public async Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm)
+        {
+            try
+            {
+                var sameGroup = await _groupAuthenticationRepository.SearchGroupAsync(new GroupSearchModel()
+                {
+                    Name = groupForm.Name
+                });
+
+                if (sameGroup.Count>0)
+                {
+                    throw new ExperienceManagementGlobalException(GroupServiceErrors.SameGroupExistError);
+                }
+                var group = await _groupAuthenticationRepository.AddGroupAsync(user,groupForm);
+                return group;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(GroupServiceErrors.AddGroupError, ex);
+            }
         }
 
-        public Task<bool> DeleteGroupAsync(User user, List<long> groupIds)
+        public async Task<bool> DeleteGroupAsync(User user, List<long> groupIds)
         {
-            throw new NotImplementedException();
+            try
+            {               
+                var group = await _groupAuthenticationRepository.DeleteGroupAsync(user, groupIds);
+                return group;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(GroupServiceErrors.DeleteGroupError, ex);
+            }
         }
 
-        public Task<bool> EditGroupAsync(User user, EditGroupFormModel groupForm)
+        public async Task<bool> EditGroupAsync(User user, EditGroupFormModel groupForm)
         {
-            throw new NotImplementedException();
+            try
+            {
+
+                var resp = await _groupAuthenticationRepository.EditGroupAsync(user, groupForm);
+                return resp;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(GroupServiceErrors.EditGroupError, ex);
+            }
         }
 
         public async Task<List<RoleViewModel>> GetGroupRoleAsync(User user, long Id)
         {
            try
             {
-                var roles = await _groupAuthenticationRepository.GetRolesAsync();
+                var roles = await _groupAuthenticationRepository.GetGroupRoleAsync(Id);
                 return roles.Select(x => new RoleViewModel
                 {
                     RoleId = x.Id,

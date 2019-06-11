@@ -93,6 +93,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        
         public async Task<IActionResult> AddUser([FromBody] AddUserFormModel userForm)
         {
             var user = await _usersService.AddUserAsync(HttpContext.GetUser(), userForm);

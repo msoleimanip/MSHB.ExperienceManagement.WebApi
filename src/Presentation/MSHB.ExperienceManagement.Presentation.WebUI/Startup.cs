@@ -79,7 +79,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
 
             services.AddDbContext<ExperienceManagementDbContext>(options =>
             {
-                options.UseLazyLoadingProxies(false).UseSqlServer(
+                options.UseLazyLoadingProxies(true).UseSqlServer(
                     Configuration.GetConnectionString("SqlServer:ApplicationDbContextConnection"),
                     serverDbContextOptionsBuilder =>
                     {

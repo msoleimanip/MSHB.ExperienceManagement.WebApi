@@ -12,6 +12,7 @@
           "MSHB.ExperienceManagement.Layers.L00_BaseModels": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L01_Entities": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L02_DataLayer": "1.0.0",
+          "MSHB.ExperienceManagement.Layers.L04_ViewModels": "1.0.0",
           "Microsoft.EntityFrameworkCore": "2.2.4",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.2.4"
         },
@@ -4672,6 +4673,11 @@
           "MSHB.ExperienceManagement.Layers.L02_DataLayer.dll": {}
         }
       },
+      "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
+        "runtime": {
+          "MSHB.ExperienceManagement.Layers.L04_ViewModels.dll": {}
+        }
+      },
       "MSHB.ExperienceManagement.Shared.Common/1.0.0": {
         "dependencies": {
           "CoreCompat.System.Drawing.v2": "5.2.0-preview1-r131",
@@ -7177,6 +7183,11 @@
       "sha512": ""
     },
     "MSHB.ExperienceManagement.Layers.L02_DataLayer/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

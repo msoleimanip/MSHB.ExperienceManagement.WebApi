@@ -2653,6 +2653,7 @@
           "MSHB.ExperienceManagement.Layers.L00_BaseModels": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L01_Entities": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L02_DataLayer": "1.0.0",
+          "MSHB.ExperienceManagement.Layers.L04_ViewModels": "1.0.0",
           "Microsoft.EntityFrameworkCore": "2.2.4",
           "Microsoft.EntityFrameworkCore.SqlServer": "2.2.4"
         },

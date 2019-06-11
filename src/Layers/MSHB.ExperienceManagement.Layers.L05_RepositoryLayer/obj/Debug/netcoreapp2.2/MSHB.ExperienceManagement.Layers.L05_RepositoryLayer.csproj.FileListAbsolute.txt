@@ -34,3 +34,5 @@ C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\obj\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.csproj.CopyComplete
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\obj\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\obj\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.pdb
+C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L04_ViewModels.dll
+C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L04_ViewModels.pdb

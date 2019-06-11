@@ -5871,6 +5871,16 @@
           "bin/placeholder/MSHB.ExperienceManagement.Layers.L02_DataLayer.dll": {}
         }
       },
+      "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v2.2",
+        "compile": {
+          "bin/placeholder/MSHB.ExperienceManagement.Layers.L04_ViewModels.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/MSHB.ExperienceManagement.Layers.L04_ViewModels.dll": {}
+        }
+      },
       "MSHB.ExperienceManagement.Shared.Common/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.2",
@@ -15673,6 +15683,11 @@
       "path": "../MSHB.ExperienceManagement.Layers.L02_DataLayer/MSHB.ExperienceManagement.Layers.L02_DataLayer.csproj",
       "msbuildProject": "../MSHB.ExperienceManagement.Layers.L02_DataLayer/MSHB.ExperienceManagement.Layers.L02_DataLayer.csproj"
     },
+    "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
+      "type": "project",
+      "path": "../MSHB.ExperienceManagement.Layers.L04_ViewModels/MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj",
+      "msbuildProject": "../MSHB.ExperienceManagement.Layers.L04_ViewModels/MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj"
+    },
     "MSHB.ExperienceManagement.Shared.Common/1.0.0": {
       "type": "project",
       "path": "../../Shared/MSHB.ExperienceManagement.Shared.Common/MSHB.ExperienceManagement.Shared.Common.csproj",
@@ -15685,6 +15700,7 @@
       "MSHB.ExperienceManagement.Layers.L00_BaseModels >= 1.0.0",
       "MSHB.ExperienceManagement.Layers.L01_Entities >= 1.0.0",
       "MSHB.ExperienceManagement.Layers.L02_DataLayer >= 1.0.0",
+      "MSHB.ExperienceManagement.Layers.L04_ViewModels >= 1.0.0",
       "Microsoft.EntityFrameworkCore >= 2.2.4",
       "Microsoft.EntityFrameworkCore.SqlServer >= 2.2.4",
       "Microsoft.NETCore.App >= 2.2.0"
@@ -15728,6 +15744,9 @@
             },
             "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L02_DataLayer\\MSHB.ExperienceManagement.Layers.L02_DataLayer.csproj": {
               "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L02_DataLayer\\MSHB.ExperienceManagement.Layers.L02_DataLayer.csproj"
+            },
+            "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L04_ViewModels\\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj": {
+              "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L04_ViewModels\\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj"
             }
           }
         }
