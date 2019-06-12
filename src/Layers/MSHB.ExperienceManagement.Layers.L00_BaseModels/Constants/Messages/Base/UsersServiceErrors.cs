@@ -14,7 +14,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
            new ExperienceManagementErrorMessage("AUE-1002", "رده ای که انتخاب کرده اید وجود ندارد ");
         public static readonly ExperienceManagementErrorMessage UserExistError =
            new ExperienceManagementErrorMessage("AUE-1003", "کاربری با این نام در سیستم وجود دارد امکان اضافه کردن وجود ندارد.");
-
+        public static readonly ExperienceManagementErrorMessage UserNotFoundError =
+           new ExperienceManagementErrorMessage("AUE-1004", "کاربری با این مشخصات در سیستم وجود ندارد.");
         
 
     }

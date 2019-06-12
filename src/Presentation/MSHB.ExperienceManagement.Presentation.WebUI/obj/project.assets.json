@@ -6627,6 +6627,9 @@
       "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
         "type": "project",
         "framework": ".NETCoreApp,Version=v2.2",
+        "dependencies": {
+          "MSHB.ExperienceManagement.Layers.L00_BaseModels": "1.0.0"
+        },
         "compile": {
           "bin/placeholder/MSHB.ExperienceManagement.Layers.L04_ViewModels.dll": {}
         },

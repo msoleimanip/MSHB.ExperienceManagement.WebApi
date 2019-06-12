@@ -5,10 +5,11 @@ using System.Text;
 
 namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
 {
+   
     public class AddUserFormModel
     {
         
-        [Required(ErrorMessage = "باید نام کاربری مشخص گردد")]
+        [Required(ErrorMessage = "باید نام کاربری مشخص گردد")]       
         public string Username { get; set; }
         [Required(ErrorMessage = "باید کلمه عبور مشخص گردد")]
         public string Password { get; set; }

@@ -2624,6 +2624,9 @@
         }
       },
       "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
+        "dependencies": {
+          "MSHB.ExperienceManagement.Layers.L00_BaseModels": "1.0.0"
+        },
         "runtime": {
           "MSHB.ExperienceManagement.Layers.L04_ViewModels.dll": {}
         },

@@ -78,21 +78,111 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.AddUserError, ex);
             }
         }
-        public Task<bool> EditUserAsync(User user, EditUserFormModel userForm)
+        public async Task<bool> EditUserAsync(User user, EditUserFormModel userForm)
         {
-            throw new NotImplementedException();
+            try
+            {               
+                var userEdt = await _context.Users.FirstOrDefaultAsync(c => c.Id == userForm.UserId);
+                if (userEdt==null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
+                var groupRole = await _context.GroupAuthRoles.Where(c => c.GroupAuthId == userForm.GroupAuthId).Include(c=>c.Role).ToListAsync();
+                if (groupRole == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
+                }
+                var org = await _context.Organizations.FirstOrDefaultAsync(c => c.Id == userForm.OrganizationId);
+                if (org == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.OrganizationNotFoundError);
+                }
+                if (userEdt.GroupAuthId!= userForm.GroupAuthId)
+                {
+                   
+                   _context.UserRoles.RemoveRange(_context.UserRoles.Where(c => c.UserId == userForm.UserId).ToList());
+                   
+                   var newUserRoles = groupRole.Select(c=>c.Role).Select(role =>
+                                        new UserRole
+                                        {
+                                            UserId = userForm.UserId,
+                                            Role = role
+                                        }).ToList();
+                        _context.UserRoles.AddRange(newUserRoles);
+                   
+                }
+                userEdt.OrganizationId = org.Id;
+                userEdt.GroupAuthId = userForm.GroupAuthId;
+                userEdt.FirstName = userForm.FirstName;
+                userEdt.Description = userForm.Description;
+                userEdt.IsActive = userForm.IsActive;
+                userEdt.IsPresident = userForm.IsPresident;
+                userEdt.LastName = userForm.LastName;
+                userEdt.Password = _securityService.GetSha256Hash(userForm.Password);
+                userEdt.SerialNumber = Guid.NewGuid().ToString("N");
+                userEdt.Location = userForm.Location;
+                userEdt.PhoneNumber = userForm.PhoneNumber;
+                _context.Users.Update(userEdt);
+                _context.SaveChanges();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.AddUserError, ex);
+            }
         }
         public Task<bool> DeleteUserAsync(User user, List<Guid> userIds)
         {
             throw new NotImplementedException();
         }
-        public Task<UserViewModel> GetUserById(User user, Guid id)
+        public async Task<UserViewModel> GetUserById(User user, Guid id)
         {
-            throw new NotImplementedException();
+            var respUser = await _context.Users.FindAsync(id);
+            return new UserViewModel()
+            {
+                Id = respUser.Id,
+                 FirstName= respUser.FirstName,
+                 LastName = respUser.LastName,
+                 Description = respUser.Description,
+                 Location = respUser.Location,
+                 PhoneNumber = respUser.PhoneNumber,
+                 IsActive = respUser.IsActive,
+                 IsPresident = respUser.IsPresident,
+                 GroupAuthId = respUser.GroupAuthId,
+                 OrganizationId = respUser.OrganizationId,
+                 UserConfigurationId = respUser.UserConfigurationId,
+                 LastLockoutDate = respUser.LastLockoutDate,
+                 LastPasswordChangedDate = respUser.LastPasswordChangedDate,
+                 CreationDate = respUser.CreationDate,
+                 LastVisit = respUser.LastVisit,
+                 LastLoggedIn = respUser.LastLoggedIn
+             };
+
         }
-        public Task<List<UserViewModel>> GetUsersAsync()
+        public async Task<List<UserViewModel>> GetUsersAsync()
         {
-            throw new NotImplementedException();
+            var resp = await _context.Users.ToListAsync();
+            return resp.Select(respUser => new UserViewModel()
+            {
+                Id = respUser.Id,
+                FirstName = respUser.FirstName,
+                LastName = respUser.LastName,
+                Description = respUser.Description,
+                Location = respUser.Location,
+                PhoneNumber = respUser.PhoneNumber,
+                IsActive = respUser.IsActive,
+                IsPresident = respUser.IsPresident,
+                GroupAuthId = respUser.GroupAuthId,
+                OrganizationId = respUser.OrganizationId,
+                UserConfigurationId = respUser.UserConfigurationId,
+                LastLockoutDate = respUser.LastLockoutDate,
+                LastPasswordChangedDate = respUser.LastPasswordChangedDate,
+                CreationDate = respUser.CreationDate,
+                LastVisit = respUser.LastVisit,
+                LastLoggedIn = respUser.LastLoggedIn
+            }).ToList();
         }
         public async Task UpdateUserLastActivityDateAsync(Guid userId)
         {

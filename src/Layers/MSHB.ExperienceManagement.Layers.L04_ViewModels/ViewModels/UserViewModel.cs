@@ -18,5 +18,10 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public long? GroupAuthId { get; set; }
         public long? OrganizationId { get; set; }
         public long? UserConfigurationId { get; set; }
+        public DateTime? LastLockoutDate { get; set; }
+        public DateTime? LastPasswordChangedDate { get; set; }
+        public DateTime? CreationDate { get; set; }
+        public DateTime? LastVisit { get; set; }       
+        public DateTimeOffset? LastLoggedIn { get; set; }
     }
 }

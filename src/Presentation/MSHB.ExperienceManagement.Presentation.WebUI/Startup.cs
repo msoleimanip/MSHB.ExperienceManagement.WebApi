@@ -63,8 +63,9 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             services.AddTransient<ITokenValidatorService, TokenValidatorService>();
             services.AddTransient<IGroupAuthenticationService, GroupAuthenticationService>();
             services.AddTransient<IOrganizationService, OrganizationService>();
+            services.AddTransient<IEquipmentService, EquipmentService>();
 
-            
+
 
 
 

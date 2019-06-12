@@ -13,4 +13,8 @@
     <ProjectReference Include="..\..\Shared\MSHB.ExperienceManagement.Shared.Common\MSHB.ExperienceManagement.Shared.Common.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="UtilsClass\" />
+  </ItemGroup>
+
 </Project>
