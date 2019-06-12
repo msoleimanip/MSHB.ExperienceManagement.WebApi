@@ -7,26 +7,38 @@ using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.Tree;
-using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Extensions;
+using MSHB.ExperienceManagement.Layers.L02_DataLayer;
+using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
     public class EquipmentService : IEquipmentService
     {
-        private readonly IEquipmentRepository _equipmentRepository;
+        private readonly ExperienceManagementDbContext _context;
 
-
-        public EquipmentService(IEquipmentRepository equipmentRepository)
+        public EquipmentService(ExperienceManagementDbContext context)
         {
-            _equipmentRepository = equipmentRepository;
-            _equipmentRepository.CheckArgumentIsNull(nameof(_equipmentRepository));
+            _context = context;
+            _context.CheckArgumentIsNull(nameof(_context));
         }
         public async Task<EquipmentViewModel> GetAsync(User user, long Id)
         {
-            var equipment = await _equipmentRepository.GetEquipmentByIdAsync(user, Id);
+            Equipment equipment;
+            try
+            {
+                 equipment = await _context.Equipments.FindAsync(Id);
+                
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.GetEquipmentError, ex);
+            }
+            
             if (equipment != null)
             {
                 return new EquipmentViewModel()
@@ -42,7 +54,18 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         }
         public async Task<List<JsTreeNode>> GetEquipmentByUserAsync(User user)
         {
-            var equipments = await _equipmentRepository.GetEquipmentByUserAsync(user);
+            var equipments = new List<Equipment>();
+
+            if (user.IsAdmin())
+            {
+                 equipments = await _context.Equipments.ToListAsync();
+             
+            }
+            else
+            {
+                 equipments = await _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.Equipment).ToListAsync();             
+
+            }
             var equipmentnodes = new List<JsTreeNode>();
             equipments.ForEach(or =>
             {
@@ -79,9 +102,26 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         public async Task<long> AddEquipmentAsync(User user, AddEquipmentFormModel equipmentForm)
         {
             try
-            {
-                var orgId = await _equipmentRepository.AddEquipmentAsync(user, equipmentForm.EquipmentName, equipmentForm.Description, equipmentForm.ParentId);
-                return orgId;
+            {               
+                    Equipment parent = null;
+                    if (equipmentForm.ParentId != null)
+                        parent = _context.Equipments.FirstOrDefault(c => c.ParentId == equipmentForm.ParentId);
+                    var isDuplicateEquipment = _context.Equipments.Any(c => c.EquipmentName == equipmentForm.EquipmentName);
+                    if (!isDuplicateEquipment)
+                    {
+                        var org = new Equipment()
+                        {
+                            Description = equipmentForm.Description,
+                            EquipmentName = equipmentForm.EquipmentName,
+                            ParentId = equipmentForm.ParentId
+                        };
+                        await _context.Equipments.AddAsync(org);
+                        await _context.SaveChangesAsync();
+                        return org.Id;
+                    }
+                    throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddDuplicateEquipmentError);
+               
+                
             }
             catch(Exception ex)
             {
@@ -95,25 +135,80 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var res = await _equipmentRepository.EditEquipmentAsync(user, equipmentForm.EquipmentId, equipmentForm.EquipmentName, equipmentForm.Description, equipmentForm.ParentId);
-                return res;
+                Equipment equipment = null;
+                equipment = _context.Equipments.FirstOrDefault(c => c.Id == equipmentForm.EquipmentId);
+                if (equipment != null)
+                {
+                    var isDuplicateEquipment = _context.Equipments.Any(c => c.EquipmentName == equipmentForm.EquipmentName && c.Id != equipmentForm.EquipmentId);
+                    if (!isDuplicateEquipment)
+                    {
+                        equipment.Description = equipmentForm.Description;
+                        equipment.EquipmentName = equipmentForm.EquipmentName;
+                        equipment.ParentId = equipmentForm.ParentId;
+                        equipment.LastUpdateDate = DateTime.Now;
+                        _context.Equipments.Update(equipment);
+                        await _context.SaveChangesAsync();
+                        return true;
+                    }
+                    throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditDuplicateEquipmentError);
+                }
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentNotExistError);
             }
+
             catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentError, ex);
             }
+           
         }
 
         public async Task<bool> DeleteEquipmentAsync(User user, List<long> equipmentIds)
         {
             try
             {
-                var res = await _equipmentRepository.DeleteEquipmentAsync(user, equipmentIds);
-                return res;
+                foreach (var equipmentid in equipmentIds)
+                {
+                    if (_context.EquipmentUserSubscriptions.Any(c => c.EquipmentId == equipmentid))
+                    {
+                        throw new ExperienceManagementGlobalException(EquipmentServiceErrors.UserInEquipmentExistError);
+                    }
+                    var parent = _context.Equipments.Include(p => p.Children)
+                               .SingleOrDefault(p => p.Id == equipmentid);
+
+                    foreach (var child in parent.Children.ToList())
+                    {
+                        if (!equipmentIds.Contains(child.Id))
+                        {
+                            throw new ExperienceManagementGlobalException(EquipmentServiceErrors.DeleteEquipmentNotselectedError);
+                        }
+                        await DeleteEquipmentByChildAsync(child, equipmentIds);
+                        _context.Equipments.Remove(child);
+                    }
+                    _context.Equipments.Remove(parent);
+                }
+                _context.SaveChanges();
+                return true;
             }
+
             catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.DeleteEquipmentError, ex);
+            }          
+        }
+        private async Task DeleteEquipmentByChildAsync(Equipment child, List<long> equipmentIds)
+        {
+            
+            var parentEquipment = _context.Equipments.Include(p => p.Children)
+                       .SingleOrDefault(p => p.Id == child.Id);
+
+            foreach (var childEquipment in parentEquipment.Children.ToList())
+            {
+                if (!equipmentIds.Contains(childEquipment.Id))
+                {
+                    throw new ExperienceManagementGlobalException(EquipmentServiceErrors.DeleteEquipmentNotselectedError);
+                }
+                await DeleteEquipmentByChildAsync(childEquipment, equipmentIds);
+                _context.Equipments.Remove(child);
             }
         }
 

@@ -25,7 +25,6 @@
     <ProjectReference Include="..\..\Layers\MSHB.ExperienceManagement.Layers.L00_BaseModels\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj" />
     <ProjectReference Include="..\..\Layers\MSHB.ExperienceManagement.Layers.L03_Services\MSHB.ExperienceManagement.Layers.L03_Services.csproj" />
     <ProjectReference Include="..\..\Layers\MSHB.ExperienceManagement.Layers.L04_ViewModels\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj" />
-    <ProjectReference Include="..\..\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.csproj" />
   </ItemGroup>
 
   <ItemGroup>

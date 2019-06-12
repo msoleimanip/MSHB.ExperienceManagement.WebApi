@@ -39,12 +39,10 @@ C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManag
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L02_DataLayer.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L03_Services.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L04_ViewModels.dll
-C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L00_BaseModels.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L03_Services.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L04_ViewModels.pdb
-C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L01_Entities.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L02_DataLayer.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Presentation\MSHB.ExperienceManagement.Presentation.WebUI\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.pdb

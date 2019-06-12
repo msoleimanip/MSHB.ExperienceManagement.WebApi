@@ -27,14 +27,12 @@ C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L01_Entities.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L02_DataLayer.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L04_ViewModels.dll
-C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L00_BaseModels.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L01_Entities.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L02_DataLayer.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L04_ViewModels.pdb
-C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\bin\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.pdb
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\obj\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L03_Services.csprojAssemblyReference.cache
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\obj\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L03_Services.csproj.CoreCompileInputs.cache
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Layers\MSHB.ExperienceManagement.Layers.L03_Services\obj\Debug\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L03_Services.AssemblyInfoInputs.cache

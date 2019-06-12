@@ -7,7 +7,6 @@ using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
-using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
@@ -16,19 +15,22 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {  
     public class RolesService : IRolesService
     {
-        private readonly IRolesRepository _rolesRepository;
-
-        public RolesService(IRolesRepository rolesRepository)
+        private readonly ExperienceManagementDbContext _context;
+        public RolesService(ExperienceManagementDbContext context)
         {
-            _rolesRepository = rolesRepository;
-            _rolesRepository.CheckArgumentIsNull(nameof(_rolesRepository));
+            _context = context;
+            _context.CheckArgumentIsNull(nameof(_context));
         }
 
         public async Task<List<Role>> FindUserRolesAsync(Guid userId)
         {
             try
             {
-                return await _rolesRepository.FindUserRolesAsync(userId);
+                var userRolesQuery = from role in _context.Roles
+                                     from userRoles in role.UserRoles
+                                     where userRoles.UserId == userId
+                                     select role;
+                return await userRolesQuery.OrderBy(x => x.Name).ToListAsync();
             }
             catch (Exception ex)
             {
@@ -43,7 +45,13 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                return await _rolesRepository.FirstOrDefaultUserRoleAsync(userId, roleName) != null;
+                var userRolesQuery = from role in _context.Roles
+                                     where role.Name == roleName
+                                     from user in role.UserRoles
+                                     where user.UserId == userId
+                                     select role;
+                var userInRole= await userRolesQuery.FirstOrDefaultAsync();
+                return userInRole != null;
             }
             catch (Exception ex)
             {
@@ -57,7 +65,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                return _rolesRepository.FindUsersInRoleAsync(roleName);
+                var roleUserIdsQuery = from role in _context.Roles
+                                       where role.Name == roleName
+                                       from user in role.UserRoles
+                                       select user.UserId;
+                return _context.Users.Where(user => roleUserIdsQuery.Contains(user.Id))
+                             .ToListAsync();
             }
             catch (Exception ex)
             {
@@ -71,7 +84,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var roles = await _rolesRepository.GetRolesAsync();
+                var roles = await _context.Roles.ToListAsync();
                 return roles.Select(x => new RoleViewModel
                 {
                     RoleId = x.Id,

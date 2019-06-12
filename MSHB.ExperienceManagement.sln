@@ -27,8 +27,6 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSHB.ExperienceManagement.P
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSHB.ExperienceManagement.Shared.Common", "src\Shared\MSHB.ExperienceManagement.Shared.Common\MSHB.ExperienceManagement.Shared.Common.csproj", "{2C39817D-34A1-4BC7-8CBF-AC62A701390A}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer", "src\Layers\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer\MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.csproj", "{BC6A474D-80CF-4772-ADB5-AF7DB6A799FA}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,10 +61,6 @@ Global
 		{2C39817D-34A1-4BC7-8CBF-AC62A701390A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2C39817D-34A1-4BC7-8CBF-AC62A701390A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2C39817D-34A1-4BC7-8CBF-AC62A701390A}.Release|Any CPU.Build.0 = Release|Any CPU
-		{BC6A474D-80CF-4772-ADB5-AF7DB6A799FA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{BC6A474D-80CF-4772-ADB5-AF7DB6A799FA}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{BC6A474D-80CF-4772-ADB5-AF7DB6A799FA}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{BC6A474D-80CF-4772-ADB5-AF7DB6A799FA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -83,7 +77,6 @@ Global
 		{FC7E9A18-6E25-4B7D-9894-2CDD5023759F} = {524999F0-F513-46BA-9EDE-51B72E116132}
 		{532B0621-7B68-4025-BE73-AB8E3C90CE96} = {FD73BFCB-D4DE-4AB5-BC0B-41A35FA962D3}
 		{2C39817D-34A1-4BC7-8CBF-AC62A701390A} = {F8AAF28A-9B0C-4ACF-BBB9-C4D8AAFED940}
-		{BC6A474D-80CF-4772-ADB5-AF7DB6A799FA} = {524999F0-F513-46BA-9EDE-51B72E116132}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {D7655C2B-9616-46A6-88FC-7F11EA8335D2}

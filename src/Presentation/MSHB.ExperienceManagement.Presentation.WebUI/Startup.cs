@@ -26,10 +26,6 @@ using MSHB.ExperienceManagement.Layers.L03.Services.Logger;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L03_Services.Impls;
 using MSHB.ExperienceManagement.Layers.L03_Services.Initialization;
-using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Contracts;
-using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Implement;
-using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
-using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Implement;
 using MSHB.ExperienceManagement.Presentation.WebUI.Utils;
 using Newtonsoft.Json;
 using Swashbuckle.AspNetCore.Swagger;
@@ -67,10 +63,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             services.AddTransient<ITokenValidatorService, TokenValidatorService>();
             services.AddTransient<IGroupAuthenticationService, GroupAuthenticationService>();
             services.AddTransient<IOrganizationService, OrganizationService>();
-            services.AddTransient<IGroupAuthenticationRepository, DbGroupAuthenticationRepository>();
-            services.AddTransient<IOrganizationRepository, DbOrganizationRepository>();
-            services.AddTransient<IRolesRepository, DbRolesRepository>();
-            services.AddTransient<IUserRepository, DbUserRepository>();
+
             
 
 

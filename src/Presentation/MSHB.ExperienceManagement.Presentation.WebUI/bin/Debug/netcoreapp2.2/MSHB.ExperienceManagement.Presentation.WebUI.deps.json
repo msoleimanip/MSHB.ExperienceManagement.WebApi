@@ -1,7 +1,7 @@
 {
   "runtimeTarget": {
     "name": ".NETCoreApp,Version=v2.2",
-    "signature": "f6010b8e29c6302efbc379f0bf5bbe05d81f1742"
+    "signature": "91cc4e17c2fdd8cd60f5ea25d895b13a81ecb764"
   },
   "compilationOptions": {
     "defines": [
@@ -29,7 +29,6 @@
           "MSHB.ExperienceManagement.Layers.L00_BaseModels": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L03_Services": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L04_ViewModels": "1.0.0",
-          "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer": "1.0.0",
           "Microsoft.AspNetCore.App": "2.2.0",
           "Microsoft.AspNetCore.OData": "7.1.0",
           "Microsoft.EntityFrameworkCore.Proxies": "2.2.4",
@@ -259,20 +258,6 @@
             "assetType": "native",
             "fileVersion": "0.0.0.0"
           }
-        }
-      },
-      "LinqKit.Microsoft.EntityFrameworkCore/1.1.16": {
-        "dependencies": {
-          "Microsoft.EntityFrameworkCore": "2.2.4"
-        },
-        "runtime": {
-          "lib/netstandard2.0/LinqKit.Microsoft.EntityFrameworkCore.dll": {
-            "assemblyVersion": "1.1.16.0",
-            "fileVersion": "1.1.16.0"
-          }
-        },
-        "compile": {
-          "lib/netstandard2.0/LinqKit.Microsoft.EntityFrameworkCore.dll": {}
         }
       },
       "log4net/2.0.8": {
@@ -2622,7 +2607,6 @@
           "MSHB.ExperienceManagement.Layers.L01_Entities": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L02_DataLayer": "1.0.0",
           "MSHB.ExperienceManagement.Layers.L04_ViewModels": "1.0.0",
-          "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer": "1.0.0",
           "MSHB.ExperienceManagement.Shared.Common": "1.0.0",
           "Microsoft.AspNetCore": "2.2.0",
           "Microsoft.AspNetCore.Authentication.JwtBearer": "2.2.0",
@@ -2645,23 +2629,6 @@
         },
         "compile": {
           "MSHB.ExperienceManagement.Layers.L04_ViewModels.dll": {}
-        }
-      },
-      "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer/1.0.0": {
-        "dependencies": {
-          "LinqKit.Microsoft.EntityFrameworkCore": "1.1.16",
-          "MSHB.ExperienceManagement.Layers.L00_BaseModels": "1.0.0",
-          "MSHB.ExperienceManagement.Layers.L01_Entities": "1.0.0",
-          "MSHB.ExperienceManagement.Layers.L02_DataLayer": "1.0.0",
-          "MSHB.ExperienceManagement.Layers.L04_ViewModels": "1.0.0",
-          "Microsoft.EntityFrameworkCore": "2.2.4",
-          "Microsoft.EntityFrameworkCore.SqlServer": "2.2.4"
-        },
-        "runtime": {
-          "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.dll": {}
-        },
-        "compile": {
-          "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.dll": {}
         }
       },
       "MSHB.ExperienceManagement.Shared.Common/1.0.0": {
@@ -5647,13 +5614,6 @@
       "path": "libuv/1.10.0",
       "hashPath": "libuv.1.10.0.nupkg.sha512"
     },
-    "LinqKit.Microsoft.EntityFrameworkCore/1.1.16": {
-      "type": "package",
-      "serviceable": true,
-      "sha512": "sha512-CI6wcf1C6vXp3rGwp7brpxBJjVS/vDoHswmX55Rhe13VdhEunHAI7iDCmxMgAYO7s6rarYTjWkNMu6UU66YVdA==",
-      "path": "linqkit.microsoft.entityframeworkcore/1.1.16",
-      "hashPath": "linqkit.microsoft.entityframeworkcore.1.1.16.nupkg.sha512"
-    },
     "log4net/2.0.8": {
       "type": "package",
       "serviceable": true,
@@ -6536,11 +6496,6 @@
       "sha512": ""
     },
     "MSHB.ExperienceManagement.Layers.L04_ViewModels/1.0.0": {
-      "type": "project",
-      "serviceable": false,
-      "sha512": ""
-    },
-    "MSHB.ExperienceManagement.Layers.L05_RepositoryLayer/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""
