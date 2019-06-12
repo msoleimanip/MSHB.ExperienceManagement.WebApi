@@ -15,6 +15,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm);
         Task<bool> EditGroupAsync(User user, EditGroupFormModel groupForm);
         Task<bool> DeleteGroupAsync(User user, List<long> groupIds);
-        Task<List<RoleViewModel>> GetRolesAsync(User user);
+
     }
 }

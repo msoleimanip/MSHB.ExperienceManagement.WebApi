@@ -6,7 +6,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
-using MSHB.ExperienceManagement.Layers.L03.Services.Security;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
@@ -120,24 +119,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(await _usersService.GetUsersAsync()));
 
         }
+
         [HttpGet("[action]")]
         public async Task<IActionResult> GetUserById([FromQuery] Guid Id)
         {
             return Ok(GetRequestResult(await _usersService.GetUserById(HttpContext.GetUser(), Id)));
         }
 
-        [HttpGet("[action]"), HttpPost("[action]")]
-        public IActionResult IsAuthenticated()
-        {
-            return Ok(GetRequestResult(User.Identity.IsAuthenticated)); 
-        }
-
-        [HttpGet("[action]"), HttpPost("[action]")]
-        public IActionResult GetUserInfo()
-        {
-            var claimsIdentity = User.Identity as ClaimsIdentity;
-            return Ok(GetRequestResult(new { Username = claimsIdentity.Name }));
-        }
     }
 
     

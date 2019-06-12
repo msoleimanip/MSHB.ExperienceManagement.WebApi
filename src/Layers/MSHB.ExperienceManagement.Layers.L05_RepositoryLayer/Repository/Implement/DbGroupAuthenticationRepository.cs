@@ -156,19 +156,7 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Implement
             }
         }
 
-        public async Task<List<Role>> GetRolesAsync()
-        {
-            try
-            {
-                var roles = await _uow.Roles.ToListAsync();
-                return roles;
-            }
-            catch (Exception ex)
-            {
-                throw new ExperienceManagementGlobalException(GroupRepositoryErrors.DbGetRolesError, ex);
-
-            }
-        }
+   
 
         public async Task<List<GroupAuth>> SearchGroupAsync(GroupSearchModel groupmodel)
         {

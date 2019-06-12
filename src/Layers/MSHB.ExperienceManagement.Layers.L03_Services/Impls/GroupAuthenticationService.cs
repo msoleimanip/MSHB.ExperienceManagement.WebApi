@@ -37,23 +37,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 Description = x.Description
             }).ToList();
         }
-        public async Task<List<RoleViewModel>> GetRolesAsync(User user)
-        {
-            try
-            {
-                var roles = await _groupAuthenticationRepository.GetRolesAsync();
-                return roles.Select(x => new RoleViewModel
-                {
-                    RoleId = x.Id,
-                    Name = x.Name,
-                    Title = x.Title
-                }).ToList();
-            }
-            catch(Exception ex)
-            {
-                throw new ExperienceManagementGlobalException(GroupServiceErrors.GetRolesError,ex);
-            }
-        }
+       
         public async Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm)
         {
             try

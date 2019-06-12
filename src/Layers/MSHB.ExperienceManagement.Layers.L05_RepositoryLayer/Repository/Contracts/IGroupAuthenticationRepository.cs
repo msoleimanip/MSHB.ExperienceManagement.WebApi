@@ -13,7 +13,7 @@ namespace MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Contracts
     {
         Task<List<GroupAuth>> GetGroupAuthenticationAsync();
         Task<List<GroupAuth>> SearchGroupAsync(GroupSearchModel groupmodel);
-        Task<List<Role>> GetRolesAsync();
+
         Task<List<Role>> GetGroupRoleAsync(long id);        
         Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm);
         Task<bool> DeleteGroupAsync(User user, List<long> groupIds);

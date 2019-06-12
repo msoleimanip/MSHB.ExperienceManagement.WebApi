@@ -9,13 +9,9 @@ using System;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 
-namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
+namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
-    public interface ITokenValidatorService
-    {
-        Task ValidateAsync(TokenValidatedContext context);
-    }
-
+    
     public class TokenValidatorService : ITokenValidatorService
     {
         private readonly IUsersService _usersService;

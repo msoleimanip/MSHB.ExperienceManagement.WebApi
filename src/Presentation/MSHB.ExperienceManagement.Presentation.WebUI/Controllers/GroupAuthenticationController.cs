@@ -17,13 +17,16 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
     public class GroupAuthenticationController : BaseController
     {
         private readonly IGroupAuthenticationService _groupAuthenticationService;
+        private readonly IRolesService _rolesService;
 
         public GroupAuthenticationController(
-            IGroupAuthenticationService groupAuthenticationService
+            IGroupAuthenticationService groupAuthenticationService, IRolesService rolesService
             )
         {
             _groupAuthenticationService = groupAuthenticationService;
             _groupAuthenticationService.CheckArgumentIsNull(nameof(_groupAuthenticationService));
+            _rolesService = rolesService;
+            _rolesService.CheckArgumentIsNull(nameof(_rolesService));
         }
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> GetGroupAuthentication()
@@ -62,7 +65,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> GetRoles()
         {
-            return Ok(GetRequestResult(await _groupAuthenticationService.GetRolesAsync(HttpContext.GetUser())));
+            return Ok(GetRequestResult(await _rolesService.GetRolesAsync(HttpContext.GetUser())));
         }
     }
 }

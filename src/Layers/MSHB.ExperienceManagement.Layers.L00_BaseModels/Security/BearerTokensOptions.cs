@@ -1,4 +1,4 @@
-namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
+namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Security
 {
     public class BearerTokensOptions
     {

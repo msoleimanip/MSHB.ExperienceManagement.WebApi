@@ -4,8 +4,8 @@ using System.Linq;
 
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 
-namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
-{
+namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
+{ 
     public static class CustomRoles
     {
         public static List<Role> GetInitialRoles()
@@ -45,7 +45,6 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
             return initRoles;
 
         }
-
         private static List<Role> DefineGroupRole()
         {
             var initRoles = new List<Role>
@@ -59,7 +58,6 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
             return initRoles;
 
         }
-
         private static Role DefineIntRole(string name,string title)
         {
             var role = new Role()
@@ -72,9 +70,5 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
             return role;
 
         }
-
-       
-
-
     }
 }

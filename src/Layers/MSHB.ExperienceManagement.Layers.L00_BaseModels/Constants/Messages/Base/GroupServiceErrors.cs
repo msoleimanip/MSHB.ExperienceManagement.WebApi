@@ -18,7 +18,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
         public static readonly ExperienceManagementErrorMessage EditGroupError =
           new ExperienceManagementErrorMessage("GRE-1004", "خطا در ویرایش گروه درخواست شده");
 
-        
+
+
 
     }
     

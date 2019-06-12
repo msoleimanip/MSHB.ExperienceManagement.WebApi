@@ -1,14 +1,10 @@
+using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using System;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
+namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
-    public interface ISecurityService
-    {
-        string GetSha256Hash(string input);
-    }
-
     public class SecurityService : ISecurityService
     {
         public string GetSha256Hash(string input)

@@ -7,8 +7,9 @@ using System.Transactions;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
+using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 
-namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
+namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
 {
     public interface IDbInitializerService
     {

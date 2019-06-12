@@ -19,12 +19,13 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Security;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Settings;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using MSHB.ExperienceManagement.Layers.L03.Services.Logger;
-using MSHB.ExperienceManagement.Layers.L03.Services.Security;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L03_Services.Impls;
+using MSHB.ExperienceManagement.Layers.L03_Services.Initialization;
 using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Contracts;
 using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Implement;
 using MSHB.ExperienceManagement.Layers.L05_RepositoryLayer.Repository.Contracts;
@@ -68,11 +69,9 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             services.AddTransient<IOrganizationService, OrganizationService>();
             services.AddTransient<IGroupAuthenticationRepository, DbGroupAuthenticationRepository>();
             services.AddTransient<IOrganizationRepository, DbOrganizationRepository>();
-
-
-
-
-
+            services.AddTransient<IRolesRepository, DbRolesRepository>();
+            services.AddTransient<IUserRepository, DbUserRepository>();
+            
 
 
 

@@ -7,27 +7,17 @@ using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
-
 using System.Security.Claims;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
+using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Security;
 
-namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
+namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
-    public interface ITokenStoreService
-    {
-        Task AddUserTokenAsync(UserToken userToken);
-        Task AddUserTokenAsync(User user, string refreshToken, string accessToken, string refreshTokenSource);
-        Task<bool> IsValidTokenAsync(string accessToken, Guid userId);
-        Task DeleteExpiredTokensAsync();
-        Task<UserToken> FindTokenAsync(string refreshToken);
-        Task DeleteTokenAsync(string refreshToken);
-        Task DeleteTokensWithSameRefreshTokenSourceAsync(string refreshTokenIdHashSource);
-        Task InvalidateUserTokensAsync(Guid userId);
-        Task<(string accessToken, string refreshToken)> CreateJwtTokens(User user, string refreshTokenSource);
-        Task RevokeUserBearerTokensAsync(string userIdValue, string refreshToken);
-    }
+
+   
 
     public class TokenStoreService : ITokenStoreService
     {
@@ -37,7 +27,7 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
         private readonly IOptionsSnapshot<BearerTokensOptions> _configuration;
         private readonly IRolesService _rolesService;
 
-        
+
 
         public TokenStoreService(
             ExperienceManagementDbContext uow,
@@ -137,7 +127,7 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
             }
 
             await DeleteExpiredTokensAsync();
-           
+
         }
 
         public Task<UserToken> FindTokenAsync(string refreshToken)
@@ -200,7 +190,7 @@ namespace MSHB.ExperienceManagement.Layers.L03.Services.Security
                 new Claim(ClaimTypes.UserData, user.Id.ToString())
             };
 
-            
+
             // add roles
             var roles = await _rolesService.FindUserRolesAsync(user.Id);
             foreach (var role in roles)
