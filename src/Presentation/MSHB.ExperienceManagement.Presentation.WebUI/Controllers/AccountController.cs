@@ -120,6 +120,21 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         }
 
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> UserOrganizationAssign([FromBody]  UserOrgAssignFormModel userOrgAssignForm)
+        {
+            var userorgAssign = await _usersService.UserOrganizationAssignAsync(HttpContext.GetUser(), userOrgAssignForm);
+            return Ok(GetRequestResult(userorgAssign));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> UserEquipmentAssign([FromBody]  UserEquipmentAssignFormModel userEquipmentAssignForm)
+        {
+            var userEquipmentAssign = await _usersService.UserEquipmentAssignAsync(HttpContext.GetUser(), userEquipmentAssignForm);
+            return Ok(GetRequestResult(userEquipmentAssign));
+        }
+
         [HttpGet("[action]")]
         public async Task<IActionResult> GetUserById([FromQuery] Guid Id)
         {

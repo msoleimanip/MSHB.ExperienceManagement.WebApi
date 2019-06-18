@@ -18,6 +18,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<bool> EditUserAsync(User user, EditUserFormModel userForm);
         Task<bool> DeleteUserAsync(User user, List<Guid> userIds);
         Task<List<UserViewModel>> GetUsersAsync(SearchUserFormModel searchUserForm);
-        Task<UserViewModel> GetUserById(User user, Guid id);    
+        Task<UserViewModel> GetUserById(User user, Guid id);
+        Task<bool> UserOrganizationAssignAsync(User user, UserOrgAssignFormModel userOrgAssignForm);
+        Task<bool> UserEquipmentAssignAsync(User user, UserEquipmentAssignFormModel userEquipmentAssignForm);
     }
 }

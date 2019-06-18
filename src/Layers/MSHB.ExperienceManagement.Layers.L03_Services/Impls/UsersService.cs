@@ -265,6 +265,67 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             return user.SerialNumber;
         }
 
+        public async Task<bool> UserOrganizationAssignAsync(User user, UserOrgAssignFormModel userOrgAssignForm)
+        {
+            try
+            {
+                var userOrg = await _context.Users.FirstOrDefaultAsync(c => c.Id == userOrgAssignForm.UserId);
+                if (userOrg == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
 
+                var Org = await _context.Organizations.FindAsync( userOrgAssignForm.OrganizationId);
+                if (Org == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.OrgNotFoundError);
+                }
+
+                userOrg.OrganizationId = userOrgAssignForm.OrganizationId;
+                _context.Users.Update(userOrg);
+                _context.SaveChanges();
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.AssignmentError, ex);
+            }
+           
+        }
+
+        public async Task<bool> UserEquipmentAssignAsync(User user, UserEquipmentAssignFormModel userEquipmentAssignForm)
+        {
+            try
+            {
+                var userEquipment = await _context.Users.FirstOrDefaultAsync(c => c.Id == userEquipmentAssignForm.UserId);
+                if (userEquipment == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
+                var notExistEquipment =  _context.Equipments.Any(c=>!userEquipmentAssignForm.EquipmentIds.Contains(c.Id));
+                if (notExistEquipment == false)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.EquipmentNotFoundError);
+                }
+                userEquipmentAssignForm.EquipmentIds.ForEach(async ueq =>
+                {
+                    var userEqSubscription = new EquipmentUserSubscription();
+                    userEqSubscription.UserId = userEquipment.Id;
+                    userEqSubscription.EquipmentId = ueq;
+                    await _context.EquipmentUserSubscriptions.AddAsync(userEqSubscription);
+                });
+
+                await _context.SaveChangesAsync();
+
+                    return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.AssignmentError, ex);
+            }
+        }
     }
 }
