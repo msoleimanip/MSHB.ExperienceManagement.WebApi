@@ -81,13 +81,13 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         public async Task<bool> EditUserAsync(User user, EditUserFormModel userForm)
         {
             try
-            {               
+            {
                 var userEdt = await _context.Users.FirstOrDefaultAsync(c => c.Id == userForm.UserId);
-                if (userEdt==null)
+                if (userEdt == null)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
                 }
-                var groupRole = await _context.GroupAuthRoles.Where(c => c.GroupAuthId == userForm.GroupAuthId).Include(c=>c.Role).ToListAsync();
+                var groupRole = await _context.GroupAuthRoles.Where(c => c.GroupAuthId == userForm.GroupAuthId).Include(c => c.Role).ToListAsync();
                 if (groupRole == null)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
@@ -97,19 +97,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.OrganizationNotFoundError);
                 }
-                if (userEdt.GroupAuthId!= userForm.GroupAuthId)
+                if (userEdt.GroupAuthId != userForm.GroupAuthId)
                 {
-                   
-                   _context.UserRoles.RemoveRange(_context.UserRoles.Where(c => c.UserId == userForm.UserId).ToList());
-                   
-                   var newUserRoles = groupRole.Select(c=>c.Role).Select(role =>
-                                        new UserRole
-                                        {
-                                            UserId = userForm.UserId,
-                                            Role = role
-                                        }).ToList();
-                        _context.UserRoles.AddRange(newUserRoles);
-                   
+
+                    _context.UserRoles.RemoveRange(_context.UserRoles.Where(c => c.UserId == userForm.UserId).ToList());
+
+                    var newUserRoles = groupRole.Select(c => c.Role).Select(role =>
+                                           new UserRole
+                                           {
+                                               UserId = userForm.UserId,
+                                               Role = role
+                                           }).ToList();
+                    _context.UserRoles.AddRange(newUserRoles);
+
                 }
                 userEdt.OrganizationId = org.Id;
                 userEdt.GroupAuthId = userForm.GroupAuthId;
@@ -143,32 +143,56 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             return new UserViewModel()
             {
                 Id = respUser.Id,
-                 FirstName= respUser.FirstName,
-                 LastName = respUser.LastName,
-                 Description = respUser.Description,
-                 Location = respUser.Location,
-                 PhoneNumber = respUser.PhoneNumber,
-                 IsActive = respUser.IsActive,
-                 IsPresident = respUser.IsPresident,
-                 GroupAuthId = respUser.GroupAuthId,
-                 OrganizationId = respUser.OrganizationId,
-                 UserConfigurationId = respUser.UserConfigurationId,
-                 LastLockoutDate = respUser.LastLockoutDate,
-                 LastPasswordChangedDate = respUser.LastPasswordChangedDate,
-                 CreationDate = respUser.CreationDate,
-                 LastVisit = respUser.LastVisit,
-                 LastLoggedIn = respUser.LastLoggedIn
-             };
+                FirstName = respUser.FirstName,
+                LastName = respUser.LastName,
+                Description = respUser.Description,
+                Location = respUser.Location,
+                PhoneNumber = respUser.PhoneNumber,
+                IsActive = respUser.IsActive,
+                IsPresident = respUser.IsPresident,
+                GroupAuthId = respUser.GroupAuthId,
+                OrganizationId = respUser.OrganizationId,
+                UserConfigurationId = respUser.UserConfigurationId,
+                LastLockoutDate = respUser.LastLockoutDate,
+                LastPasswordChangedDate = respUser.LastPasswordChangedDate,
+                CreationDate = respUser.CreationDate,
+                LastVisit = respUser.LastVisit,
+                LastLoggedIn = respUser.LastLoggedIn
+            };
 
         }
-        public async Task<List<UserViewModel>> GetUsersAsync()
+        public async Task<List<UserViewModel>> GetUsersAsync(SearchUserFormModel searchUserForm)
         {
-            var resp = await _context.Users.ToListAsync();
+            var queryable = _context.Users.AsQueryable();
+
+            if (!string.IsNullOrEmpty(searchUserForm.FirstName))
+            {
+                queryable = queryable.Where(q => q.FirstName.Contains(searchUserForm.FirstName));
+            }
+
+            if (!string.IsNullOrEmpty(searchUserForm.LastName))
+            {
+                queryable = queryable.Where(q => q.LastName.Contains(searchUserForm.LastName));
+            }
+
+            if (!string.IsNullOrEmpty(searchUserForm.Username))
+            {
+                queryable = queryable.Where(q => q.LastName.Contains(searchUserForm.Username));
+            }
+
+            if (searchUserForm.IsActive.HasValue)
+            {
+                queryable = queryable.Where(q => q.IsActive == searchUserForm.IsActive.Value);
+            }
+
+            var resp = await queryable
+                .OrderBy(x => x.CreationDate).Take(searchUserForm.PageSize).Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).ToListAsync();
             return resp.Select(respUser => new UserViewModel()
             {
                 Id = respUser.Id,
                 FirstName = respUser.FirstName,
                 LastName = respUser.LastName,
+                Username = respUser.Username,
                 Description = respUser.Description,
                 Location = respUser.Location,
                 PhoneNumber = respUser.PhoneNumber,

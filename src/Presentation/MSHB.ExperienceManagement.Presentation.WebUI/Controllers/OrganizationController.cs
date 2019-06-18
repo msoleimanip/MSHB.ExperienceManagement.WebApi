@@ -41,6 +41,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> GetUserOrgazinationForUser([FromQuery] Guid userId)
+        {
+            var organizations = await _organizationService.GetUserOrgazinationForUserAsync(HttpContext.GetUser(), userId);
+            return Ok(GetRequestResult(organizations));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> AddOrganization([FromBody] AddOrgFormModel orgForm)
         {            
             var organizations = await _organizationService.AddOrganizationAsync(HttpContext.GetUser(), orgForm);

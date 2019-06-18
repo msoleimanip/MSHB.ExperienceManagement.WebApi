@@ -114,9 +114,9 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(users));
         }
         [HttpGet("[action]"), HttpPost("[action]")]
-        public async Task<IActionResult> GetUsers()
+        public async Task<IActionResult> GetUsers([FromBody] SearchUserFormModel searchUserForm)
         {
-            return Ok(GetRequestResult(await _usersService.GetUsersAsync()));
+            return Ok(GetRequestResult(await _usersService.GetUsersAsync(searchUserForm)));
 
         }
 

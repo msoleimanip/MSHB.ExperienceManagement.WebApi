@@ -13,6 +13,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
     {
         Task<OrganizationViewModel> GetAsync(User user,long Id);
         Task<List<JsTreeNode>> GetOrganizationByUserAsync(User user);
+        Task<List<JsTreeNode>> GetUserOrgazinationForUserAsync(User user, Guid userId);
         Task<long> AddOrganizationAsync(User user, AddOrgFormModel orgForm);
         Task<bool> EditOrganizationAsync(User user, EditOrgFormModel orgForm);
         Task<bool> DeleteOrganizationAsync(User user, List<long> orgIds);

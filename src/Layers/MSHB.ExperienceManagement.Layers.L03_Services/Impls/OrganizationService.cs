@@ -69,14 +69,49 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     JsTreeNode parentNode = new JsTreeNode();
                     parentNode.id = or.Id.ToString();
                     parentNode.text = or.OrganizationName;
-                    parentNode = FillChild(organizations, parentNode, or.Id);
+                    parentNode = FillChild(organizations, parentNode, or.Id, null);
                     organizationnodes.Add(parentNode);
                 }
 
             });
             return organizationnodes;
         }
-        private JsTreeNode FillChild(List<Organization> organizations, JsTreeNode parentNode, long Id)
+
+        public async Task<List<JsTreeNode>> GetUserOrgazinationForUserAsync(User user, Guid userId)
+        {
+            var UserOrgId = (await _context.Users.FindAsync(userId))?.OrganizationId;
+
+            var organizations = new List<Organization>();
+            if (user.IsAdmin())
+            {
+                organizations = await _context.Organizations.ToListAsync();
+            }
+            else
+            {
+                organizations = await _context.Organizations.Where(x => x.ParentId == user.OrganizationId).SelectMany(x => x.Children).ToListAsync();
+            }
+            var organizationnodes = new List<JsTreeNode>();
+            organizations.ForEach(or =>
+            {
+                if (or.ParentId == null)
+                {
+                    JsTreeNode parentNode = new JsTreeNode();
+                    parentNode.id = or.Id.ToString();
+                    parentNode.text = or.OrganizationName;
+                    if (UserOrgId.HasValue && or.Id == UserOrgId.Value)
+                    {
+                        parentNode.state.selected = true;
+                        parentNode.state.opened = true;
+                    }
+                    parentNode = FillChild(organizations, parentNode, or.Id, UserOrgId);
+                    organizationnodes.Add(parentNode);
+                }
+
+            });
+            return organizationnodes;
+        }
+
+        private JsTreeNode FillChild(List<Organization> organizations, JsTreeNode parentNode, long Id, long? UserOrgId)
         {
             if (organizations.Count > 0)
             {
@@ -87,8 +122,13 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         JsTreeNode parentNodeChild = new JsTreeNode();
                         parentNodeChild.id = or.Id.ToString();
                         parentNodeChild.text = or.OrganizationName;
+                        if (UserOrgId.HasValue && or.Id == UserOrgId.Value)
+                        {
+                            parentNodeChild.state.selected = true;
+                            parentNodeChild.state.opened = true;
+                        }
                         parentNode.children.Add(parentNodeChild);
-                        FillChild(organizations, parentNodeChild, or.Id);
+                        FillChild(organizations, parentNodeChild, or.Id, UserOrgId);
                     }
                 });
             }
