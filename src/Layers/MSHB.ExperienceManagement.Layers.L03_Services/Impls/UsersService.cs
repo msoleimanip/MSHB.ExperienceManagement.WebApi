@@ -154,7 +154,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             };
 
         }
-        public async Task<List<UserViewModel>> GetUsersAsync(SearchUserFormModel searchUserForm)
+        public async Task<SearchUserViewModel> GetUsersAsync(SearchUserFormModel searchUserForm)
         {
             var queryable = _context.Users.AsQueryable();
 
@@ -204,8 +204,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
             var resp = await queryable.Take(searchUserForm.PageSize).Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).ToListAsync();
             var count = await queryable.CountAsync();
-
-            return resp.Select(respUser => new UserViewModel()
+            var searchViewModel = new SearchUserViewModel();
+            searchViewModel.searchUserViewModel= resp.Select(respUser => new UserViewModel()
             {
                 Id = respUser.Id,
                 FirstName = respUser.FirstName,
@@ -224,11 +224,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 CreationDate = respUser.CreationDate,
                 LastVisit = respUser.LastVisit,
                 LastLoggedIn = respUser.LastLoggedIn,
-                PageIndex= searchUserForm.PageIndex,
-                PageSize= searchUserForm.PageSize,
-                TotalCount= count
 
             }).ToList();
+            searchViewModel.PageIndex = searchUserForm.PageIndex;
+            searchViewModel.PageSize = searchUserForm.PageSize;
+            searchViewModel.TotalCount = count;
+            return searchViewModel;
         }
         public async Task UpdateUserLastActivityDateAsync(Guid userId)
         {
