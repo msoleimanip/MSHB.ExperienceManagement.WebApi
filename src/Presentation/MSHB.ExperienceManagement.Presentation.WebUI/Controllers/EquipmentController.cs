@@ -40,6 +40,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> GetUserEquipmentForUser([FromQuery] Guid userId)
+        {
+            var organizations = await _equipmentService.GetUserEquipmentForUserAsync(HttpContext.GetUser(), userId);
+            return Ok(GetRequestResult(organizations));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> AddEquipment([FromBody] AddEquipmentFormModel equipmentForm)
         {            
             var equipments = await _equipmentService.AddEquipmentAsync(HttpContext.GetUser(), equipmentForm);

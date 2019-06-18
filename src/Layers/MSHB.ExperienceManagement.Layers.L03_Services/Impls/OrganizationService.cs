@@ -101,7 +101,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     if (UserOrgId.HasValue && or.Id == UserOrgId.Value)
                     {
                         parentNode.state.selected = true;
-                        parentNode.state.opened = true;
+                       
                     }
                     parentNode = FillChild(organizations, parentNode, or.Id, UserOrgId);
                     organizationnodes.Add(parentNode);
@@ -125,7 +125,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         if (UserOrgId.HasValue && or.Id == UserOrgId.Value)
                         {
                             parentNodeChild.state.selected = true;
-                            parentNodeChild.state.opened = true;
+                           
                         }
                         parentNode.children.Add(parentNodeChild);
                         FillChild(organizations, parentNodeChild, or.Id, UserOrgId);

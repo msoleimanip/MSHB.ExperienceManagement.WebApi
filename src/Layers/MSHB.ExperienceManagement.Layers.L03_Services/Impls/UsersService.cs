@@ -41,14 +41,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
                 }
-                var org = await _context.Organizations.FirstOrDefaultAsync(c => c.Id == userForm.OrganizationId);
-                if (org == null)
-                {
-                    throw new ExperienceManagementGlobalException(UsersServiceErrors.OrganizationNotFoundError);
-                }
+              
                 var userReg = new User()
                 {
-                    OrganizationId = org.Id,
+                   
                     GroupAuthId = userForm.GroupAuthId,
                     FirstName = userForm.FirstName,
                     Description = userForm.Description,
@@ -92,11 +88,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
                 }
-                var org = await _context.Organizations.FirstOrDefaultAsync(c => c.Id == userForm.OrganizationId);
-                if (org == null)
-                {
-                    throw new ExperienceManagementGlobalException(UsersServiceErrors.OrganizationNotFoundError);
-                }
+               
                 if (userEdt.GroupAuthId != userForm.GroupAuthId)
                 {
 
@@ -111,7 +103,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     _context.UserRoles.AddRange(newUserRoles);
 
                 }
-                userEdt.OrganizationId = org.Id;
+            
                 userEdt.GroupAuthId = userForm.GroupAuthId;
                 userEdt.FirstName = userForm.FirstName;
                 userEdt.Description = userForm.Description;
@@ -145,6 +137,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 Id = respUser.Id,
                 FirstName = respUser.FirstName,
                 LastName = respUser.LastName,
+                Username = respUser.Username,
                 Description = respUser.Description,
                 Location = respUser.Location,
                 PhoneNumber = respUser.PhoneNumber,
@@ -184,9 +177,34 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
                 queryable = queryable.Where(q => q.IsActive == searchUserForm.IsActive.Value);
             }
+                      
+            switch (searchUserForm.SortModel.Col+"|"+searchUserForm.SortModel.Sort)
+            {
+                case "firstname|asc":
+                    queryable = queryable.OrderBy(x => x.FirstName);
+                    break;
+                case "firstname|desc":
+                    queryable = queryable.OrderByDescending(x => x.CreationDate);
+                    break;
+                case "lastname|asc":
+                    queryable = queryable.OrderBy(x => x.LastName);
+                    break;
+                case "lastname|desc":
+                    queryable = queryable.OrderByDescending(x => x.LastName);
+                    break;
+                case "username|asc":
+                    queryable = queryable.OrderBy(x => x.Username);
+                    break;
+                case "username|desc":
+                    queryable = queryable.OrderByDescending(x => x.Username);
+                    break;
+                default:
+                    queryable = queryable.OrderBy(x => x.CreationDate);
+                    break;
+            }
+            var resp = await queryable.Take(searchUserForm.PageSize).Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).ToListAsync();
+            var count = await queryable.CountAsync();
 
-            var resp = await queryable
-                .OrderBy(x => x.CreationDate).Take(searchUserForm.PageSize).Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).ToListAsync();
             return resp.Select(respUser => new UserViewModel()
             {
                 Id = respUser.Id,
@@ -205,7 +223,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 LastPasswordChangedDate = respUser.LastPasswordChangedDate,
                 CreationDate = respUser.CreationDate,
                 LastVisit = respUser.LastVisit,
-                LastLoggedIn = respUser.LastLoggedIn
+                LastLoggedIn = respUser.LastLoggedIn,
+                PageIndex= searchUserForm.PageIndex,
+                PageSize= searchUserForm.PageSize,
+                TotalCount= count
+
             }).ToList();
         }
         public async Task UpdateUserLastActivityDateAsync(Guid userId)

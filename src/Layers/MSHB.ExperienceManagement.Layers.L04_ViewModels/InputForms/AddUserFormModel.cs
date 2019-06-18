@@ -35,7 +35,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
         [Required(ErrorMessage = "باید گروه دسترسی کاربر مشخص گردد")]
         public long GroupAuthId { get; set; }
 
-        [Required(ErrorMessage = "باید رده کاربر مشخص گردد")]
-        public long OrganizationId { get; set; }
+        //[Required(ErrorMessage = "باید رده کاربر مشخص گردد")]
+        //public long OrganizationId { get; set; }
     }
 }

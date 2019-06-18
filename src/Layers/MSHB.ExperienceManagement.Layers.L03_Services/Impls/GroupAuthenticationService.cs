@@ -12,7 +12,6 @@ using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
-using MSHB.ExperienceManagement.Layers.L00_BaseModels.Search.Models;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls

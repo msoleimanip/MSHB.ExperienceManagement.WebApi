@@ -4,7 +4,7 @@ using System.Text;
 
 namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
 {
-    public class UserViewModel
+    public class UserViewModel:GeneralViewModel
     {
         public Guid Id { get; set; }    
         public string Username { get; set; }

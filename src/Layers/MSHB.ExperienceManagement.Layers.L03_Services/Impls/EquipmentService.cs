@@ -212,5 +212,58 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
+        public async Task<List<JsTreeNode>> GetUserEquipmentForUserAsync(User user, Guid userId)
+        {
+            var userEquipmentIds = (await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c=>c.Id==userId))?.EquipmentUserSubscriptions.Select(c=>c.Id).ToList();
+            var equipments = new List<Equipment>();          
+            equipments = await _context.Equipments.ToListAsync();
+           
+            var equipmentUsers =  equipments.Where(x => userEquipmentIds.Contains(x.Id)).ToList();
+            
+            var equipmentnodes = new List<JsTreeNode>();
+            equipments.ForEach(eq =>
+            {
+                if (eq.ParentId == null)
+                {
+                    JsTreeNode parentNode = new JsTreeNode();
+                    parentNode.id = eq.Id.ToString();
+                    parentNode.text = eq.EquipmentName;
+                    if (equipmentUsers.Contains(eq))
+                    {
+                        parentNode.state.selected = true;
+
+                    }
+                    parentNode = FillChild(equipments, parentNode, eq.Id, equipmentUsers);
+                    equipmentnodes.Add(parentNode);
+                }
+
+            });
+            return equipmentnodes;
+        }
+
+        private JsTreeNode FillChild(List<Equipment> equipments, JsTreeNode parentNode,long eqId ,List<Equipment> equipmentUsers)
+        {
+            if (equipments.Count > 0)
+            {
+                equipments.ForEach(eq =>
+                {
+                    
+                    if (eq.ParentId == eqId)
+                    {
+                        JsTreeNode parentNodeChild = new JsTreeNode();
+                        parentNodeChild.id = eq.Id.ToString();
+                        parentNodeChild.text = eq.EquipmentName;
+                        if (equipmentUsers.Contains(eq))
+                        {
+                            parentNodeChild.state.selected = true;
+
+                        }
+                        parentNode.children.Add(parentNodeChild);
+                        FillChild(equipments, parentNodeChild, eq.Id, equipmentUsers);
+                    }
+                });
+            }
+            return parentNode;
+        }
     }
 }
