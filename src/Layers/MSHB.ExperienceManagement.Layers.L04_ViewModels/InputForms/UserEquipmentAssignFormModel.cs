@@ -10,7 +10,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
         [Required(ErrorMessage = "باید حتما کاربر انتخاب گردد")]
         public Guid UserId { get; set; }
 
-        [Required(ErrorMessage = "باید حتما تجهیزات انتخاب گردد")]
+        [Required(ErrorMessage = "باید حتما تجهیزات انتخاب گردد"), MinLength(1)]
         public List<long> EquipmentIds { get; set; }
 
     }

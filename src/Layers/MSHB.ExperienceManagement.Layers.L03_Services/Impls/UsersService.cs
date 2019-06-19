@@ -303,7 +303,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var userEquipment = await _context.Users.FirstOrDefaultAsync(c => c.Id == userEquipmentAssignForm.UserId);
+                var userEquipment = await _context.Users.Include(c=>c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c => c.Id == userEquipmentAssignForm.UserId);
                 if (userEquipment == null)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
@@ -313,6 +313,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.EquipmentNotFoundError);
                 }
+                _context.EquipmentUserSubscriptions.RemoveRange(userEquipment.EquipmentUserSubscriptions);
                 userEquipmentAssignForm.EquipmentIds.ForEach(async ueq =>
                 {
                     var userEqSubscription = new EquipmentUserSubscription();

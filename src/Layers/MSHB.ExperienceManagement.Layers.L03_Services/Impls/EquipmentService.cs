@@ -214,7 +214,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
         public async Task<List<JsTreeNode>> GetUserEquipmentForUserAsync(User user, Guid userId)
         {
-            var userEquipmentIds = (await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c=>c.Id==userId))?.EquipmentUserSubscriptions.Select(c=>c.Id).ToList();
+            var userEquipmentIds = (await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c=>c.Id==userId))?.EquipmentUserSubscriptions.Select(c=>c.EquipmentId).ToList();
             var equipments = new List<Equipment>();          
             equipments = await _context.Equipments.ToListAsync();
            

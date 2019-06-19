@@ -19,9 +19,9 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public DateTime? LastUpdateDate { get; set; }
         [MaxLength(250)]
         public string ImageAddress { get; set; }
-        public int? AnswerCounts { get; set; }
+        public int? AnswerCounts { get; set; } = 0;
         public bool? IsActive { get; set; } = false;
-        public int? ViewCounts { get; set; }
+        public int? ViewCounts { get; set; } = 0;
         public IssueType IssueType { get; set; }
         public Guid UserId { get; set; }      
         public virtual ICollection<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }

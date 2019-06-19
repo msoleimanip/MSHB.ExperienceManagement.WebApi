@@ -31,6 +31,18 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> AddIssueDetails([FromBody] AddIssueDetailFormModel issueDetailForm)
+        {
+            var resp = await _issueService.AddIssueDetailAsync(HttpContext.GetUser(), issueDetailForm);
+            return Ok(GetRequestResult(resp));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> UploadFile(IFormFile file)
+        {
+            return Ok(GetRequestResult(await _issueService.UploadFileAsync(HttpContext.GetUser(),file)));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> EditIssue([FromBody]  EditIssueFormModel issueForm)
         {
             var resp = await _issueService.EditIssueAsync(HttpContext.GetUser(), issueForm);

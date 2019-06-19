@@ -6,16 +6,17 @@ using System.Text;
 
 namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
 {
-    [Table("IssueDetailAttachment_T")]
-    public class IssueDetailAttachment:BaseEntity
+    public class FileAddress
     {
-        public long IssueDetailId { get; set; }
 
+        public Guid FileId { get; set; }
         [MaxLength(20)]
         public string FileType { get; set; }
         public long? FileSize { get; set; }
         public string FilePath { get; set; }
-        [ForeignKey("IssueDetailId")]
-        public virtual IssueDetail IssueDetails { get; set; }
+        public DateTime CreationDate { get; set; }
+        public Guid UserId { get; set; }
+        [ForeignKey("UserId")]
+        public virtual User User { get; set; }
     }
 }

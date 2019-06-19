@@ -32,6 +32,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<IssueDetailComment> IssueDetailComments { get; set; }
         public virtual DbSet<IssueDetailAttachment> IssueDetailAttachments { get; set; }
         public virtual DbSet<UserIssueSubscription> UserIssueSubscriptions { get; set; } /* User Popular user issues */
+        public virtual DbSet<FileAddress> FileAddresses { get; set; }
         public virtual DbSet<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
@@ -181,6 +182,9 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
                     .Property(c => c.CreationDate).HasDefaultValueSql("getdate()");
             modelBuilder.Entity<Organization>()
                     .Property(c => c.CreationDate).HasDefaultValueSql("getdate()");
+
+            modelBuilder.Entity<FileAddress>().HasKey(x => x.FileId);
+           modelBuilder.Entity<FileAddress>().Property(x => x.FileId).HasDefaultValueSql("NEWID()");
 
 
 
