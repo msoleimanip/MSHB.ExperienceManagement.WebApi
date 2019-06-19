@@ -78,6 +78,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
+                if (_context.Users.Any(c => c.Username.ToLower() == userForm.Username.ToLower() && c.Id != userForm.UserId))
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserExistError);
+                }
                 var userEdt = await _context.Users.FirstOrDefaultAsync(c => c.Id == userForm.UserId);
                 if (userEdt == null)
                 {
@@ -89,6 +93,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
                 }
                
+
                 if (userEdt.GroupAuthId != userForm.GroupAuthId)
                 {
 
@@ -110,6 +115,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 userEdt.IsActive = userForm.IsActive;
                 userEdt.IsPresident = userForm.IsPresident;
                 userEdt.LastName = userForm.LastName;
+                if (!string.IsNullOrEmpty(userForm.Password))
                 userEdt.Password = _securityService.GetSha256Hash(userForm.Password);
                 userEdt.SerialNumber = Guid.NewGuid().ToString("N");
                 userEdt.Location = userForm.Location;
@@ -125,10 +131,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.AddUserError, ex);
             }
         }
-        public Task<bool> DeleteUserAsync(User user, List<Guid> userIds)
-        {
-            throw new NotImplementedException();
-        }
+     
         public async Task<UserViewModel> GetUserById(User user, Guid id)
         {
             var respUser = await _context.Users.FindAsync(id);
@@ -177,7 +180,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
                 queryable = queryable.Where(q => q.IsActive == searchUserForm.IsActive.Value);
             }
-                      
+            if (searchUserForm.SortModel!=null)         
             switch (searchUserForm.SortModel.Col+"|"+searchUserForm.SortModel.Sort)
             {
                 case "firstname|asc":
@@ -202,7 +205,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     queryable = queryable.OrderBy(x => x.CreationDate);
                     break;
             }
-            var resp = await queryable.Take(searchUserForm.PageSize).Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).ToListAsync();
+            else
+                queryable = queryable.OrderBy(x => x.CreationDate);
+            var resp = await queryable.Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).Take(searchUserForm.PageSize).ToListAsync();
             var count = await queryable.CountAsync();
             var searchViewModel = new SearchUserViewModel();
             searchViewModel.searchUserViewModel= resp.Select(respUser => new UserViewModel()
@@ -326,6 +331,28 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
 
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.AssignmentError, ex);
+            }
+        }
+
+        public async Task<bool> ChangeActivateUserAsync(User user, ChangeActivationFormModel userForm)
+        {
+            try
+            {
+                var userEdt = await _context.Users.FindAsync(userForm.UserId);
+                if (userEdt == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
+                userEdt.IsActive = userForm.IsActive;
+                _context.Users.Update(userEdt);
+                await _context.SaveChangesAsync();
+                return true;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.ChangeStateError, ex);
             }
         }
     }

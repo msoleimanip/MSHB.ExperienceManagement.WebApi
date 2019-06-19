@@ -107,10 +107,10 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
-        public async Task<IActionResult> DeleteUser([FromBody]
-        [Required(ErrorMessage = "لیست کاربران ارسال شده برای حذف نامعتبر است")] List<Guid> userIds)
+        public async Task<IActionResult> ChangeActivateUser([FromBody]
+       ChangeActivationFormModel userForm)
         {
-            var users = await _usersService.DeleteUserAsync(HttpContext.GetUser(), userIds);
+            var users = await _usersService.ChangeActivateUserAsync(HttpContext.GetUser(), userForm);
             return Ok(GetRequestResult(users));
         }
         [HttpGet("[action]"), HttpPost("[action]")]

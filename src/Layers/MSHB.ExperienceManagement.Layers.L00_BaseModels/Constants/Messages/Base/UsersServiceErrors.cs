@@ -22,9 +22,13 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
            new ExperienceManagementErrorMessage("AUE-1006", "ارگان انتخابی پیدا نشد.");
         public static readonly ExperienceManagementErrorMessage EquipmentNotFoundError =
            new ExperienceManagementErrorMessage("AUE-1006", "در تجهیزات انتخابی موردی است که یافت نشد.");
-
+        public static readonly ExperienceManagementErrorMessage ChangeStateError =
+           new ExperienceManagementErrorMessage("AUE-1007", "خطا در تغییر وضعیت کاربر");
 
         
+
+
+
 
 
 

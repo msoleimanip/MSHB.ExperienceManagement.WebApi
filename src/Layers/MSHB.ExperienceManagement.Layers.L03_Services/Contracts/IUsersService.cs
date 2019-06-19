@@ -15,11 +15,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<User> FindUserAsync(Guid userId);
         Task UpdateUserLastActivityDateAsync(Guid userId);
         Task<Guid> AddUserAsync(User user, AddUserFormModel userForm);
-        Task<bool> EditUserAsync(User user, EditUserFormModel userForm);
-        Task<bool> DeleteUserAsync(User user, List<Guid> userIds);
+        Task<bool> EditUserAsync(User user, EditUserFormModel userForm);      
         Task<SearchUserViewModel> GetUsersAsync(SearchUserFormModel searchUserForm);
         Task<UserViewModel> GetUserById(User user, Guid id);
         Task<bool> UserOrganizationAssignAsync(User user, UserOrgAssignFormModel userOrgAssignForm);
         Task<bool> UserEquipmentAssignAsync(User user, UserEquipmentAssignFormModel userEquipmentAssignForm);
+        Task<bool> ChangeActivateUserAsync(User user, ChangeActivationFormModel userForm);
     }
 }
