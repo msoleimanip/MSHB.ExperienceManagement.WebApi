@@ -55,6 +55,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             });
 
             services.Configure<BearerTokensOptions>(options => Configuration.GetSection("BearerTokens").Bind(options));
+
             services.AddTransient<IUsersService, UsersService>();
             services.AddTransient<IRolesService, RolesService>();
             services.AddTransient<ISecurityService, SecurityService>();
@@ -64,10 +65,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             services.AddTransient<IGroupAuthenticationService, GroupAuthenticationService>();
             services.AddTransient<IOrganizationService, OrganizationService>();
             services.AddTransient<IEquipmentService, EquipmentService>();
-
-
-
-
+            services.AddTransient<IIssueService, IssueService>();
 
 
             services.AddDbContext<ExperienceManagementDbContext>(options =>

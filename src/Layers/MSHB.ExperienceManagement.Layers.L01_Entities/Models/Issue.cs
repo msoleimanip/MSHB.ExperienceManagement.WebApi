@@ -20,11 +20,11 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         [MaxLength(250)]
         public string ImageAddress { get; set; }
         public int? AnswerCounts { get; set; }
+        public bool? IsActive { get; set; } = false;
         public int? ViewCounts { get; set; }
         public IssueType IssueType { get; set; }
         public Guid UserId { get; set; }      
         public virtual ICollection<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
-
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
         public virtual ICollection<IssueDetail> IssueDetails { get; set; }

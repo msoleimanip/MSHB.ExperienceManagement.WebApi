@@ -33,13 +33,9 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<IssueDetailAttachment> IssueDetailAttachments { get; set; }
         public virtual DbSet<UserIssueSubscription> UserIssueSubscriptions { get; set; } /* User Popular user issues */
         public virtual DbSet<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
-
-
-
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
             @"Data Source=.;Initial Catalog=ExperienceManagement;Persist Security Info=True;User ID=sa;Password=Aa123456;");
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
