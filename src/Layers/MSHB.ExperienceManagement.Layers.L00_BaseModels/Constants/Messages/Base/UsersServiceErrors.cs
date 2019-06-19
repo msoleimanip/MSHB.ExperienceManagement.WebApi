@@ -24,9 +24,11 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
            new ExperienceManagementErrorMessage("AUE-1006", "در تجهیزات انتخابی موردی است که یافت نشد.");
         public static readonly ExperienceManagementErrorMessage ChangeStateError =
            new ExperienceManagementErrorMessage("AUE-1007", "خطا در تغییر وضعیت کاربر");
+        public static readonly ExperienceManagementErrorMessage ChangePasswordError =
+           new ExperienceManagementErrorMessage("AUE-1008", "در تغییر پسورد خطایی رخ داده است.");
+
 
         
-
 
 
 

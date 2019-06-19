@@ -108,18 +108,26 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> ChangeActivateUser([FromBody]
-       ChangeActivationFormModel userForm)
+                                                                ChangeActivationFormModel userForm)
         {
             var users = await _usersService.ChangeActivateUserAsync(HttpContext.GetUser(), userForm);
             return Ok(GetRequestResult(users));
         }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> ChangePassword([FromBody]
+                                                                ChangePasswordFormModel userForm)
+        {
+            var users = await _usersService.ChangePasswordAsync(HttpContext.GetUser(), userForm);
+            return Ok(GetRequestResult(users));
+        }
+
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> GetUsers([FromBody] SearchUserFormModel searchUserForm)
         {
             return Ok(GetRequestResult(await _usersService.GetUsersAsync(searchUserForm)));
 
         }
-
 
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> UserOrganizationAssign([FromBody]  UserOrgAssignFormModel userOrgAssignForm)

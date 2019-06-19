@@ -27,7 +27,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
         }
-
         public async Task<Guid> AddUserAsync(User user, AddUserFormModel userForm)
         {
             try
@@ -130,8 +129,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.AddUserError, ex);
             }
-        }
-     
+        }   
         public async Task<UserViewModel> GetUserById(User user, Guid id)
         {
             var respUser = await _context.Users.FindAsync(id);
@@ -353,6 +351,26 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
 
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.ChangeStateError, ex);
+            }
+        }
+
+        public async Task<bool> ChangePasswordAsync(User user, ChangePasswordFormModel userForm)
+        {
+            try
+            {
+                var userEdt = await _context.Users.FirstOrDefaultAsync(c=>c.Id==userForm.UserId && c.Password == _securityService.GetSha256Hash(userForm.CurrentPassword));
+                if (userEdt == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
+                userEdt.Password = _securityService.GetSha256Hash(userForm.NewPassword);
+                _context.Users.Update(userEdt);
+                await _context.SaveChangesAsync();
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.ChangePasswordError, ex);
             }
         }
     }

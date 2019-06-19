@@ -21,5 +21,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<bool> UserOrganizationAssignAsync(User user, UserOrgAssignFormModel userOrgAssignForm);
         Task<bool> UserEquipmentAssignAsync(User user, UserEquipmentAssignFormModel userEquipmentAssignForm);
         Task<bool> ChangeActivateUserAsync(User user, ChangeActivationFormModel userForm);
+        Task<bool> ChangePasswordAsync(User user, ChangePasswordFormModel userForm);
     }
 }
