@@ -31,27 +31,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _siteSettings.CheckArgumentIsNull(nameof(_siteSettings));
         }
 
-        public async Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate)
-        {
-            try
-            {
-                var issue = await _context.Issues.FindAsync(issueActivate.IssueId);
-                if (issue is null)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
-                }
-                issue.IsActive=issueActivate.IsActive;
-                _context.Issues.Update(issue);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                
-                 throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeStateIssueError, ex);
-            }
-        }
-
         public async Task<bool> AddIssueAsync(User user, AddIssueFormModel issueForm)
         {
             try
@@ -93,7 +72,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
             catch (Exception ex)
             {
-                throw new ExperienceManagementGlobalException(IssueServiceErrors.AddIssueError, ex);
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileError, ex);
             }
         }
 
@@ -118,7 +97,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     Title = issueDetailForm.Title,
                     Description = issueDetailForm.Description,
                     UserId = issueDetailForm.UserId,
-                    LastUpdateDate=DateTime.Now
 
                 };
                 await _context.IssueDetails.AddAsync(issueDetail);
@@ -162,136 +140,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<bool> EditIssueAsync(User user, EditIssueFormModel issueForm)
+        public Task<bool> EditIssueAsync(User user, EditIssueFormModel issueForm)
         {
-            try
-            {
-                var issue = await _context.Issues.FindAsync(issueForm.IssueId);
-                if (issue is null)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
-                }
-                FileAddress fileAddress;
-                if (issueForm.ImageId!=null)
-                {
-                    fileAddress = await _context.FileAddresses.FindAsync(issueForm.ImageId);
-                    if (fileAddress == null)
-                    {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileNotFound);
-                    }
-                    try
-                    {
-                        Image image = Image.FromFile(fileAddress.FilePath);
-                        Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
-                        var newPath = Path.ChangeExtension(fileAddress.FilePath, "thumb");
-                        thumb.Save(newPath);
-                        issue.ImageAddress = newPath;
-                    }
-                    catch (Exception ex)
-                    {
-
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeToThumbnailError,ex);
-                    }
-                    
-                }
-                issue.IssueType = (IssueType)issueForm.IssueType;
-                issue.Title = issueForm.Title;
-                issue.Description = issue.Description;              
-                issue.LastUpdateDate = DateTime.Now;           
-                 _context.Issues.Update(issue);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                throw new ExperienceManagementGlobalException(IssueServiceErrors.EditIssueError, ex);
-            }
+            throw new NotImplementedException();
         }
 
-        public async Task<bool> EditIssueDetailAsync(User user, EditIssueDetailFormModel issueDetailForm)
-        {
-            try
-            {
-                var issue = await _context.Issues.FindAsync(issueDetailForm.IssueId);
-                if (issue is null)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
-                }
-                var userReq = await _context.Users.FindAsync(issueDetailForm.UserId);
-                if (userReq is null)
-                {
-                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
-                }
-                var issueDetail = await _context.IssueDetails.FindAsync(issueDetailForm.IssueDetailId);
-                if (issueDetail is null)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
-                }
-                
-                issueDetail.LastUpdateDate=DateTime.Now;
-                issueDetail.Title=issueDetailForm.Title;
-                issueDetail.Description=issueDetailForm.Description;
-                 _context.IssueDetails.Update(issueDetail);
-
-                if (issueDetailForm.UploadFiles!=null && issueDetailForm.UploadFiles.Count > 0)
-                {
-                    var notFoundFiles = 0;
-                    var filesAddress = new List<FileAddress>();
-                    issueDetailForm.UploadFiles.ForEach( uf =>
-                    {
-                        var fileAddress =  _context.FileAddresses.Find(uf);
-                        if (fileAddress == null)
-                        {
-                            notFoundFiles++;
-                        }
-                        filesAddress.Add(fileAddress);
-                    });
-                    if (notFoundFiles > 0)
-                    {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileNotFound);
-                    }
-                    
-                    filesAddress.ForEach(async fa => {
-                        var issueDetailAttachment = new IssueDetailAttachment() {
-                            IssueDetailId = issueDetail.Id,
-                            FilePath=fa.FilePath,
-                            FileSize=fa.FileSize,
-                            FileType=fa.FileType,                           
-                        };
-                        await _context.IssueDetailAttachments.AddAsync(issueDetailAttachment);
-                    });
-                }
-                await _context.SaveChangesAsync();
-                return true;
-
-
-            }
-            catch (Exception ex)
-            {
-                throw new ExperienceManagementGlobalException(IssueServiceErrors.EditIssueDetailError, ex);
-            }
-        }
-
-        public async Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm)
-        {
-             try
-            {
-                var issueDetailAttachment = await _context.IssueDetailAttachments.FindAsync(issueDetailAttachmentForm.IssueDetailAttachId);
-                if (issueDetailAttachment is null)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailAttachmentNotFoundError);
-                }
-                
-                _context.IssueDetailAttachments.Remove(issueDetailAttachment);
-                await _context.SaveChangesAsync();
-                return true;
-            }
-            catch (Exception ex)
-            {
-                
-                 throw new ExperienceManagementGlobalException(IssueServiceErrors.DeleteIssueDetailAttachmentsError, ex);
-            }
-        }
         public async Task<Guid> UploadFileAsync(User user, IFormFile file)
         {
             try

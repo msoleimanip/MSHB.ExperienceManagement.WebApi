@@ -14,7 +14,6 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public string Title { get; set; }
         public string Description { get; set; }
         public DateTime? CreationDate { get; set; }
-        public DateTime? LastUpdateDate { get; set; }
         public int AnswerUseful { get; set; } = 0;
         public bool IsCorrectAnswer { get; set; } 
         public int? Likes { get; set; }

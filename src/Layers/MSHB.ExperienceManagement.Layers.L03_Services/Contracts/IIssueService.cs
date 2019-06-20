@@ -15,8 +15,5 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<bool> EditIssueAsync(User user, EditIssueFormModel issueForm);       
         Task<Guid> UploadFileAsync(User user, IFormFile file);
         Task<bool> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm);
-        Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate);
-        Task<bool> EditIssueDetailAsync(User user, EditIssueDetailFormModel issueDetailForm);
-        Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm);
     }
 }
