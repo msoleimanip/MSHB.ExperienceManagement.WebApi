@@ -36,6 +36,17 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             var resp = await _issueService.AddIssueDetailAsync(HttpContext.GetUser(), issueDetailForm);
             return Ok(GetRequestResult(resp));
         }
+
+        
+
+         [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> ActivateIssue([FromBody] ActivateIssueFormModel issueActivate)
+        {
+            var resp = await _issueService.ActivateIssueAsync(HttpContext.GetUser(), issueActivate);
+            return Ok(GetRequestResult(resp));
+        }
+
+
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> UploadFile(IFormFile file)
         {
@@ -49,6 +60,20 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(resp));
         }
 
-     
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> EditIssueDetails( [FromBody] EditIssueDetailFormModel issueDetailForm)
+        {
+            var resp = await _issueService.EditIssueDetailAsync(HttpContext.GetUser(), issueDetailForm);
+            
+            return Ok(GetRequestResult(resp));
+        }
+        
+         [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> DeleteIssueDetailAttachments( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
+        {
+            var resp = await _issueService.DeleteIssueDetailAttachmentsAsync(HttpContext.GetUser(), issueDetailAttachmentForm);
+            return Ok(GetRequestResult(resp));
+            
+        }
     }
 }
