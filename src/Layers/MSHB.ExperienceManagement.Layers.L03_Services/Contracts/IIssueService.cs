@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
 {
@@ -18,5 +19,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate);
         Task<bool> EditIssueDetailAsync(User user, EditIssueDetailFormModel issueDetailForm);
         Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm);
+        Task<bool> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm);
+        Task<SearchIssueViewModel> GetIssuesForUserAsync(SearchIssueFormModel searchIssueForm);
+        Task<List<IssueDetailViewModel>> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm);
     }
 }

@@ -12,8 +12,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("UFE-1001", "فایل ارسالی بایستی معتبر باشد.");
         public static readonly ExperienceManagementErrorMessage AddIssueError =
           new ExperienceManagementErrorMessage("UFE-1002", "هنگام ذخیره مسئله خطایی رخ داده است.");
-        public static readonly ExperienceManagementErrorMessage UploadFileNotFound =
-          new ExperienceManagementErrorMessage("UFE-1003", "فایل تصویری با این مقدار وجود ندارد.");
+        public static readonly ExperienceManagementErrorMessage NotExistEquipmentError =
+          new ExperienceManagementErrorMessage("UFE-1003", "فایل  با این مقدار وجود ندارد.");
         public static readonly ExperienceManagementErrorMessage ChangeToThumbnailError =
           new ExperienceManagementErrorMessage("UFE-1004", "خطا در تغییر سایز تصویر");
         public static readonly ExperienceManagementErrorMessage AddIssueDetailError =
@@ -34,12 +34,21 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
 
         public static ExperienceManagementErrorMessage DeleteIssueDetailAttachmentsError =
           new ExperienceManagementErrorMessage("UFE-1012", "در حذف ضمیمه مورد نظر خطایی رخ داده است.");
+        public static ExperienceManagementErrorMessage NotExistEquipmentsListError =
+          new ExperienceManagementErrorMessage("UFE-1013", "برخی از تجهیزات انتخابی وجود ندارد.");
 
-          
+        public static ExperienceManagementErrorMessage AddIssueDetailCommentError =
+          new ExperienceManagementErrorMessage("UFE-1014", "در اضافه کردن پیام به جزییات خاص خطایی رخ داده است.");
+        public static ExperienceManagementErrorMessage GetIssuesError =
+          new ExperienceManagementErrorMessage("UFE-1015", "خطا در دریافت مسئله های کاربر.");
+        public static ExperienceManagementErrorMessage GetIssueDetailsError =
+          new ExperienceManagementErrorMessage("UFE-1016", "خطا در دریافت جزییات مسئله.");
 
 
-          
-          
-          
+        
+
+
+
+
     }
 }

@@ -70,11 +70,31 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
         
          [HttpGet("[action]"), HttpPost("[action]")]
-        public async Task<IActionResult> DeleteIssueDetailAttachments( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
+        public async Task<IActionResult> AddIssueDetail( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
         {
             var resp = await _issueService.DeleteIssueDetailAttachmentsAsync(HttpContext.GetUser(), issueDetailAttachmentForm);
             return Ok(GetRequestResult(resp));
             
         }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> AddIssueDetailComment([FromBody] AddIssueDetailCommentFormModel issueForm)
+        {
+            var resp = await _issueService.AddIssueDetailCommentAsync(HttpContext.GetUser(), issueForm);
+            return Ok(GetRequestResult(resp));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> GetIssuesForUser([FromBody] SearchIssueFormModel searchIssueForm)
+        {
+            return Ok(GetRequestResult(await _issueService.GetIssuesForUserAsync(searchIssueForm)));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> GetIssueDetails([FromBody] SearchIssueDetailFormModel searchIssueDetailForm)
+        {
+            return Ok(GetRequestResult(await _issueService.GetIssueDetailsAsync(searchIssueDetailForm)));
+
+        }
+
     }
 }

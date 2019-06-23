@@ -185,7 +185,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     queryable = queryable.OrderBy(x => x.FirstName);
                     break;
                 case "firstname|desc":
-                    queryable = queryable.OrderByDescending(x => x.CreationDate);
+                    queryable = queryable.OrderByDescending(x => x.FirstName);
                     break;
                 case "lastname|asc":
                     queryable = queryable.OrderBy(x => x.LastName);

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
@@ -8,17 +9,21 @@ using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
-    public class IssueService: IIssueService
+    public class IssueService : IIssueService
     {
         private readonly ExperienceManagementDbContext _context;
         private readonly IOptionsSnapshot<SiteSettings> _siteSettings;
@@ -40,15 +45,15 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
                 }
-                issue.IsActive=issueActivate.IsActive;
+                issue.IsActive = issueActivate.IsActive;
                 _context.Issues.Update(issue);
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                
-                 throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeStateIssueError, ex);
+
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeStateIssueError, ex);
             }
         }
 
@@ -57,13 +62,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             try
             {
                 var issue = new Issue();
+                var userInfo = await _context.Users.FirstOrDefaultAsync(c => c.Id == issueForm.UserId);
+                if (userInfo == null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
+
                 FileAddress fileAddress;
-                if (issueForm.ImageId!=null)
+                if (issueForm.ImageId != null)
                 {
                     fileAddress = await _context.FileAddresses.FindAsync(issueForm.ImageId);
                     if (fileAddress == null)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileNotFound);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
                     }
                     try
                     {
@@ -76,10 +87,24 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     catch (Exception ex)
                     {
 
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeToThumbnailError,ex);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeToThumbnailError, ex);
                     }
-                    
+
                 }
+                var IsExistEquipment = _context.Equipments.All(c => issueForm.EquipmentIds.Contains(c.Id));
+                if (!IsExistEquipment)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentsListError);
+                }
+                issueForm.EquipmentIds.ForEach(async resp =>
+                {
+                    var equipmentIssueSubscription = new EquipmentIssueSubscription();
+                    equipmentIssueSubscription.IssueId = issue.Id;
+                    equipmentIssueSubscription.EquipmentId = resp;
+                    await _context.EquipmentIssueSubscriptions.AddAsync(equipmentIssueSubscription);
+                });
+
+
                 issue.IsActive = false;
                 issue.IssueType = (IssueType)issueForm.IssueType;
                 issue.Title = issueForm.Title;
@@ -118,34 +143,39 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     Title = issueDetailForm.Title,
                     Description = issueDetailForm.Description,
                     UserId = issueDetailForm.UserId,
-                    LastUpdateDate=DateTime.Now
+                    LastUpdateDate = DateTime.Now
 
                 };
+                issue.AnswerCounts = issue.AnswerCounts + 1;
+                _context.Issues.Update(issue);
+
                 await _context.IssueDetails.AddAsync(issueDetail);
-                if (issueDetailForm.UploadFiles!=null && issueDetailForm.UploadFiles.Count > 0)
+                if (issueDetailForm.UploadFiles != null && issueDetailForm.UploadFiles.Count > 0)
                 {
                     var notFoundFiles = 0;
                     var filesAddress = new List<FileAddress>();
-                    issueDetailForm.UploadFiles.ForEach( uf =>
-                    {
-                        var fileAddress =  _context.FileAddresses.Find(uf);
-                        if (fileAddress == null)
-                        {
-                            notFoundFiles++;
-                        }
-                        filesAddress.Add(fileAddress);
-                    });
+                    issueDetailForm.UploadFiles.ForEach(uf =>
+                   {
+                       var fileAddress = _context.FileAddresses.Find(uf);
+                       if (fileAddress == null)
+                       {
+                           notFoundFiles++;
+                       }
+                       filesAddress.Add(fileAddress);
+                   });
                     if (notFoundFiles > 0)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileNotFound);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
                     }
-                    
-                    filesAddress.ForEach(async fa => {
-                        var issueDetailAttachment = new IssueDetailAttachment() {
+
+                    filesAddress.ForEach(async fa =>
+                    {
+                        var issueDetailAttachment = new IssueDetailAttachment()
+                        {
                             IssueDetailId = issueDetail.Id,
-                            FilePath=fa.FilePath,
-                            FileSize=fa.FileSize,
-                            FileType=fa.FileType,                           
+                            FilePath = fa.FilePath,
+                            FileSize = fa.FileSize,
+                            FileType = fa.FileType,
                         };
                         await _context.IssueDetailAttachments.AddAsync(issueDetailAttachment);
                     });
@@ -172,12 +202,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
                 }
                 FileAddress fileAddress;
-                if (issueForm.ImageId!=null)
+                if (issueForm.ImageId != null)
                 {
                     fileAddress = await _context.FileAddresses.FindAsync(issueForm.ImageId);
                     if (fileAddress == null)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileNotFound);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
                     }
                     try
                     {
@@ -190,15 +220,39 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     catch (Exception ex)
                     {
 
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeToThumbnailError,ex);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeToThumbnailError, ex);
                     }
-                    
+
                 }
+                var IsExistEquipment = _context.Equipments.All(c => issueForm.EquipmentIds.Contains(c.Id));
+                if (!IsExistEquipment)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentsListError);
+                }
+                var equipmentIssueSubscriptionsRemove = await _context.EquipmentIssueSubscriptions.Where(c => c.IssueId == issue.Id).ToListAsync();
+
+                var oldequipmentIssueSubscription = equipmentIssueSubscriptionsRemove.Select(c => c.Id).ToList();
+
+                IEnumerable<long> differencesFirst = issueForm.EquipmentIds.Except(oldequipmentIssueSubscription).Union(oldequipmentIssueSubscription.Except(issueForm.EquipmentIds));
+                IEnumerable<long> differencesSecond = issueForm.EquipmentIds.Union(oldequipmentIssueSubscription).Except(issueForm.EquipmentIds.Intersect(oldequipmentIssueSubscription));
+                if (differencesFirst.Count() > 0 || differencesSecond.Count() > 0)
+                {
+                    _context.EquipmentIssueSubscriptions.RemoveRange(equipmentIssueSubscriptionsRemove);
+                    issueForm.EquipmentIds.ForEach(async resp =>
+                    {
+                        var equipmentIssueSubscription = new EquipmentIssueSubscription();
+                        equipmentIssueSubscription.IssueId = issue.Id;
+                        equipmentIssueSubscription.EquipmentId = resp;
+                        await _context.EquipmentIssueSubscriptions.AddAsync(equipmentIssueSubscription);
+                    });
+                }
+
+
                 issue.IssueType = (IssueType)issueForm.IssueType;
                 issue.Title = issueForm.Title;
-                issue.Description = issue.Description;              
-                issue.LastUpdateDate = DateTime.Now;           
-                 _context.Issues.Update(issue);
+                issue.Description = issue.Description;
+                issue.LastUpdateDate = DateTime.Now;
+                _context.Issues.Update(issue);
                 await _context.SaveChangesAsync();
                 return true;
             }
@@ -227,36 +281,38 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
                 }
-                
-                issueDetail.LastUpdateDate=DateTime.Now;
-                issueDetail.Title=issueDetailForm.Title;
-                issueDetail.Description=issueDetailForm.Description;
-                 _context.IssueDetails.Update(issueDetail);
 
-                if (issueDetailForm.UploadFiles!=null && issueDetailForm.UploadFiles.Count > 0)
+                issueDetail.LastUpdateDate = DateTime.Now;
+                issueDetail.Title = issueDetailForm.Title;
+                issueDetail.Description = issueDetailForm.Description;
+                _context.IssueDetails.Update(issueDetail);
+
+                if (issueDetailForm.UploadFiles != null && issueDetailForm.UploadFiles.Count > 0)
                 {
                     var notFoundFiles = 0;
                     var filesAddress = new List<FileAddress>();
-                    issueDetailForm.UploadFiles.ForEach( uf =>
-                    {
-                        var fileAddress =  _context.FileAddresses.Find(uf);
-                        if (fileAddress == null)
-                        {
-                            notFoundFiles++;
-                        }
-                        filesAddress.Add(fileAddress);
-                    });
+                    issueDetailForm.UploadFiles.ForEach(uf =>
+                   {
+                       var fileAddress = _context.FileAddresses.Find(uf);
+                       if (fileAddress == null)
+                       {
+                           notFoundFiles++;
+                       }
+                       filesAddress.Add(fileAddress);
+                   });
                     if (notFoundFiles > 0)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileNotFound);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
                     }
-                    
-                    filesAddress.ForEach(async fa => {
-                        var issueDetailAttachment = new IssueDetailAttachment() {
+
+                    filesAddress.ForEach(async fa =>
+                    {
+                        var issueDetailAttachment = new IssueDetailAttachment()
+                        {
                             IssueDetailId = issueDetail.Id,
-                            FilePath=fa.FilePath,
-                            FileSize=fa.FileSize,
-                            FileType=fa.FileType,                           
+                            FilePath = fa.FilePath,
+                            FileSize = fa.FileSize,
+                            FileType = fa.FileType,
                         };
                         await _context.IssueDetailAttachments.AddAsync(issueDetailAttachment);
                     });
@@ -274,34 +330,35 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
         public async Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm)
         {
-             try
+            try
             {
                 var issueDetailAttachment = await _context.IssueDetailAttachments.FindAsync(issueDetailAttachmentForm.IssueDetailAttachId);
                 if (issueDetailAttachment is null)
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailAttachmentNotFoundError);
                 }
-                
+
                 _context.IssueDetailAttachments.Remove(issueDetailAttachment);
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-                
-                 throw new ExperienceManagementGlobalException(IssueServiceErrors.DeleteIssueDetailAttachmentsError, ex);
+
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.DeleteIssueDetailAttachmentsError, ex);
             }
         }
+
         public async Task<Guid> UploadFileAsync(User user, IFormFile file)
         {
             try
             {
-                if (string.IsNullOrEmpty(file.FileName)||file.Length==0)
+                if (string.IsNullOrEmpty(file.FileName) || file.Length == 0)
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileValidError);
                 }
-                var extension =  file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                var fileName = Guid.NewGuid().ToString() + extension;                                                                  
+                var extension = file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
+                var fileName = Guid.NewGuid().ToString() + extension;
                 var path = Path.Combine(_siteSettings.Value.UserAttachedFile.PhysicalPath, "." + fileName);
 
                 using (var bits = new FileStream(path, FileMode.Create))
@@ -326,6 +383,189 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
 
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileError, ex);
+            }
+        }
+
+        public async Task<bool> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm)
+        {
+            try
+            {
+                var issueDetail = await _context.IssueDetails.FindAsync(issueForm.IssueDetailId);
+                if (issueDetail is null)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
+                }
+                var userReq = await _context.Users.FindAsync(issueForm.UserId);
+                if (userReq is null)
+                {
+                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
+                }
+                var issueDetailComment = new IssueDetailComment()
+                {
+                    Comment = issueForm.Comment,
+                    CreationDate = DateTime.Now,
+                    IssueDetailId = issueDetail.Id,
+                    UserId = userReq.Id
+                };
+                await _context.IssueDetailComments.AddAsync(issueDetailComment);
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.AddIssueDetailCommentError, ex);
+            }
+        }
+
+        public async Task<SearchIssueViewModel> GetIssuesForUserAsync(SearchIssueFormModel searchIssueForm)
+        {
+            try
+            {
+                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c => c.User).AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchIssueForm.Title))
+                {
+                    queryable = queryable.Where(q => q.Title.Contains(searchIssueForm.Title));
+                }
+
+                if (searchIssueForm.IssueType.HasValue)
+                {
+                    queryable = queryable.Where(q => q.IssueType == searchIssueForm.IssueType);
+                }
+
+                if (searchIssueForm.IsActive.HasValue)
+                {
+                    queryable = queryable.Where(q => q.IsActive == searchIssueForm.IsActive);
+                }
+                if (searchIssueForm.UserId.HasValue)
+                {
+                    queryable = queryable.Where(q => q.UserId == searchIssueForm.UserId);
+                }
+                if (searchIssueForm.EquipmentIds.Count > 0)
+                {
+                    queryable = queryable.Where(c => searchIssueForm.EquipmentIds.Intersect(c.EquipmentIssueSubscriptions.Select(d => d.EquipmentId)).Any());
+                }
+                if (searchIssueForm.SortModel != null)
+                    switch (searchIssueForm.SortModel.Col + "|" + searchIssueForm.SortModel.Sort)
+                    {
+                        case "creationdate|asc":
+                            queryable = queryable.OrderBy(x => x.CreationDate);
+                            break;
+                        case "creationdate|desc":
+                            queryable = queryable.OrderByDescending(x => x.CreationDate);
+                            break;
+
+                        default:
+                            queryable = queryable.OrderBy(x => x.CreationDate);
+                            break;
+                    }
+                else
+                    queryable = queryable.OrderBy(x => x.CreationDate);
+                var response = await queryable.Skip((searchIssueForm.PageIndex - 1) * searchIssueForm.PageSize).Take(searchIssueForm.PageSize).ToListAsync();
+                var count = await queryable.CountAsync();
+                var searchViewModel = new SearchIssueViewModel();
+
+                searchViewModel.searchIssueViewModel = response.Select(resp => new IssueViewModel()
+                {
+                    Id = resp.Id,
+                    AnswerCounts = resp.AnswerCounts,
+                    CreationDate = resp.CreationDate,
+                    Description = resp.Description,
+                    EquipmentIds = resp.EquipmentIssueSubscriptions.Select(c => c.EquipmentId).ToList() ?? null,
+                    IsActive = resp.IsActive,
+                    IssueType = resp.IssueType,
+                    LastUpdateDate = resp.LastUpdateDate,
+                    Title = resp.Title,
+                    UserId = resp.UserId,
+                    UserName = resp.User.Username,
+                    ImageAddress = new System.Uri(resp.ImageAddress).AbsoluteUri
+
+                }).ToList();
+                searchViewModel.PageIndex = searchIssueForm.PageIndex;
+                searchViewModel.PageSize = searchIssueForm.PageSize;
+                searchViewModel.TotalCount = count;
+                return searchViewModel;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.GetIssuesError, ex);
+            }
+        }
+
+        public async Task<List<IssueDetailViewModel>> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm)
+        {
+            try
+            {
+                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
+                if (searchIssueDetailForm.IssueDetailsId.HasValue)
+                {
+                    querable = querable.Where(c => c.Id == searchIssueDetailForm.IssueDetailsId);
+                }
+                var resp = await querable.ToListAsync();
+                if (resp is null)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
+                }
+                var issueDetailViewModel = new List<IssueDetailViewModel>();
+                resp.ForEach(response =>
+                {
+
+                    var issuedetail = new IssueDetailViewModel()
+                    {
+                        Title = response.Title,
+                        AnswerUseful = response.AnswerUseful,
+                        CreationDate = response.CreationDate,
+                        Description = response.Description,
+                        IsCorrectAnswer = response.IsCorrectAnswer,
+                        IssueId = response.IssueId,
+                        Likes = response.Likes,
+                        IssueDetailId = response.Id,
+                        UserId = response.UserId,
+                        UserName = response.User.Username,
+                        LastUpdateDate = response.LastUpdateDate,
+                        IssueDetailComments=new List<IssueDetailCommentViewModel>(),
+                        IssueDetailAttachments=new List<IssueDetailAttachmentViewModel>()
+                        
+                };
+                    response.IssueDetailComments.ToList().ForEach(c =>
+                    {
+                        var IssueDetailComment = new IssueDetailCommentViewModel()
+                        {
+                            Comment = c.Comment,
+                            CreationDate = c.CreationDate,
+                            IssueDetailId = c.IssueDetailId,
+                            Id = c.Id,
+                            UserId = c.UserId,
+                            UserName = c.User.Username
+                        };
+                        issuedetail.IssueDetailComments.Add(IssueDetailComment);
+
+                    });
+                    response.IssueDetailAttachments.ToList().ForEach(c =>
+                    {
+                        var IssueDetailAtt = new IssueDetailAttachmentViewModel()
+                        {
+                            FileSize = c.FileSize,
+                            FileType=c.FileType,
+                            UrlFile= new System.Uri(c.FilePath).AbsoluteUri,
+                            IssueDetailId = c.IssueDetailId,
+                            Id = c.Id,
+                        };
+                        issuedetail.IssueDetailAttachments.Add(IssueDetailAtt);
+
+                    });
+
+
+
+                });
+
+                return issueDetailViewModel;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.GetIssueDetailsError, ex);
             }
         }
     }
