@@ -36,7 +36,8 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                         .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     EquipmentName = table.Column<string>(maxLength: 100, nullable: true),
                     Description = table.Column<string>(nullable: true),
-                    ParentId = table.Column<long>(nullable: true)
+                    ParentId = table.Column<long>(nullable: true),
+                    LastUpdateDate = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -91,6 +92,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     OrganizationName = table.Column<string>(maxLength: 100, nullable: true),
                     Description = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: true, defaultValueSql: "getdate()"),
+                    LastUpdateDate = table.Column<DateTime>(nullable: true),
                     ParentId = table.Column<long>(nullable: true)
                 },
                 constraints: table =>
@@ -102,6 +104,23 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                         principalTable: "Organization_T",
                         principalColumn: "Id",
                         onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "ReportStructure_T",
+                columns: table => new
+                {
+                    Id = table.Column<long>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    ReportId = table.Column<string>(maxLength: 40, nullable: false),
+                    Configuration = table.Column<string>(nullable: true),
+                    ProtoType = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: false, defaultValueSql: "getdate()"),
+                    LastUpdatedDateTime = table.Column<DateTime>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_ReportStructure_T", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -216,6 +235,28 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "FileAddress_T",
+                columns: table => new
+                {
+                    FileId = table.Column<Guid>(nullable: false, defaultValueSql: "NEWID()"),
+                    FileType = table.Column<string>(maxLength: 20, nullable: true),
+                    FileSize = table.Column<long>(nullable: true),
+                    FilePath = table.Column<string>(nullable: true),
+                    CreationDate = table.Column<DateTime>(nullable: false),
+                    UserId = table.Column<Guid>(nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_FileAddress_T", x => x.FileId);
+                    table.ForeignKey(
+                        name: "FK_FileAddress_T_User_T_UserId",
+                        column: x => x.UserId,
+                        principalTable: "User_T",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Issue_T",
                 columns: table => new
                 {
@@ -225,9 +266,9 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     Description = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: true, defaultValueSql: "getdate()"),
                     LastUpdateDate = table.Column<DateTime>(nullable: true),
-                    ImageAddress = table.Column<string>(maxLength: 250, nullable: true),
+                    FileId = table.Column<Guid>(nullable: true),
                     AnswerCounts = table.Column<int>(nullable: true),
-                    ViewCounts = table.Column<int>(nullable: true),
+                    IsActive = table.Column<bool>(nullable: true),
                     IssueType = table.Column<int>(nullable: false),
                     UserId = table.Column<Guid>(nullable: false)
                 },
@@ -347,6 +388,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     Title = table.Column<string>(nullable: true),
                     Description = table.Column<string>(nullable: true),
                     CreationDate = table.Column<DateTime>(nullable: true, defaultValueSql: "getdate()"),
+                    LastUpdateDate = table.Column<DateTime>(nullable: true),
                     AnswerUseful = table.Column<int>(nullable: false),
                     IsCorrectAnswer = table.Column<bool>(nullable: false),
                     Likes = table.Column<int>(nullable: true)
@@ -404,7 +446,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     IssueDetailId = table.Column<long>(nullable: false),
                     FileType = table.Column<string>(maxLength: 20, nullable: true),
                     FileSize = table.Column<long>(nullable: true),
-                    FilePath = table.Column<long>(nullable: true)
+                    FileId = table.Column<Guid>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -476,6 +518,16 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_FileAddress_T_FileId",
+                table: "FileAddress_T",
+                column: "FileId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_FileAddress_T_UserId",
+                table: "FileAddress_T",
+                column: "UserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_GroupAuthRole_T_RoleId",
                 table: "GroupAuthRole_T",
                 column: "RoleId");
@@ -511,9 +563,19 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                 column: "UserId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Organization_T_OrganizationName",
+                table: "Organization_T",
+                column: "OrganizationName");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Organization_T_ParentId",
                 table: "Organization_T",
                 column: "ParentId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_ReportStructure_T_ReportId",
+                table: "ReportStructure_T",
+                column: "ReportId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Role_T_Id",
@@ -595,6 +657,9 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                 name: "EquipmentUserSubscription_T");
 
             migrationBuilder.DropTable(
+                name: "FileAddress_T");
+
+            migrationBuilder.DropTable(
                 name: "GroupAuthRole_T");
 
             migrationBuilder.DropTable(
@@ -605,6 +670,9 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 
             migrationBuilder.DropTable(
                 name: "Log_T");
+
+            migrationBuilder.DropTable(
+                name: "ReportStructure_T");
 
             migrationBuilder.DropTable(
                 name: "UserConfiguration_T");

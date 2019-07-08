@@ -10,6 +10,7 @@ namespace MSHB.ExperienceManagement.Shared.Common.PersianToolkit
 {
     public class CustomStringModelBinderProvider : IModelBinderProvider
     {
+        [Obsolete]
         public IModelBinder GetBinder(ModelBinderProviderContext context)
         {
             if (context == null)

@@ -9,6 +9,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task AddUserTokenAsync(UserToken userToken);
         Task AddUserTokenAsync(User user, string refreshToken, string accessToken, string refreshTokenSource);
         Task<bool> IsValidTokenAsync(string accessToken, Guid userId);
+        Task<UserToken> FindTokenLoginAsync(string refreshToken);
         Task DeleteExpiredTokensAsync();
         Task<UserToken> FindTokenAsync(string refreshToken);
         Task DeleteTokenAsync(string refreshToken);

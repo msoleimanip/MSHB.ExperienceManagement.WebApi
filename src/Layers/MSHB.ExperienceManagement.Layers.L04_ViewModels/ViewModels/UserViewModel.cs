@@ -1,4 +1,5 @@
-﻿using System;
+﻿using MSHB.ExperienceManagement.Layers.L01_Entities.Enums;
+using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -14,7 +15,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public string Location { get; set; }
         public string PhoneNumber { get; set; }
         public bool IsActive { get; set; }
-        public int? IsPresident { get; set; }
+        public PresidentType? IsPresident { get; set; }
         public long? GroupAuthId { get; set; }
         public long? OrganizationId { get; set; }
         public long? UserConfigurationId { get; set; }

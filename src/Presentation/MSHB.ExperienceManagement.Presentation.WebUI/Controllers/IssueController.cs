@@ -46,13 +46,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(resp));
         }
 
-
-        [HttpGet("[action]"), HttpPost("[action]")]
-        public async Task<IActionResult> UploadFile(IFormFile file)
-        {
-            return Ok(GetRequestResult(await _issueService.UploadFileAsync(HttpContext.GetUser(),file)));
-        }
-
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> EditIssue([FromBody]  EditIssueFormModel issueForm)
         {

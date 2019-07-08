@@ -12,6 +12,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
     {
         Task<List<GroupAuthenticationViewModel>> GetGroupAuthenticationAsync();
         Task<List<RoleViewModel>> GetGroupRoleAsync(User user, long Id);
+        Task<GroupRoleViewModel> GetGroupAuthenticationByIdAsync(long Id);
         Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm);
         Task<bool> EditGroupAsync(User user, EditGroupFormModel groupForm);
         Task<bool> DeleteGroupAsync(User user, List<long> groupIds);

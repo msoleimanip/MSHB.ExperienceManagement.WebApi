@@ -144,9 +144,11 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 
                     b.HasKey("FileId");
 
+                    b.HasIndex("FileId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("FileAddresses");
+                    b.ToTable("FileAddress_T");
                 });
 
             modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.GroupAuth", b =>
@@ -197,8 +199,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("ImageAddress")
-                        .HasMaxLength(250);
+                    b.Property<Guid?>("FileId");
 
                     b.Property<bool?>("IsActive");
 
@@ -260,7 +261,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FilePath");
+                    b.Property<Guid?>("FileId");
 
                     b.Property<long?>("FileSize");
 
@@ -327,6 +328,33 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Organization_T");
+                });
+
+            modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.ReportStructure", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Configuration");
+
+                    b.Property<DateTime>("CreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime>("LastUpdatedDateTime");
+
+                    b.Property<string>("ProtoType");
+
+                    b.Property<string>("ReportId")
+                        .IsRequired()
+                        .HasMaxLength(40);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.ToTable("ReportStructure_T");
                 });
 
             modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.Role", b =>

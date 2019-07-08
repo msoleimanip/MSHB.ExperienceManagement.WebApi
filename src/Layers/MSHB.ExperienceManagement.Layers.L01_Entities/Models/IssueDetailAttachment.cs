@@ -14,7 +14,7 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         [MaxLength(20)]
         public string FileType { get; set; }
         public long? FileSize { get; set; }
-        public string FilePath { get; set; }
+        public Guid? FileId { get; set; }
         [ForeignKey("IssueDetailId")]
         public virtual IssueDetail IssueDetails { get; set; }
     }

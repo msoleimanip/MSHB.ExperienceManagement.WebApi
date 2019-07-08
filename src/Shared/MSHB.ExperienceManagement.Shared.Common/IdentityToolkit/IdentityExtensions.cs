@@ -43,7 +43,7 @@ namespace SubPro.WebUI.Shared.Common.IdentityToolkit
         }
 
         //public static T GetUserId<T>(this IIdentity identity) where T : IConvertible
-        public static T GetUserId<T>(this IIdentity identity) 
+        public static T GetUserId<T>(this IIdentity identity)
         {
             var firstValue = identity?.GetUserClaimValue(ClaimTypes.NameIdentifier);
             return firstValue != null
@@ -57,11 +57,11 @@ namespace SubPro.WebUI.Shared.Common.IdentityToolkit
         }
         public static T GetUserPresident<T>(this IIdentity identity)
         {
-            var isPresident=identity?.GetUserClaimValue("IsPresident");
+            var isPresident = identity?.GetUserClaimValue("IsPresident");
             return isPresident != null
-                ? (T)Convert.ChangeType(isPresident, typeof(T), CultureInfo.InvariantCulture)
+                ? (T)TypeDescriptor.GetConverter(typeof(T)).ConvertFromInvariantString(isPresident)
                 : default(T);
-           
+
         }
         public static string GetUserLastName(this IIdentity identity)
         {

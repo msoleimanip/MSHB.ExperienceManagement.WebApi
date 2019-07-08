@@ -17,6 +17,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Tokens;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Security;
@@ -66,6 +67,10 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             services.AddTransient<IOrganizationService, OrganizationService>();
             services.AddTransient<IEquipmentService, EquipmentService>();
             services.AddTransient<IIssueService, IssueService>();
+            services.AddTransient<IFileService, FileService>();
+            services.AddSingleton<IFileProvider>(
+               new PhysicalFileProvider(
+                   Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
 
             services.AddDbContext<ExperienceManagementDbContext>(options =>
@@ -79,8 +84,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
                         serverDbContextOptionsBuilder.EnableRetryOnFailure();
                     });
             });
-           
 
+            services.AddMemoryCache();
             services.AddOData();
             try
             {

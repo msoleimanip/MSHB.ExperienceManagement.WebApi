@@ -34,6 +34,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<UserIssueSubscription> UserIssueSubscriptions { get; set; } /* User Popular user issues */
         public virtual DbSet<FileAddress> FileAddresses { get; set; }
         public virtual DbSet<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
+        public virtual DbSet<ReportStructure> ReportStructures { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
             @"Data Source=.;Initial Catalog=ExperienceManagement;Persist Security Info=True;User ID=sa;Password=Aa123456;");
@@ -185,6 +186,12 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
 
             modelBuilder.Entity<FileAddress>().HasKey(x => x.FileId);
            modelBuilder.Entity<FileAddress>().Property(x => x.FileId).HasDefaultValueSql("NEWID()");
+            modelBuilder.Entity<FileAddress>().HasIndex(x => x.FileId);
+
+
+            modelBuilder.Entity<ReportStructure>().HasIndex(x => x.ReportId);
+            modelBuilder.Entity<ReportStructure>()
+                    .Property(c => c.CreationDate).HasDefaultValueSql("getdate()");
 
 
 

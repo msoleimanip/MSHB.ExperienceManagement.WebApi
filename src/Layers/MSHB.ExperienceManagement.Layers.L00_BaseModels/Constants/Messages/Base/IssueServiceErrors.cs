@@ -12,7 +12,7 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("UFE-1001", "فایل ارسالی بایستی معتبر باشد.");
         public static readonly ExperienceManagementErrorMessage AddIssueError =
           new ExperienceManagementErrorMessage("UFE-1002", "هنگام ذخیره مسئله خطایی رخ داده است.");
-        public static readonly ExperienceManagementErrorMessage NotExistEquipmentError =
+        public static readonly ExperienceManagementErrorMessage NotExistFileAddressError =
           new ExperienceManagementErrorMessage("UFE-1003", "فایل  با این مقدار وجود ندارد.");
         public static readonly ExperienceManagementErrorMessage ChangeToThumbnailError =
           new ExperienceManagementErrorMessage("UFE-1004", "خطا در تغییر سایز تصویر");
@@ -28,8 +28,10 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("UFE-1009", "جزییات مورد نظر در مسئله یافت نشد.");
           public static ExperienceManagementErrorMessage EditIssueDetailError =
           new ExperienceManagementErrorMessage("UFE-1010", "خطا در تغییر جزییات در مسئله رخ داده است.");
+        public static readonly ExperienceManagementErrorMessage FileNotFoundError =
+        new ExperienceManagementErrorMessage("UFE-1011", "فایل یافت نشد.");
 
-         public static ExperienceManagementErrorMessage IssueDetailAttachmentNotFoundError =
+        public static ExperienceManagementErrorMessage IssueDetailAttachmentNotFoundError =
           new ExperienceManagementErrorMessage("UFE-1011", "ضمیمه مورد نظر یافت نشده است");
 
         public static ExperienceManagementErrorMessage DeleteIssueDetailAttachmentsError =

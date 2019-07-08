@@ -6,6 +6,7 @@ using System.Text;
 
 namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
 {
+    [Table("FileAddress_T")]
     public class FileAddress
     {
 

@@ -12,7 +12,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public string Description { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? LastUpdateDate { get; set; }     
-        public string ImageAddress { get; set; }
+        public Guid?  FileId { get; set; }
         public int? AnswerCounts { get; set; } = 0;
         public bool? IsActive { get; set; } = false;
         public IssueType IssueType { get; set; }

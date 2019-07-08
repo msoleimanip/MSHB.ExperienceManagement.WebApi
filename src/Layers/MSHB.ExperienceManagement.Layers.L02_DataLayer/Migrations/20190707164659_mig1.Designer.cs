@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 {
     [DbContext(typeof(ExperienceManagementDbContext))]
-    [Migration("20190619133324_mig6")]
-    partial class mig6
+    [Migration("20190707164659_mig1")]
+    partial class mig1
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -146,9 +146,11 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 
                     b.HasKey("FileId");
 
+                    b.HasIndex("FileId");
+
                     b.HasIndex("UserId");
 
-                    b.ToTable("FileAddresses");
+                    b.ToTable("FileAddress_T");
                 });
 
             modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.GroupAuth", b =>
@@ -199,8 +201,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 
                     b.Property<string>("Description");
 
-                    b.Property<string>("ImageAddress")
-                        .HasMaxLength(250);
+                    b.Property<Guid?>("FileId");
 
                     b.Property<bool?>("IsActive");
 
@@ -213,8 +214,6 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                         .HasMaxLength(100);
 
                     b.Property<Guid>("UserId");
-
-                    b.Property<int?>("ViewCounts");
 
                     b.HasKey("Id");
 
@@ -241,6 +240,8 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 
                     b.Property<long>("IssueId");
 
+                    b.Property<DateTime?>("LastUpdateDate");
+
                     b.Property<int?>("Likes");
 
                     b.Property<string>("Title");
@@ -262,7 +263,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                         .ValueGeneratedOnAdd()
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<string>("FilePath");
+                    b.Property<Guid?>("FileId");
 
                     b.Property<long?>("FileSize");
 
@@ -329,6 +330,33 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     b.HasIndex("ParentId");
 
                     b.ToTable("Organization_T");
+                });
+
+            modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.ReportStructure", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Configuration");
+
+                    b.Property<DateTime>("CreationDate")
+                        .ValueGeneratedOnAdd()
+                        .HasDefaultValueSql("getdate()");
+
+                    b.Property<DateTime>("LastUpdatedDateTime");
+
+                    b.Property<string>("ProtoType");
+
+                    b.Property<string>("ReportId")
+                        .IsRequired()
+                        .HasMaxLength(40);
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ReportId");
+
+                    b.ToTable("ReportStructure_T");
                 });
 
             modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.Role", b =>

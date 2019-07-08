@@ -17,8 +17,7 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public string Description { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? LastUpdateDate { get; set; }
-        [MaxLength(250)]
-        public string ImageAddress { get; set; }
+        public Guid? FileId { get; set; }
         public int? AnswerCounts { get; set; } = 0;
         public bool? IsActive { get; set; } = false;       
         public IssueType IssueType { get; set; }

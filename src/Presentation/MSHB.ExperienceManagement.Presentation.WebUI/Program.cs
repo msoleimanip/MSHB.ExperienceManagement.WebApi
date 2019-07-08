@@ -21,7 +21,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
                 var services = scope.ServiceProvider;
                 try
                 {
-                    var dbInitializer = scope.ServiceProvider.GetService<IDbInitializerService>();
+                    var dbInitializer = scope.ServiceProvider.GetRequiredService<IDbInitializerService>();
                     dbInitializer.Initialize();
                     dbInitializer.SeedData();
 

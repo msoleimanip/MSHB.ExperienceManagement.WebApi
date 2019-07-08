@@ -10,6 +10,7 @@ using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 using MSHB.ExperienceManagement.Presentation.WebCore;
+using MSHB.ExperienceManagement.Presentation.WebUI.filters;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using Newtonsoft.Json.Linq;
 
@@ -18,6 +19,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 {
     [Route("api/[controller]")]
     [EnableCors("CorsPolicy")]
+    [Authorize(Roles = "Account")]
     public class AccountController : BaseController
     {
         private readonly IUsersService _usersService;
@@ -39,44 +41,29 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         [AllowAnonymous]
         [HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> Login([FromBody]  LoginViewModels loginUser)
         {
-            if (loginUser == null)
-            {
-                return BadRequest("user is not set.");
-            } 
-            var user = await _usersService.FindUserAsync(loginUser.UserName, loginUser.Password);
-            if (user == null || !user.IsActive)
-            {
-                return Unauthorized();
-            }
+            var user = await _usersService.FindUserLoginAsync(loginUser.UserName, loginUser.Password);
+
 
             var (accessToken, refreshToken) = await _tokenStoreService.CreateJwtTokens(user, refreshTokenSource: null);
             return Ok(GetRequestResult(new { access_token = accessToken, refresh_token = refreshToken }));
         }
-       
-        [AllowAnonymous]
-       
+
+        [Authorize(Roles = "Account-RefreshToken")]
+
         [HttpPost("[action]")]
         public async Task<IActionResult> RefreshToken([FromBody]JToken jsonBody)
         {
             var refreshToken = jsonBody.Value<string>("refreshToken");
-            if (string.IsNullOrWhiteSpace(refreshToken))
-            {
-                return BadRequest("refreshToken is not set.");
-            }
-
-            var token = await _tokenStoreService.FindTokenAsync(refreshToken);
-            if (token == null)
-            {
-                return Unauthorized();
-            }
-
+            var token = await _tokenStoreService.FindTokenLoginAsync(refreshToken);
             var (accessToken, newRefreshToken) = await _tokenStoreService.CreateJwtTokens(token.User, refreshToken);
             return Ok(GetRequestResult(new { access_token = accessToken, refresh_token = newRefreshToken }));
         }
 
         [AllowAnonymous]
+        [ValidateModelAttribute]
         public async Task<IActionResult> Logout([FromBody]string refreshToken)
         {
             var claimsIdentity = this.User.Identity as ClaimsIdentity;
@@ -92,7 +79,9 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
 
         [HttpGet("[action]"), HttpPost("[action]")]
-        
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-AddUser")]
+
         public async Task<IActionResult> AddUser([FromBody] AddUserFormModel userForm)
         {
             var user = await _usersService.AddUserAsync(HttpContext.GetUser(), userForm);
@@ -100,6 +89,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-EditUser")]
         public async Task<IActionResult> EditUser([FromBody]  EditUserFormModel userForm)
         {
             var user = await _usersService.EditUserAsync(HttpContext.GetUser(), userForm);
@@ -107,6 +98,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-ChangeActivateUser")]
         public async Task<IActionResult> ChangeActivateUser([FromBody]
                                                                 ChangeActivationFormModel userForm)
         {
@@ -115,6 +108,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-ChangePassword")]
         public async Task<IActionResult> ChangePassword([FromBody]
                                                                 ChangePasswordFormModel userForm)
         {
@@ -123,6 +118,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-GetUsers")]
         public async Task<IActionResult> GetUsers([FromBody] SearchUserFormModel searchUserForm)
         {
             return Ok(GetRequestResult(await _usersService.GetUsersAsync(searchUserForm)));
@@ -130,6 +127,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-UserOrganizationAssign")]
         public async Task<IActionResult> UserOrganizationAssign([FromBody]  UserOrgAssignFormModel userOrgAssignForm)
         {
             var userorgAssign = await _usersService.UserOrganizationAssignAsync(HttpContext.GetUser(), userOrgAssignForm);
@@ -137,6 +136,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-UserEquipmentAssign")]
         public async Task<IActionResult> UserEquipmentAssign([FromBody]  UserEquipmentAssignFormModel userEquipmentAssignForm)
         {
             var userEquipmentAssign = await _usersService.UserEquipmentAssignAsync(HttpContext.GetUser(), userEquipmentAssignForm);
@@ -144,10 +145,14 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-GetUserById")]
         public async Task<IActionResult> GetUserById([FromQuery] Guid Id)
         {
             return Ok(GetRequestResult(await _usersService.GetUserById(HttpContext.GetUser(), Id)));
         }
+
+       
 
     }
 

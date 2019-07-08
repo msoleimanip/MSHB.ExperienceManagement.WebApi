@@ -18,7 +18,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
 
     public class GroupAuthenticationService : IGroupAuthenticationService
-    {        
+    {
         private readonly ExperienceManagementDbContext _context;
 
         public GroupAuthenticationService(ExperienceManagementDbContext context)
@@ -28,7 +28,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         }
         public async Task<List<GroupAuthenticationViewModel>> GetGroupAuthenticationAsync()
         {
-            var groupAuthentications =await  _context.GroupAuths.ToListAsync();
+            var groupAuthentications = await _context.GroupAuths.ToListAsync();
             return groupAuthentications.Select(x => new GroupAuthenticationViewModel
             {
                 Id = x.Id,
@@ -40,17 +40,13 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         public async Task<long> AddGroupAsync(User user, AddGroupFormModel groupForm)
         {
             try
-            {                       
+            {
                 var sameGroup = await _context.GroupAuths.Where(c => c.Name == groupForm.Name).ToListAsync();
                 if (sameGroup.Count > 0)
                 {
                     throw new ExperienceManagementGlobalException(GroupServiceErrors.SameGroupExistError);
                 }
-                if (_context.Roles.Any(c => !groupForm.RoleIds.Contains(c.Id)))
-                {
-                    throw new ExperienceManagementGlobalException(GroupServiceErrors.RoleExistError);
 
-                }
                 var group = new GroupAuth()
                 {
                     Name = groupForm.Name,
@@ -83,21 +79,21 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                
-                    if (_context.GroupAuths.Any(c => !groupIds.Contains(c.Id)))
-                    {
-                        throw new ExperienceManagementGlobalException(GroupServiceErrors.DeleteGroupNotselectedError);
 
-                    }
-                    if (_context.GroupAuths.Where(c => groupIds.Contains(c.Id)).Include(c => c.Users).Any())
-                    {
-                        throw new ExperienceManagementGlobalException(GroupServiceErrors.UserInGroupExistError);
+                if (_context.GroupAuths.Any(c => !groupIds.Contains(c.Id)))
+                {
+                    throw new ExperienceManagementGlobalException(GroupServiceErrors.DeleteGroupNotselectedError);
 
-                    }
-                    _context.GroupAuths.RemoveRange(_context.GroupAuths.Where(c => groupIds.Contains(c.Id)));
-                    await _context.SaveChangesAsync();
-                    return true;
-                
+                }
+                if (_context.GroupAuths.Where(c => groupIds.Contains(c.Id)).Include(c => c.Users).Any())
+                {
+                    throw new ExperienceManagementGlobalException(GroupServiceErrors.UserInGroupExistError);
+
+                }
+                _context.GroupAuths.RemoveRange(_context.GroupAuths.Where(c => groupIds.Contains(c.Id)));
+                await _context.SaveChangesAsync();
+                return true;
+
             }
             catch (Exception ex)
             {
@@ -108,49 +104,45 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         public async Task<bool> EditGroupAsync(User user, EditGroupFormModel groupForm)
         {
             try
-            {   
-                    GroupAuth group = null;
-                    if (_context.Roles.Any(c => !groupForm.RoleIds.Contains(c.Id)))
-                    {
-                        throw new ExperienceManagementGlobalException(GroupServiceErrors.RoleExistError);
+            {
+                GroupAuth group = null;
 
-                    }
-                    group = _context.GroupAuths.Include(c => c.Users).Include(c => c.GroupRoles).FirstOrDefault(c => c.Id == groupForm.GroupId);
-                    if (group != null)
+                group = _context.GroupAuths.Include(c => c.Users).Include(c => c.GroupRoles).FirstOrDefault(c => c.Id == groupForm.GroupId);
+                if (group != null)
+                {
+                    var isDuplicategroup = _context.GroupAuths.Any(c => c.Name == groupForm.Name && c.Id != groupForm.GroupId);
+                    if (!isDuplicategroup)
                     {
-                        var isDuplicategroup = _context.GroupAuths.Any(c => c.Name == groupForm.Name && c.Id != groupForm.GroupId);
-                        if (!isDuplicategroup)
+                        var oldRoleIds = group.GroupRoles.Select(c => c.RoleId).ToList();
+                        IEnumerable<long> differencesFirst = groupForm.RoleIds.Except(oldRoleIds).Union(oldRoleIds.Except(groupForm.RoleIds));
+                        IEnumerable<long> differencesSecond = groupForm.RoleIds.Union(oldRoleIds).Except(groupForm.RoleIds.Intersect(oldRoleIds));
+                        if (differencesFirst.Count() > 0 || differencesSecond.Count() > 0)
                         {
-                            var oldRoleIds = group.GroupRoles.Select(c => c.RoleId).ToList();
-                            IEnumerable<long> differencesFirst = groupForm.RoleIds.Except(oldRoleIds).Union(oldRoleIds.Except(groupForm.RoleIds));
-                            IEnumerable<long> differencesSecond = groupForm.RoleIds.Union(oldRoleIds).Except(groupForm.RoleIds.Intersect(oldRoleIds));
-                            if (differencesFirst.Count() > 0 || differencesSecond.Count() > 0)
+                            foreach (var gpUser in group.Users.ToList())
                             {
-                                foreach (var gpUser in group.Users.ToList())
-                                {
                                 _context.UserRoles.RemoveRange(_context.UserRoles.Where(c => c.UserId == gpUser.Id).ToList());
-                                }
-                                foreach (var gpUser in group.Users.ToList())
-                                {
-                                    var newUserRoles = groupForm.RoleIds.Select(roleId =>
-                                                    new UserRole
-                                                    {
-                                                        UserId = gpUser.Id,
-                                                        RoleId = roleId
-                                                    }).ToList();
-                                _context.UserRoles.AddRange(newUserRoles);
-                                }
                             }
-                            group.Name = groupForm.Name;
-                            group.Description = groupForm.Description;
-                            await _context.SaveChangesAsync();
-                            return true;
+                            foreach (var gpUser in group.Users.ToList())
+                            {
+                                var newUserRoles = groupForm.RoleIds.Select(roleId =>
+                                                new UserRole
+                                                {
+                                                    UserId = gpUser.Id,
+                                                    RoleId = roleId
+                                                }).ToList();
+                                _context.UserRoles.AddRange(newUserRoles);
+                            }
                         }
-                        throw new ExperienceManagementGlobalException(GroupServiceErrors.EditDuplicateGroupError);
+                        group.Name = groupForm.Name;
+                        group.Description = groupForm.Description;
+                        await _context.SaveChangesAsync();
+                        return true;
                     }
-                    throw new ExperienceManagementGlobalException(GroupServiceErrors.EditGroupNotExistError);
+                    throw new ExperienceManagementGlobalException(GroupServiceErrors.EditDuplicateGroupError);
+                }
+                throw new ExperienceManagementGlobalException(GroupServiceErrors.EditGroupNotExistError);
 
-                
+
             }
             catch (Exception ex)
             {
@@ -180,7 +172,32 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
         public async Task<GroupAuth> GetGroupByIdAsync(User user, long groupAuthId)
         {
-            return  await _context.GroupAuths.FindAsync(groupAuthId);
+            return await _context.GroupAuths.FindAsync(groupAuthId);
+        }
+
+        public async Task<GroupRoleViewModel> GetGroupAuthenticationByIdAsync(long Id)
+        {
+            try
+            {
+                var group = await _context.GroupAuths.FirstOrDefaultAsync(x => x.Id == Id);
+                if (group != null)
+                {
+                    return new GroupRoleViewModel()
+                    {
+                        Id = group.Id,
+                        Name = group.Name,
+                        Description = group.Description,
+                        RoleIds = group.GroupRoles.Select(x => x.RoleId).ToList()
+                    };
+                }
+
+                throw new ExperienceManagementGlobalException(GroupServiceErrors.GetGroupAuthenticationByIdError);
+
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(GroupServiceErrors.GetGroupAuthenticationByIdError, ex);
+            }
         }
     }
 }

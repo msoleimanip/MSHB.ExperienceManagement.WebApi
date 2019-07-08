@@ -26,14 +26,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
     public class IssueService : IIssueService
     {
         private readonly ExperienceManagementDbContext _context;
-        private readonly IOptionsSnapshot<SiteSettings> _siteSettings;
 
-        public IssueService(ExperienceManagementDbContext context, IOptionsSnapshot<SiteSettings> siteSettings)
+        public IssueService(ExperienceManagementDbContext context)
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
-            _siteSettings = siteSettings;
-            _siteSettings.CheckArgumentIsNull(nameof(_siteSettings));
+           
         }
 
         public async Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate)
@@ -74,15 +72,23 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     fileAddress = await _context.FileAddresses.FindAsync(issueForm.ImageId);
                     if (fileAddress == null)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistFileAddressError);
                     }
                     try
                     {
+                        if (!File.Exists(fileAddress.FilePath))
+                        {
+                            throw new ExperienceManagementGlobalException(IssueServiceErrors.FileNotFoundError);
+
+                        }
                         Image image = Image.FromFile(fileAddress.FilePath);
                         Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
                         var newPath = Path.ChangeExtension(fileAddress.FilePath, "thumb");
                         thumb.Save(newPath);
-                        issue.ImageAddress = newPath;
+                        fileAddress.FilePath = newPath;
+                        fileAddress.FileType = "thumb";
+                        _context.FileAddresses.Update(fileAddress);
+                        issue.FileId = fileAddress.FileId;
                     }
                     catch (Exception ex)
                     {
@@ -165,7 +171,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                    });
                     if (notFoundFiles > 0)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistFileAddressError);
                     }
 
                     filesAddress.ForEach(async fa =>
@@ -173,7 +179,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         var issueDetailAttachment = new IssueDetailAttachment()
                         {
                             IssueDetailId = issueDetail.Id,
-                            FilePath = fa.FilePath,
+                            FileId = fa.FileId,
                             FileSize = fa.FileSize,
                             FileType = fa.FileType,
                         };
@@ -207,15 +213,23 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     fileAddress = await _context.FileAddresses.FindAsync(issueForm.ImageId);
                     if (fileAddress == null)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistFileAddressError);
                     }
                     try
                     {
+                        if (!File.Exists(fileAddress.FilePath))
+                        {
+                            throw new ExperienceManagementGlobalException(IssueServiceErrors.FileNotFoundError);
+
+                        }
                         Image image = Image.FromFile(fileAddress.FilePath);
                         Image thumb = image.GetThumbnailImage(120, 120, () => false, IntPtr.Zero);
                         var newPath = Path.ChangeExtension(fileAddress.FilePath, "thumb");
                         thumb.Save(newPath);
-                        issue.ImageAddress = newPath;
+                        issue.FileId = fileAddress.FileId;
+                        fileAddress.FilePath = newPath;
+                        fileAddress.FileType = "thumb";
+                        _context.FileAddresses.Update(fileAddress);
                     }
                     catch (Exception ex)
                     {
@@ -302,7 +316,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                    });
                     if (notFoundFiles > 0)
                     {
-                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentError);
+                        throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistFileAddressError);
                     }
 
                     filesAddress.ForEach(async fa =>
@@ -310,7 +324,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         var issueDetailAttachment = new IssueDetailAttachment()
                         {
                             IssueDetailId = issueDetail.Id,
-                            FilePath = fa.FilePath,
+                            FileId = fa.FileId,
                             FileSize = fa.FileSize,
                             FileType = fa.FileType,
                         };
@@ -346,43 +360,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
 
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.DeleteIssueDetailAttachmentsError, ex);
-            }
-        }
-
-        public async Task<Guid> UploadFileAsync(User user, IFormFile file)
-        {
-            try
-            {
-                if (string.IsNullOrEmpty(file.FileName) || file.Length == 0)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileValidError);
-                }
-                var extension = file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                var fileName = Guid.NewGuid().ToString() + extension;
-                var path = Path.Combine(_siteSettings.Value.UserAttachedFile.PhysicalPath, "." + fileName);
-
-                using (var bits = new FileStream(path, FileMode.Create))
-                {
-                    await file.CopyToAsync(bits);
-                }
-                var uploadFile = new FileAddress()
-                {
-                    FilePath = path,
-                    FileType = extension,
-                    UserId = user.Id,
-                    FileSize = file.Length,
-                    CreationDate = DateTime.Now
-                };
-                await _context.FileAddresses.AddAsync(uploadFile);
-                await _context.SaveChangesAsync();
-
-                return uploadFile.FileId;
-
-            }
-            catch (Exception ex)
-            {
-
-                throw new ExperienceManagementGlobalException(IssueServiceErrors.UploadFileError, ex);
             }
         }
 
@@ -479,7 +456,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     Title = resp.Title,
                     UserId = resp.UserId,
                     UserName = resp.User.Username,
-                    ImageAddress = new System.Uri(resp.ImageAddress).AbsoluteUri
+                    FileId = resp.FileId
 
                 }).ToList();
                 searchViewModel.PageIndex = searchIssueForm.PageIndex;
@@ -548,7 +525,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         {
                             FileSize = c.FileSize,
                             FileType=c.FileType,
-                            UrlFile= new System.Uri(c.FilePath).AbsoluteUri,
+                            FileId = c.FileId,
                             IssueDetailId = c.IssueDetailId,
                             Id = c.Id,
                         };

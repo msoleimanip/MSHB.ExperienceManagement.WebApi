@@ -26,9 +26,12 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
            new ExperienceManagementErrorMessage("AUE-1007", "خطا در تغییر وضعیت کاربر");
         public static readonly ExperienceManagementErrorMessage ChangePasswordError =
            new ExperienceManagementErrorMessage("AUE-1008", "در تغییر پسورد خطایی رخ داده است.");
+        public static ExperienceManagementErrorMessage Unauthorized =
+             new ExperienceManagementErrorMessage("AUE-1010", "نام کاربری و شناسه کاربری درست نمی باشد.");
+        public static ExperienceManagementErrorMessage RefreshToken =
+            new ExperienceManagementErrorMessage("AUE-1011", "مشکل در کد دریافت دوباره سطح دسترسی.");
 
 
-        
 
 
 

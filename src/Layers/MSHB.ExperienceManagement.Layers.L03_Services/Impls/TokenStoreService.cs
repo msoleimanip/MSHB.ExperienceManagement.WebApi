@@ -13,6 +13,9 @@ using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Security;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
@@ -76,7 +79,21 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             };
             await AddUserTokenAsync(token);
         }
+        public Task<UserToken> FindTokenLoginAsync(string refreshToken)
+        {
+            if (string.IsNullOrWhiteSpace(refreshToken))
+            {
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.RefreshToken);
+            }
 
+            var refreshTokenIdHash = _securityService.GetSha256Hash(refreshToken);
+            var token = _tokens.Include(x => x.User).FirstOrDefaultAsync(x => x.RefreshTokenIdHash == refreshTokenIdHash);
+            if (token == null)
+            {
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.RefreshToken);
+            }
+            return token;
+        }
         public async Task DeleteExpiredTokensAsync()
         {
             var now = DateTimeOffset.UtcNow;
@@ -181,7 +198,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Surname, user.LastName),
                 new Claim(ClaimTypes.GivenName, user.FirstName),
-                new Claim("IsPresident", user.IsPresident?.ToString()),
+               new Claim("IsPresident", user.IsPresident.ToString()),
                 new Claim("DisplayName", user.FirstName ?? ""+" "+ user.LastName ?? ""),
             
             // to invalidate the cookie

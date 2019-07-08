@@ -28,7 +28,9 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("GRE-1009", "بخشی یا کل رول ها در لیست انتخابی وجود ندارد");
         public static readonly ExperienceManagementErrorMessage EditGroupNotExistError =
           new ExperienceManagementErrorMessage("GRE-1010", "گروهی که می خواهید  تغییر دهید وجود ندارد");
-     
+        public static readonly ExperienceManagementErrorMessage GetGroupAuthenticationByIdError =
+          new ExperienceManagementErrorMessage("GRE-1011", "گروه مربوط به شناسه ارسالی در سامانه وجود ندارد");
+
 
     }
     

@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Linq;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
@@ -8,6 +8,7 @@ using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
+using MSHB.ExperienceManagement.Layers.L01_Entities.Enums;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
 {
@@ -29,88 +30,84 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
     {
         private readonly IServiceScopeFactory _scopeFactory;
         private readonly ISecurityService _securityService;
+        private readonly ExperienceManagementDbContext _context;
 
         public DbInitializerService(
             IServiceScopeFactory scopeFactory,
-            ISecurityService securityService)
+            ISecurityService securityService, ExperienceManagementDbContext context)
         {
             _scopeFactory = scopeFactory;
             _scopeFactory.CheckArgumentIsNull(nameof(_scopeFactory));
 
             _securityService = securityService;
             _securityService.CheckArgumentIsNull(nameof(_securityService));
+            _context = context;
+            _context.CheckArgumentIsNull(nameof(_context));
         }
 
         public void Initialize()
         {
-            using (var serviceScope = _scopeFactory.CreateScope())
-            {
-                using (var context = serviceScope.ServiceProvider.GetService<ExperienceManagementDbContext>())
-                {
-                    context.Database.Migrate();
-                }
-            }
+
+            _context.Database.Migrate();
         }
 
         public void SeedData()
         {
 
-            using (var serviceScope = _scopeFactory.CreateScope())
+
+
+
+
+            // Add default roles
+            var adminRole = CustomRoles.GetInitialRoles();
+
+            if (!_context.Roles.Any())
             {
-                using (var context = serviceScope.ServiceProvider.GetService<ExperienceManagementDbContext>())
-                {
+                _context.AddRange(adminRole);
 
-
-                    // Add default roles
-                    var adminRole = CustomRoles.GetInitialRoles();
-
-                    if (!context.Roles.Any())
-                    {
-                        context.AddRange(adminRole);
-
-                        context.SaveChanges();
-                    }
-
-                    // Add Admin user
-                    if (!context.Users.Any())
-                    {
-                        var groupAuth = new GroupAuth()
-                        {
-                            Name = "Administrator",
-                            Description = "Administrator"
-                        };
-
-                        var adminUser = new User
-                        {
-                            Username = "MSHB",
-                            FirstName = "Mohammad",
-                            LastName = "Soleimani",
-                            IsActive = true,
-                            IsPresident = 1,
-                            LastLoggedIn = null,
-                            Password = _securityService.GetSha256Hash("1234"),
-                            SerialNumber = Guid.NewGuid().ToString("N"),
-                            GroupAuth = groupAuth
-                        };
-
-                        context.GroupAuths.Add(groupAuth);
-                        context.Users.Add(adminUser);
-
-                        foreach (var role in context.Roles.ToList())
-                        {
-                            context.Add(new UserRole { Role = role, User = adminUser });
-                            if (groupAuth != null)
-                            {
-                                context.GroupAuthRoles.Add(new GroupAuthRole { GroupAuthId = groupAuth.Id, RoleId = role.Id });
-                            }
-                        }
-
-                        context.SaveChanges();
-
-                    }
-
-                }
+                _context.SaveChanges();
             }
+
+            // Add Admin user
+            if (!_context.Users.Any())
+            {
+                var groupAuth = new GroupAuth()
+                {
+                    Name = "Administrator",
+                    Description = "Administrator"
+                };
+
+                var adminUser = new User
+                {
+                    Username = "admin",
+                    FirstName = "مدیر",
+                    LastName = "سیستم",
+                    IsActive = true,
+                    IsPresident = PresidentType.Admin,
+                    LastLoggedIn = null,
+                    Password = _securityService.GetSha256Hash("1234"),
+                    SerialNumber = Guid.NewGuid().ToString("N"),
+                    GroupAuth = groupAuth
+                };
+
+                _context.GroupAuths.Add(groupAuth);
+                _context.Users.Add(adminUser);
+
+                foreach (var role in _context.Roles.ToList())
+                {
+                    _context.Add(new UserRole { Role = role, User = adminUser });
+                    if (groupAuth != null)
+                    {
+                        _context.GroupAuthRoles.Add(new GroupAuthRole { GroupAuthId = groupAuth.Id, RoleId = role.Id });
+                    }
+                }
+
+                _context.SaveChanges();
+
+
+
+            }
+
         }
     }
 }

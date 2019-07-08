@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Http;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Authority;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
+using MSHB.ExperienceManagement.Layers.L01_Entities.Enums;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using SubPro.WebUI.Shared.Common.IdentityToolkit;
 
@@ -41,7 +42,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
                     FirstName = context.User.Identity.GetUserFirstName(),
                     LastName = context.User.Identity.GetUserLastName(),
                     Id = context.User.Identity.GetUserId<Guid>(),
-                    IsPresident = context.User.Identity.GetUserPresident<int>()
+                    IsPresident = context.User.Identity.GetUserPresident<PresidentType>()
                 };
 
                 return user;
@@ -53,11 +54,11 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
             }
         }
 
-        public static AuthorityKeys GetUserPresident(this HttpContext context)
+        public static PresidentType GetUserPresident(this HttpContext context)
         {
             try
             {
-                var IsPresident = (AuthorityKeys)context.User.Identity.GetUserPresident<int>();
+                var IsPresident = (PresidentType)context.User.Identity.GetUserPresident<PresidentType>();
                 return IsPresident;
             }
 

@@ -27,6 +27,18 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
         }
+
+        public async Task<User> FindUserLoginAsync(string username, string password)
+        {
+            var passwordHash = _securityService.GetSha256Hash(password);
+            var resp = await _context.Users.FirstOrDefaultAsync(x => x.Username == username && x.Password == passwordHash);
+            if (resp == null || !resp.IsActive)
+            {
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.Unauthorized);
+
+            }
+            return resp;
+        }
         public async Task<Guid> AddUserAsync(User user, AddUserFormModel userForm)
         {
             try
