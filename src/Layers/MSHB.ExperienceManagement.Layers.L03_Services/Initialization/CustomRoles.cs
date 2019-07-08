@@ -11,54 +11,66 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
         public static List<Role> GetInitialRoles()
         {
             var initRoles = new List<Role>();
-            initRoles.AddRange(DefineLog());
-            initRoles.AddRange(DefineUserRole());
-            initRoles.AddRange(DefineGroupRole());
+            initRoles.AddRange(DefineInitRole());
 
 
             return initRoles;
         }
-        private static List<Role> DefineLog()
+
+        private static List<Role> DefineInitRole()
         {
             var initRoles = new List<Role>
             {
-                DefineIntRole("Log-Show", "گزارش لاگ")
+                DefineIntRole("File", "File"),
+                DefineIntRole("File-UploadFile", "File-UploadFile"),
+                DefineIntRole("File-DownloadFile", "File-DownloadFile"),           
+
+                DefineIntRole("GroupAuthentication", "GroupAuthentication"),
+                DefineIntRole("GroupAuthentication-GetGroupAuthentication", "GroupAuthentication-GetGroupAuthentication"),
+                DefineIntRole("GroupAuthentication-GetGroupRole", "GroupAuthentication-GetGroupRole"),
+                DefineIntRole("GroupAuthentication-AddGroup", "GroupAuthentication-AddGroup"),
+                DefineIntRole("GroupAuthentication-EditGroup", "GroupAuthentication-EditGroup"),
+                DefineIntRole("GroupAuthentication-DeleteGroup", "GroupAuthentication-DeleteGroup"),
+                DefineIntRole("GroupAuthentication-GetRoles", "GroupAuthentication-GetRoles"),
+                DefineIntRole("GroupAuthentication-GetGroupAuthenticationById", "GroupAuthentication-GetGroupAuthenticationById"),
+
+
+                DefineIntRole("Organization", "Organization"),
+                DefineIntRole("Organization-Get", "Organization-Get"),
+                DefineIntRole("Organization-GetOrganizationByUser", "Organization-GetOrganizationByUser"),
+                DefineIntRole("Organization-GetUserOrganizationForUser", "Organization-GetUserOrganizationForUser"),
+                DefineIntRole("Organization-AddOrganization", "Organization-AddOrganization"),
+                DefineIntRole("Organization-EditOrganization", "Organization-EditOrganization"),               
+                DefineIntRole("Organization-DeleteOrganization", "Organization-DeleteOrganization"),
+
+
+                DefineIntRole("Equipment", "Equipment"),
+                DefineIntRole("Equipment-Get", "Equipment-Get"),
+                DefineIntRole("Equipment-GetEquipmentByUser", "Equipment-GetEquipmentByUser"),
+                DefineIntRole("Equipment-GetUserEquipmentForUser", "Equipment-GetUserEquipmentForUser"),
+                DefineIntRole("Equipment-AddEquipment", "Equipment-AddEquipment"),
+                DefineIntRole("Equipment-EditEquipment", "Equipment-EditEquipment"),
+                DefineIntRole("Equipment-DeleteEquipment", "Equipment-DeleteEquipment"),
+
+                DefineIntRole("Account", "Account"),
+                DefineIntRole("Account-RefreshToken", "Account-RefreshToken"),
+                DefineIntRole("Account-AddUser", "Account-AddUser"),
+                DefineIntRole("Account-EditUser", "Account-EditUser"),
+                DefineIntRole("Account-ChangeActivateUser", "Account-ChangeActivateUser"),
+                DefineIntRole("Account-ChangePassword", "Account-ChangePassword"),
+                DefineIntRole("Account-GetUsers", "Account-GetUsers"),
+                DefineIntRole("Account-UserCityAssign", "Account-UserCityAssign"),
+                DefineIntRole("Account-GetUserById", "Account-GetUserById"),
+
+                DefineIntRole("Report", "Report"),
+                DefineIntRole("Report-GetReportStructure", "Report-GetReportStructure"),
+
             };
 
             return initRoles;
 
         }
-        private static List<Role> DefineUserRole()
-        {
-            var initRoles = new List<Role>
-            {
-                DefineIntRole("User-Show", "نمایش کاربران"),
-                DefineIntRole("User-Define", "تعریف کاربر"),
-                DefineIntRole("User-ResetPassword", "تغییر کلمه عبور کاربر"),
-                DefineIntRole("User-Modify", "بروزرسانی کاربر"),
-                DefineIntRole("User-Profile", "صفحه شخصی کاربر"),
-                DefineIntRole("User-Roles", "تعیین مجوز کاربر"),
-                DefineIntRole("User-NewPassword", "ایجاد کلمه عبور جدید"),
-                DefineIntRole("User-Delete", "حذف کاربر")
-            };
-
-            return initRoles;
-
-        }
-        private static List<Role> DefineGroupRole()
-        {
-            var initRoles = new List<Role>
-            {
-                DefineIntRole("Group-Show", "نمایش گروه کاربری"),
-                DefineIntRole("Group-Define", "تعریف گروه کاربری"),
-                DefineIntRole("Group-Delete", "حذف گروه کاربری"),
-                DefineIntRole("Group-Modify", "بروزرسانی گروه کاربری")
-            };
-
-            return initRoles;
-
-        }
-        private static Role DefineIntRole(string name,string title)
+        private static Role DefineIntRole(string name, string title)
         {
             var role = new Role()
             {
@@ -66,7 +78,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 Title = title,
                 Discriminator = "Role"
             };
-            
+
             return role;
 
         }
