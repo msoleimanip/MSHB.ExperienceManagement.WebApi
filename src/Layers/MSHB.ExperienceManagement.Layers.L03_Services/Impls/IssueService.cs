@@ -31,7 +31,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
-           
+
         }
 
         public async Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate)
@@ -97,17 +97,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     }
 
                 }
-                var IsExistEquipment = _context.Equipments.All(c => issueForm.EquipmentIds.Contains(c.Id));
-                if (!IsExistEquipment)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentsListError);
-                }
+                //var IsExistEquipment = await _context.Equipments.AnyAsync(c => issueForm.EquipmentIds.Contains(c.Id));
+                //if (!IsExistEquipment)
+                //{
+                //    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentsListError);
+                //}
                 issueForm.EquipmentIds.ForEach(async resp =>
                 {
-                    var equipmentIssueSubscription = new EquipmentIssueSubscription();
-                    equipmentIssueSubscription.IssueId = issue.Id;
-                    equipmentIssueSubscription.EquipmentId = resp;
-                    await _context.EquipmentIssueSubscriptions.AddAsync(equipmentIssueSubscription);
+                    var equipmentIssueSubscription = new EquipmentIssueSubscription
+                    {
+                        Issue = issue,
+                        EquipmentId = resp
+                    };
+                     await _context.EquipmentIssueSubscriptions.AddAsync(equipmentIssueSubscription);
                 });
 
 
@@ -178,7 +180,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     {
                         var issueDetailAttachment = new IssueDetailAttachment()
                         {
-                            IssueDetailId = issueDetail.Id,
+                            IssueDetails= issueDetail,
+                            //IssueDetailId = issueDetail.Id,
                             FileId = fa.FileId,
                             FileSize = fa.FileSize,
                             FileType = fa.FileType,
@@ -421,7 +424,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 }
                 if (searchIssueForm.EquipmentIds.Count > 0)
                 {
-                    queryable = queryable.Where(c => searchIssueForm.EquipmentIds.Intersect(c.EquipmentIssueSubscriptions.Select(d => d.EquipmentId)).Any());
+                    //var eqIssueSubs = _context.EquipmentIssueSubscriptions.Where(c => searchIssueForm.EquipmentIds.Contains(c.EquipmentId)).Select(c=>c.IssueId).ToList();
+                    queryable = queryable.Where(c => c.EquipmentIssueSubscriptions.Any(x => searchIssueForm.EquipmentIds.Contains(x.EquipmentId)));
                 }
                 if (searchIssueForm.SortModel != null)
                     switch (searchIssueForm.SortModel.Col + "|" + searchIssueForm.SortModel.Sort)
@@ -501,10 +505,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         UserId = response.UserId,
                         UserName = response.User.Username,
                         LastUpdateDate = response.LastUpdateDate,
-                        IssueDetailComments=new List<IssueDetailCommentViewModel>(),
-                        IssueDetailAttachments=new List<IssueDetailAttachmentViewModel>()
-                        
-                };
+                        IssueDetailComments = new List<IssueDetailCommentViewModel>(),
+                        IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>()
+
+                    };
                     response.IssueDetailComments.ToList().ForEach(c =>
                     {
                         var IssueDetailComment = new IssueDetailCommentViewModel()
@@ -524,7 +528,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         var IssueDetailAtt = new IssueDetailAttachmentViewModel()
                         {
                             FileSize = c.FileSize,
-                            FileType=c.FileType,
+                            FileType = c.FileType,
                             FileId = c.FileId,
                             IssueDetailId = c.IssueDetailId,
                             Id = c.Id,
