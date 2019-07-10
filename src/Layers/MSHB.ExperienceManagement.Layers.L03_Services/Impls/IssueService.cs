@@ -105,7 +105,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 issueForm.EquipmentIds.ForEach(async resp =>
                 {
                     var equipmentIssueSubscription = new EquipmentIssueSubscription();
-                    equipmentIssueSubscription.IssueId = issue.Id;
+                    equipmentIssueSubscription.Issue = issue;
                     equipmentIssueSubscription.EquipmentId = resp;
                     await _context.EquipmentIssueSubscriptions.AddAsync(equipmentIssueSubscription);
                 });
@@ -178,7 +178,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     {
                         var issueDetailAttachment = new IssueDetailAttachment()
                         {
-                            IssueDetailId = issueDetail.Id,
+                            IssueDetails = issueDetail,
                             FileId = fa.FileId,
                             FileSize = fa.FileSize,
                             FileType = fa.FileType,
@@ -421,7 +421,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 }
                 if (searchIssueForm.EquipmentIds.Count > 0)
                 {
-                    queryable = queryable.Where(c => searchIssueForm.EquipmentIds.Intersect(c.EquipmentIssueSubscriptions.Select(d => d.EquipmentId)).Any());
+                    //var eqIssueSubs = _context.EquipmentIssueSubscriptions.Where(c => searchIssueForm.EquipmentIds.Contains(c.EquipmentId)).Select(c=>c.IssueId).ToList();
+                    queryable = queryable.Where(c => c.EquipmentIssueSubscriptions.Any(x => searchIssueForm.EquipmentIds.Contains(x.EquipmentId)));
                 }
                 if (searchIssueForm.SortModel != null)
                     switch (searchIssueForm.SortModel.Col + "|" + searchIssueForm.SortModel.Sort)
