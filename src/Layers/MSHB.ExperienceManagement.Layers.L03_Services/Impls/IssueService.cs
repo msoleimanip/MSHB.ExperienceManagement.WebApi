@@ -55,7 +55,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<bool> AddIssueAsync(User user, AddIssueFormModel issueForm)
+        public async Task<long> AddIssueAsync(User user, AddIssueFormModel issueForm)
         {
             try
             {
@@ -120,7 +120,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 issue.UserId = user.Id;
                 await _context.Issues.AddAsync(issue);
                 await _context.SaveChangesAsync();
-                return true;
+                return issue.Id;
             }
             catch (Exception ex)
             {
@@ -128,7 +128,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<bool> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm)
+        public async Task<long> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm)
         {
             try
             {
@@ -187,7 +187,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     });
                 }
                 await _context.SaveChangesAsync();
-                return true;
+                return issueDetail.Id;
 
 
             }
@@ -363,7 +363,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<bool> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm)
+        public async Task<long> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm)
         {
             try
             {
@@ -386,7 +386,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 };
                 await _context.IssueDetailComments.AddAsync(issueDetailComment);
 
-                return true;
+                return issueDetailComment.Id;
             }
             catch (Exception ex)
             {

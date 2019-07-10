@@ -12,13 +12,13 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
 {
     public interface IIssueService
     {
-        Task<bool> AddIssueAsync(User user, AddIssueFormModel issueForm);
+        Task<long> AddIssueAsync(User user, AddIssueFormModel issueForm);
         Task<bool> EditIssueAsync(User user, EditIssueFormModel issueForm);       
-        Task<bool> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm);
+        Task<long> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm);
         Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate);
         Task<bool> EditIssueDetailAsync(User user, EditIssueDetailFormModel issueDetailForm);
         Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm);
-        Task<bool> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm);
+        Task<long> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm);
         Task<SearchIssueViewModel> GetIssuesForUserAsync(SearchIssueFormModel searchIssueForm);
         Task<List<IssueDetailViewModel>> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm);
     }
