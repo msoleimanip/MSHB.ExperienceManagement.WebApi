@@ -97,11 +97,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     }
 
                 }
-                var IsExistEquipment = _context.Equipments.All(c => issueForm.EquipmentIds.Contains(c.Id));
-                if (!IsExistEquipment)
-                {
-                    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentsListError);
-                }
+                //var IsExistEquipment = _context.Equipments.All(c => issueForm.EquipmentIds.Contains(c.Id));
+                //if (!IsExistEquipment)
+                //{
+                //    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistEquipmentsListError);
+                //}
                 issueForm.EquipmentIds.ForEach(async resp =>
                 {
                     var equipmentIssueSubscription = new EquipmentIssueSubscription();
