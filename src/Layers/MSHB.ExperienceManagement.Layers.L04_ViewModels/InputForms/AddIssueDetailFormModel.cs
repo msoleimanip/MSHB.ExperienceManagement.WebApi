@@ -12,8 +12,8 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
         [Required(ErrorMessage = "بایستی کاربر مورد نظر انتخاب شود")]
         public Guid UserId { get; set; }
         [Required(ErrorMessage = "بایستی برای جزییات مقدار وارد شود"), MinLength(1),MaxLength(250)]
-        public string Title { get; set; }
-        public string Description { get; set; }         
+        public string Caption { get; set; }
+        public string Text { get; set; }         
         public List<Guid> UploadFiles { get; set; }
 
     }

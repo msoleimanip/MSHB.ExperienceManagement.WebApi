@@ -15,7 +15,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
         [MaxLength(250)]
         public string Description { get; set; }              
         public Guid? ImageId { get; set; }
-        public int IssueType { get; set; }
+        public IssueType IssueType { get; set; }
         public Guid UserId { get; set; }
         [Required(ErrorMessage = "باید برای توضیحات مسئله جدید، عنوان انتخاب کنید"),MinLength(1)]
         public List<long> EquipmentIds { get; set; }

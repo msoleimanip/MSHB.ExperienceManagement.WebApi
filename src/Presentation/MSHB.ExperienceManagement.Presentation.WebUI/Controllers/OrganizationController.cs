@@ -46,7 +46,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
-        [Authorize(Roles = "Organization-GetUserOrgazinationForUser")]
+        [Authorize(Roles = "Organization-GetUserOrganizationForUser")]
+        
         [ValidateModelAttribute]
         public async Task<IActionResult> GetUserOrgazinationForUser([FromQuery] Guid userId)
         {

@@ -11,8 +11,8 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
     {
         public long IssueId { get; set; }  
         public Guid UserId { get; set; }
-        public string Title { get; set; }
-        public string Description { get; set; }
+        public string Caption { get; set; }
+        public string Text { get; set; }
         public DateTime? CreationDate { get; set; }
         public DateTime? LastUpdateDate { get; set; }
         public int AnswerUseful { get; set; } = 0;

@@ -146,8 +146,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     IssueId = issue.Id,
                     CreationDate = DateTime.Now,
-                    Title = issueDetailForm.Title,
-                    Description = issueDetailForm.Description,
+                    Caption = issueDetailForm.Caption,
+                    Text = issueDetailForm.Text,
                     UserId = issueDetailForm.UserId,
                     LastUpdateDate = DateTime.Now
 
@@ -297,8 +297,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 }
 
                 issueDetail.LastUpdateDate = DateTime.Now;
-                issueDetail.Title = issueDetailForm.Title;
-                issueDetail.Description = issueDetailForm.Description;
+                issueDetail.Caption = issueDetailForm.Caption;
+                issueDetail.Text = issueDetailForm.Text;
                 _context.IssueDetails.Update(issueDetail);
 
                 if (issueDetailForm.UploadFiles != null && issueDetailForm.UploadFiles.Count > 0)
@@ -490,10 +490,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     var issuedetail = new IssueDetailViewModel()
                     {
-                        Title = response.Title,
+                        Caption = response.Caption,
                         AnswerUseful = response.AnswerUseful,
                         CreationDate = response.CreationDate,
-                        Description = response.Description,
+                        Text = response.Text,
                         IsCorrectAnswer = response.IsCorrectAnswer,
                         IssueId = response.IssueId,
                         Likes = response.Likes,
