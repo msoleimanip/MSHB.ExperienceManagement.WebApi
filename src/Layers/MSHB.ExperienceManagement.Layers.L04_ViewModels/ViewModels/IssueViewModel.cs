@@ -13,11 +13,12 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public DateTime? CreationDate { get; set; }
         public DateTime? LastUpdateDate { get; set; }     
         public Guid?  FileId { get; set; }
-        public int? AnswerCounts { get; set; } = 0;
+        public int? AnswerCount { get; set; } = 0;
+        public int? SumLikes { get; set; } = 0;
         public bool? IsActive { get; set; } = false;
         public IssueType IssueType { get; set; }
         public Guid UserId { get; set; }
-        public string UserName { get; set; }
-        public List<long> EquipmentIds { get; set; }
+        public string UserName { get; set; }  
+        public List<EquipmentViewModel> Equipments { get; set; }
     }
 }

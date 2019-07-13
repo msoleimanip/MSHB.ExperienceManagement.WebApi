@@ -153,6 +153,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 };
                 issue.AnswerCounts = issue.AnswerCounts + 1;
+                issue.LastUpdateDate = DateTime.Now;
                 _context.Issues.Update(issue);
 
                 await _context.IssueDetails.AddAsync(issueDetail);
@@ -295,11 +296,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
                 }
-
+                issue.LastUpdateDate = DateTime.Now;
                 issueDetail.LastUpdateDate = DateTime.Now;
                 issueDetail.Caption = issueDetailForm.Caption;
                 issueDetail.Text = issueDetailForm.Text;
                 _context.IssueDetails.Update(issueDetail);
+                _context.Issues.Update(issue);
 
                 if (issueDetailForm.UploadFiles != null && issueDetailForm.UploadFiles.Count > 0)
                 {
@@ -447,11 +449,17 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 searchViewModel.searchIssueViewModel = response.Select(resp => new IssueViewModel()
                 {
                     Id = resp.Id,
-                    AnswerCounts = resp.AnswerCounts,
+                    AnswerCount = resp.AnswerCounts,
                     CreationDate = resp.CreationDate,
                     Description = resp.Description,
-                    EquipmentIds = resp.EquipmentIssueSubscriptions.Select(c => c.EquipmentId).ToList() ?? null,
+                    Equipments = resp.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel()
+                    {
+                        Description = x.Equipment.Description,
+                        EquipmentName = x.Equipment.EquipmentName,
+                        Id = x.EquipmentId
+                    }).ToList(),
                     IsActive = resp.IsActive,
+                    SumLikes = resp.IssueDetails.Sum(c => c.Likes),
                     IssueType = resp.IssueType,
                     LastUpdateDate = resp.LastUpdateDate,
                     Title = resp.Title,
@@ -544,6 +552,86 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
 
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.GetIssueDetailsError, ex);
+            }
+        }
+
+        public async  Task<SearchIssueViewModel> SearchSmartIssueAsync(SearchSmartIssueFormModel searchIssueForm)
+        {
+            try
+            {
+                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c=>c.IssueDetails).Include(c => c.User).AsQueryable();
+
+                if (!string.IsNullOrEmpty(searchIssueForm.SearchContent))
+                {
+                    var searchContents = searchIssueForm.SearchContent.Split(" ");
+                    queryable = queryable.Where(q => searchContents.Contains(q.Title));
+                }
+
+                if (searchIssueForm.FilterType.HasValue)
+                {
+                    if (searchIssueForm.FilterType.Value==FilterType.AcceptedAnswer)
+                    {
+                        queryable = queryable.Where(q => q.IssueDetails.Any(c=>c.IsCorrectAnswer));
+                    }
+                    else if (searchIssueForm.FilterType.Value == FilterType.NoAcceptedAnswer)
+                    {
+                        queryable = queryable.Where(q => q.IssueDetails.All(c => !c.IsCorrectAnswer));
+                    }
+                    else if (searchIssueForm.FilterType.Value == FilterType.NoAnswers)
+                    {
+                        queryable = queryable.Where(q => q.AnswerCounts>1);
+                    }
+
+                }
+
+                if (searchIssueForm.SortType.HasValue)
+                {
+                    if (searchIssueForm.SortType.Value==SortType.Newest)
+                    queryable = queryable.OrderByDescending(q => q.CreationDate);
+                    else if (searchIssueForm.SortType.Value == SortType.MostLikes)
+                        queryable = queryable.OrderByDescending(q => q.IssueDetails.Sum(x=>x.Likes));
+                    else if (searchIssueForm.SortType.Value == SortType.RecentActivity)
+                        queryable = queryable.OrderByDescending(q => q.IssueDetails.OrderByDescending(c=>c.LastUpdateDate));
+                }
+                if (searchIssueForm.UserId.HasValue)
+                {
+                    queryable = queryable.Where(q => q.UserId == searchIssueForm.UserId);
+                }
+                if (searchIssueForm.EquipmentIds.Count > 0)
+                {
+                    queryable = queryable.Where(c => c.EquipmentIssueSubscriptions.Any(x => searchIssueForm.EquipmentIds.Contains(x.EquipmentId)));
+                }
+               
+                var response = await queryable.Skip((searchIssueForm.PageIndex - 1) * searchIssueForm.PageSize).Take(searchIssueForm.PageSize).ToListAsync();
+                var count = await queryable.CountAsync();
+                var searchViewModel = new SearchIssueViewModel();
+
+                searchViewModel.searchIssueViewModel = response.Select(resp => new IssueViewModel()
+                {
+                    Id = resp.Id,
+                    AnswerCount = resp.AnswerCounts,
+                    CreationDate = resp.CreationDate,
+                    Description = resp.Description,
+                    Equipments = resp.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel() {
+                                               Description =x.Equipment.Description,EquipmentName=x.Equipment.EquipmentName,Id=x.EquipmentId }).ToList(),
+                    IsActive = resp.IsActive,
+                    IssueType = resp.IssueType,
+                    LastUpdateDate = resp.LastUpdateDate,
+                    Title = resp.Title,
+                    SumLikes=resp.IssueDetails.Sum(c=>c.Likes),
+                    UserId = resp.UserId,
+                    UserName = resp.User.Username,
+                    FileId = resp.FileId
+
+                }).ToList();
+                searchViewModel.PageIndex = searchIssueForm.PageIndex;
+                searchViewModel.PageSize = searchIssueForm.PageSize;
+                searchViewModel.TotalCount = count;
+                return searchViewModel;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.SearchIssuesError, ex);
             }
         }
     }

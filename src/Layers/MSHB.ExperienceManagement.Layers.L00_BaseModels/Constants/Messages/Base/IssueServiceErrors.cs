@@ -45,9 +45,11 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("UFE-1015", "خطا در دریافت مسئله های کاربر.");
         public static ExperienceManagementErrorMessage GetIssueDetailsError =
           new ExperienceManagementErrorMessage("UFE-1016", "خطا در دریافت جزییات مسئله.");
+        public static ExperienceManagementErrorMessage SearchIssuesError =
+          new ExperienceManagementErrorMessage("UFE-1017", "خطا در دریافت مسئله ها.");
 
 
-        
+
 
 
 

@@ -89,5 +89,17 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         }
 
+        [HttpGet("[action]"), HttpPost("[action]")]
+        public async Task<IActionResult> SearchSmartIssue([FromBody] SearchSmartIssueFormModel searchIssueForm)
+        {
+            return Ok(GetRequestResult(await _issueService.SearchSmartIssueAsync( searchIssueForm)));
+        }
+
+
+
+
+
+
+
     }
 }
