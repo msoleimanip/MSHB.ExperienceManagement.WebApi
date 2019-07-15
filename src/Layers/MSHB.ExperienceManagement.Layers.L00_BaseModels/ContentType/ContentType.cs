@@ -613,9 +613,18 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.ContentType
         }
         public static string GetContentType(string path)
         {
-            var types = GetMimeTypes();
-            var ext = Path.GetExtension(path).ToLowerInvariant();
-            return types[ext];
+            try
+            {
+                var types = GetMimeTypes();
+                var ext = Path.GetExtension(path).ToLowerInvariant();
+                return types[ext];
+            }
+            catch (Exception)
+            {
+
+                return "application/zip";
+            }
+           
         }
 
     }
