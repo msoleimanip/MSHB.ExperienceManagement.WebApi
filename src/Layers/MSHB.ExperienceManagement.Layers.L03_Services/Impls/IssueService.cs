@@ -542,7 +542,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     });
 
-
+                    issueDetailViewModel.Add(issuedetail);
 
                 });
 
