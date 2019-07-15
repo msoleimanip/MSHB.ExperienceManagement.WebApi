@@ -2,6 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Options;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.ContentType;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Settings;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Enums;
@@ -31,7 +32,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
-           
+
         }
 
         public async Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate)
@@ -510,10 +511,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         UserId = response.UserId,
                         UserName = response.User.Username,
                         LastUpdateDate = response.LastUpdateDate,
-                        IssueDetailComments=new List<IssueDetailCommentViewModel>(),
-                        IssueDetailAttachments=new List<IssueDetailAttachmentViewModel>()
-                        
-                };
+                        IssueDetailComments = new List<IssueDetailCommentViewModel>(),
+                        IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>()
+
+                    };
                     response.IssueDetailComments.ToList().ForEach(c =>
                     {
                         var IssueDetailComment = new IssueDetailCommentViewModel()
@@ -533,8 +534,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         var IssueDetailAtt = new IssueDetailAttachmentViewModel()
                         {
                             FileSize = c.FileSize,
-                            FileType=c.FileType,
+                            FileType = c.FileType,
                             FileId = c.FileId,
+                            ContentType = ContentType.GetContentType($".{c.FileType}"),
                             IssueDetailId = c.IssueDetailId,
                             Id = c.Id,
                         };
@@ -555,23 +557,27 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async  Task<SearchIssueViewModel> SearchSmartIssueAsync(SearchSmartIssueFormModel searchIssueForm)
+        public async Task<SearchIssueViewModel> SearchSmartIssueAsync(SearchSmartIssueFormModel searchIssueForm)
         {
             try
             {
-                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c=>c.IssueDetails).Include(c => c.User).AsQueryable();
+                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c => c.IssueDetails).Include(c => c.User).AsQueryable();
 
                 if (!string.IsNullOrEmpty(searchIssueForm.SearchContent))
                 {
                     var searchContents = searchIssueForm.SearchContent.Split(" ");
-                    queryable = queryable.Where(q => searchContents.Contains(q.Title));
+                    foreach (var item in searchContents)
+                    {
+                        queryable = queryable.Where(q => EF.Functions.Like(q.Title, $"%{item}%"));
+                    }                 
+                   
                 }
 
                 if (searchIssueForm.FilterType.HasValue)
                 {
-                    if (searchIssueForm.FilterType.Value==FilterType.AcceptedAnswer)
+                    if (searchIssueForm.FilterType.Value == FilterType.AcceptedAnswer)
                     {
-                        queryable = queryable.Where(q => q.IssueDetails.Any(c=>c.IsCorrectAnswer));
+                        queryable = queryable.Where(q => q.IssueDetails.Any(c => c.IsCorrectAnswer));
                     }
                     else if (searchIssueForm.FilterType.Value == FilterType.NoAcceptedAnswer)
                     {
@@ -579,19 +585,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     }
                     else if (searchIssueForm.FilterType.Value == FilterType.NoAnswers)
                     {
-                        queryable = queryable.Where(q => q.AnswerCounts>1);
+                        queryable = queryable.Where(q => q.AnswerCounts > 1);
                     }
 
                 }
 
                 if (searchIssueForm.SortType.HasValue)
                 {
-                    if (searchIssueForm.SortType.Value==SortType.Newest)
-                    queryable = queryable.OrderByDescending(q => q.CreationDate);
+                    if (searchIssueForm.SortType.Value == SortType.Newest)
+                        queryable = queryable.OrderByDescending(q => q.CreationDate);
                     else if (searchIssueForm.SortType.Value == SortType.MostLikes)
-                        queryable = queryable.OrderByDescending(q => q.IssueDetails.Sum(x=>x.Likes));
+                        queryable = queryable.OrderByDescending(q => q.IssueDetails.Sum(x => x.Likes));
                     else if (searchIssueForm.SortType.Value == SortType.RecentActivity)
-                        queryable = queryable.OrderByDescending(q => q.IssueDetails.OrderByDescending(c=>c.LastUpdateDate));
+                        queryable = queryable.OrderByDescending(q => q.IssueDetails.OrderByDescending(c => c.LastUpdateDate));
                 }
                 if (searchIssueForm.UserId.HasValue)
                 {
@@ -601,7 +607,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     queryable = queryable.Where(c => c.EquipmentIssueSubscriptions.Any(x => searchIssueForm.EquipmentIds.Contains(x.EquipmentId)));
                 }
-               
+
                 var response = await queryable.Skip((searchIssueForm.PageIndex - 1) * searchIssueForm.PageSize).Take(searchIssueForm.PageSize).ToListAsync();
                 var count = await queryable.CountAsync();
                 var searchViewModel = new SearchIssueViewModel();
@@ -612,13 +618,17 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     AnswerCount = resp.AnswerCounts,
                     CreationDate = resp.CreationDate,
                     Description = resp.Description,
-                    Equipments = resp.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel() {
-                                               Description =x.Equipment.Description,EquipmentName=x.Equipment.EquipmentName,Id=x.EquipmentId }).ToList(),
+                    Equipments = resp.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel()
+                    {
+                        Description = x.Equipment.Description,
+                        EquipmentName = x.Equipment.EquipmentName,
+                        Id = x.EquipmentId
+                    }).ToList(),
                     IsActive = resp.IsActive,
                     IssueType = resp.IssueType,
                     LastUpdateDate = resp.LastUpdateDate,
                     Title = resp.Title,
-                    SumLikes=resp.IssueDetails.Sum(c=>c.Likes),
+                    SumLikes = resp.IssueDetails.Sum(c => c.Likes),
                     UserId = resp.UserId,
                     UserName = resp.User.Username,
                     FileId = resp.FileId

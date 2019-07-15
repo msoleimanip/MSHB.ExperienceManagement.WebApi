@@ -16,9 +16,9 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public DateTime? LastUpdateDate { get; set; }
         public int AnswerUseful { get; set; } = 0;
         public bool IsCorrectAnswer { get; set; }
-        public int? Likes { get; set; }        
-        public  List<IssueDetailAttachmentViewModel> IssueDetailAttachments { get; set; }
-        public  List<IssueDetailCommentViewModel> IssueDetailComments { get; set; }
+        public int? Likes { get; set; }
+        public List<IssueDetailAttachmentViewModel> IssueDetailAttachments { get; set; }
+        public List<IssueDetailCommentViewModel> IssueDetailComments { get; set; }
     }
     public class IssueDetailAttachmentViewModel
     {
@@ -26,6 +26,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public long IssueDetailId { get; set; }
         public string FileType { get; set; }
         public long? FileSize { get; set; }
+        public string ContentType { get; set; }
         public Guid? FileId { get; set; }
     }
     public class IssueDetailCommentViewModel
