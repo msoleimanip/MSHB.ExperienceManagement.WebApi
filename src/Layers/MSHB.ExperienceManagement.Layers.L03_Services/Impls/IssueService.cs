@@ -129,7 +129,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<long> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm)
+        public async Task<IssueDetailViewModel> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm)
         {
             try
             {
@@ -189,7 +189,55 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     });
                 }
                 await _context.SaveChangesAsync();
-                return issueDetail.Id;
+
+
+                var issueDetailsViewM = new IssueDetailViewModel()
+                {
+                    Caption = issueDetail.Caption,
+                    AnswerUseful = issueDetail.AnswerUseful,
+                    CreationDate = issueDetail.CreationDate,
+                    Text = issueDetail.Text,
+                    IsCorrectAnswer = issueDetail.IsCorrectAnswer,
+                    IssueId = issueDetail.IssueId,
+                    Likes = issueDetail.Likes,
+                    IssueDetailId = issueDetail.Id,
+                    UserId = issueDetail.UserId,
+                    UserName = issueDetail.User.Username,
+                    LastUpdateDate = issueDetail.LastUpdateDate,
+                    IssueDetailComments = new List<IssueDetailCommentViewModel>(),
+                    IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>()
+
+                };
+                issueDetail.IssueDetailComments?.ToList().ForEach(c =>
+                {
+                    var IssueDetailComment = new IssueDetailCommentViewModel()
+                    {
+                        Comment = c.Comment,
+                        CreationDate = c.CreationDate,
+                        IssueDetailId = c.IssueDetailId,
+                        Id = c.Id,
+                        UserId = c.UserId,
+                        UserName = c.User.Username
+                    };
+                    issueDetailsViewM.IssueDetailComments.Add(IssueDetailComment);
+
+                });
+                issueDetail.IssueDetailAttachments?.ToList().ForEach(c =>
+                {
+                    var IssueDetailAtt = new IssueDetailAttachmentViewModel()
+                    {
+                        FileSize = c.FileSize,
+                        FileType = c.FileType,
+                        FileId = c.FileId,
+                        ContentType = ContentType.GetContentType($".{c.FileType}"),
+                        IssueDetailId = c.IssueDetailId,
+                        Id = c.Id,
+                    };
+                    issueDetailsViewM.IssueDetailAttachments.Add(IssueDetailAtt);
+
+                });
+
+                return issueDetailsViewM;
 
 
             }
@@ -366,7 +414,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<long> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm)
+        public async Task<IssueDetailCommentViewModel> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm)
         {
             try
             {
@@ -375,25 +423,29 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
                 }
-                var userReq = await _context.Users.FindAsync(issueForm.UserId);
-                if (userReq is null)
-                {
-                    throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
-                }
+
                 var issueDetailComment = new IssueDetailComment()
                 {
                     Comment = issueForm.Comment,
                     CreationDate = DateTime.Now,
                     IssueDetailId = issueDetail.Id,
-                    UserId = userReq.Id
+                    UserId = user.Id
                 };
                 await _context.IssueDetailComments.AddAsync(issueDetailComment);
+                await _context.SaveChangesAsync();
 
-                return issueDetailComment.Id;
+                return new IssueDetailCommentViewModel()
+                {
+                    Comment = issueDetailComment.Comment,
+                    CreationDate = issueDetailComment.CreationDate,
+                    IssueDetailId = issueDetailComment.IssueDetailId,
+                    Id = issueDetailComment.Id,
+                    UserId = issueDetailComment.UserId,
+                    UserName = issueDetailComment.User.Username
+                };
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.AddIssueDetailCommentError, ex);
             }
         }
@@ -569,8 +621,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     foreach (var item in searchContents)
                     {
                         queryable = queryable.Where(q => EF.Functions.Like(q.Title, $"%{item}%"));
-                    }                 
-                   
+                    }
+
                 }
 
                 if (searchIssueForm.FilterType.HasValue)
