@@ -281,7 +281,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         var equipmentAtt = new EquipmentAttachment()
                         {
                             Description = equipmentAttachmentForm.Description,
-                            EquipmentAttachmentName = equipmentAttachmentForm.EquipmentAttachmentName,
+                            EquipmentAttachmentName = equipmentAttachmentForm.EquipmentAttachmentName.ToLower(),
                             EquipmentAttachmentType = equipmentAttachmentForm.EquipmentAttachmentType,
                             EquipmentId = equipmentAttachmentForm.EquipmentId,
                         };
@@ -334,7 +334,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
 
                     var isDuplicateEquipmentAtt = _context.EquipmentAttachments.Any(c => c.Id!= equipmentAttachmentForm.EquipmentAttachmentId 
-                                                                                      && c.EquipmentId == equipmentAttachmentForm.EquipmentId && c.EquipmentAttachmentName == equipmentAttachmentForm.EquipmentAttachmentName && c.EquipmentAttachmentType == equipmentAttachmentForm.EquipmentAttachmentType);
+                                                                                      && c.EquipmentId == equipmentAttachmentForm.EquipmentId && c.EquipmentAttachmentName == equipmentAttachmentForm.EquipmentAttachmentName.ToLower() && c.EquipmentAttachmentType == equipmentAttachmentForm.EquipmentAttachmentType);
                     if (!isDuplicateEquipmentAtt)
                     {
                         var equipmentAtt = await _context.EquipmentAttachments.FindAsync(equipmentAttachmentForm.EquipmentAttachmentId);
@@ -342,7 +342,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         {
 
                             equipmentAtt.Description = equipmentAttachmentForm.Description;
-                            equipmentAtt.EquipmentAttachmentName = equipmentAttachmentForm.EquipmentAttachmentName;
+                            equipmentAtt.EquipmentAttachmentName = equipmentAttachmentForm.EquipmentAttachmentName.ToLower();
                             equipmentAtt.EquipmentAttachmentType = equipmentAttachmentForm.EquipmentAttachmentType;
                             equipmentAtt.EquipmentId = equipmentAttachmentForm.EquipmentId;
                             

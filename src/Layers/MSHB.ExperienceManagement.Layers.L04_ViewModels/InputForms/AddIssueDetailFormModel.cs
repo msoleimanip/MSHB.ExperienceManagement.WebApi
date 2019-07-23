@@ -15,6 +15,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
         public string Caption { get; set; }
         public string Text { get; set; }         
         public List<Guid> UploadFiles { get; set; }
+        public List<long> EquipmentAttachmentIds { get; set; }
 
     }
 }

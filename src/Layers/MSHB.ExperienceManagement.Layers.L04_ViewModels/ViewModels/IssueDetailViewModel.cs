@@ -19,6 +19,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public int? Likes { get; set; }
         public List<IssueDetailAttachmentViewModel> IssueDetailAttachments { get; set; }
         public List<IssueDetailCommentViewModel> IssueDetailComments { get; set; }
+        public List<EquipmentAttachmentViewModel> EquipmentAttachmentViewModels { get; set; }
     }
     public class IssueDetailAttachmentViewModel
     {
@@ -39,4 +40,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public string UserName { get; set; }
 
     }
+
 }
+
+

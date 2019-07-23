@@ -188,6 +188,21 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         await _context.IssueDetailAttachments.AddAsync(issueDetailAttachment);
                     });
                 }
+
+                if (issueDetailForm.EquipmentAttachmentIds !=null && issueDetailForm.EquipmentAttachmentIds.Count>0)
+                {
+                    issueDetailForm.EquipmentAttachmentIds.ForEach(async EqId =>
+                    {
+                        var eqAttDetailSubscription = new EquipmentAttachmentIssueDetailSubscription()
+                        {
+                            IssueDetail = issueDetail,
+                            EquipmentAttachmentId = EqId
+                        };
+                        await _context.EquipmentAttachmentIssueDetailSubscriptions.AddAsync(eqAttDetailSubscription);
+                    });
+                }
+
+
                 await _context.SaveChangesAsync();
 
 
@@ -205,7 +220,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     UserName = issueDetail.User.Username,
                     LastUpdateDate = issueDetail.LastUpdateDate,
                     IssueDetailComments = new List<IssueDetailCommentViewModel>(),
-                    IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>()
+                    IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>(),
+                    EquipmentAttachmentViewModels= new List<EquipmentAttachmentViewModel>()
 
                 };
                 issueDetail.IssueDetailComments?.ToList().ForEach(c =>
@@ -234,6 +250,23 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         Id = c.Id,
                     };
                     issueDetailsViewM.IssueDetailAttachments.Add(IssueDetailAtt);
+
+                });
+                issueDetail.EquipmentAttachmentIssueDetailSubscriptions?.ToList().ForEach(c =>
+                {
+                    var equipmentAttachment = new EquipmentAttachmentViewModel()
+                    {
+                        EquipmentAttachmentId = c.Id,
+                        CreationDate = c.EquipmentAttachment.CreationDate,
+                        Description = c.EquipmentAttachment.Description,
+                        EquipmentAttachmentName = c.EquipmentAttachment.EquipmentAttachmentName,
+                        EquipmentId = c.EquipmentAttachment.EquipmentId,
+                        EquipmentAttachmentType = c.EquipmentAttachment.EquipmentAttachmentType,
+                        FileId = c.EquipmentAttachment.FileId,
+                        FileSize = c.EquipmentAttachment.FileSize,
+                        FileType = c.EquipmentAttachment.FileType
+                    };
+                    issueDetailsViewM.EquipmentAttachmentViewModels.Add(equipmentAttachment);
 
                 });
 
@@ -340,7 +373,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
                 }
-                var issueDetail = await _context.IssueDetails.FindAsync(issueDetailForm.IssueDetailId);
+                var issueDetail = await _context.IssueDetails.Include(c=>c.EquipmentAttachmentIssueDetailSubscriptions).FirstOrDefaultAsync(c => c.Id == issueDetailForm.IssueDetailId);
                 if (issueDetail is null)
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
@@ -382,6 +415,22 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         await _context.IssueDetailAttachments.AddAsync(issueDetailAttachment);
                     });
                 }
+
+                _context.EquipmentAttachmentIssueDetailSubscriptions.RemoveRange(issueDetail.EquipmentAttachmentIssueDetailSubscriptions.ToList());
+
+                if (issueDetailForm.EquipmentAttachmentIds != null && issueDetailForm.EquipmentAttachmentIds.Count > 0)
+                {
+                    issueDetailForm.EquipmentAttachmentIds.ForEach(async EqId =>
+                    {
+                        var eqAttDetailSubscription = new EquipmentAttachmentIssueDetailSubscription()
+                        {
+                            IssueDetail = issueDetail,
+                            EquipmentAttachmentId = EqId
+                        };
+                        await _context.EquipmentAttachmentIssueDetailSubscriptions.AddAsync(eqAttDetailSubscription);
+                    });
+                }
+
                 await _context.SaveChangesAsync();
                 return true;
 
@@ -536,7 +585,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
+                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c=>c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
                 if (searchIssueDetailForm.IssueDetailsId.HasValue)
                 {
                     querable = querable.Where(c => c.Id == searchIssueDetailForm.IssueDetailsId);
@@ -564,7 +613,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         UserName = response.User.Username,
                         LastUpdateDate = response.LastUpdateDate,
                         IssueDetailComments = new List<IssueDetailCommentViewModel>(),
-                        IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>()
+                        IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>(),
+                        EquipmentAttachmentViewModels = new List<EquipmentAttachmentViewModel>()
 
                     };
                     response.IssueDetailComments.ToList().ForEach(c =>
@@ -593,6 +643,23 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                             Id = c.Id,
                         };
                         issuedetail.IssueDetailAttachments.Add(IssueDetailAtt);
+
+                    });
+                    response.EquipmentAttachmentIssueDetailSubscriptions?.ToList().ForEach(c =>
+                    {
+                        var equipmentAttachment = new EquipmentAttachmentViewModel()
+                        {
+                            EquipmentAttachmentId = c.Id,
+                            CreationDate = c.EquipmentAttachment.CreationDate,
+                            Description = c.EquipmentAttachment.Description,
+                            EquipmentAttachmentName = c.EquipmentAttachment.EquipmentAttachmentName,
+                            EquipmentId = c.EquipmentAttachment.EquipmentId,
+                            EquipmentAttachmentType = c.EquipmentAttachment.EquipmentAttachmentType,
+                            FileId = c.EquipmentAttachment.FileId,
+                            FileSize = c.EquipmentAttachment.FileSize,
+                            FileType = c.EquipmentAttachment.FileType
+                        };
+                        issuedetail.EquipmentAttachmentViewModels.Add(equipmentAttachment);
 
                     });
 
