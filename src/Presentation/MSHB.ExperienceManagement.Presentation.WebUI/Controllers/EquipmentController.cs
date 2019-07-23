@@ -114,7 +114,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(equipmentAtts));
         }
 
-        [HttpGet("[action]")]
+        [HttpGet("[action]"), HttpPost("[action]")]
         [Authorize(Roles = "Equipment-GetEquipmentAttachmentByEquipmentId")]
         public async Task<IActionResult> GetEquipmentAttachmentByEquipmentId([FromQuery] long Id)
         {
