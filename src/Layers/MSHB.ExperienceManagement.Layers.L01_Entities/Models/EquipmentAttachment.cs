@@ -21,7 +21,8 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public long? FileSize { get; set; }
         public Guid? FileId { get; set; }
         [ForeignKey("EquipmentId")]
-        public virtual Equipment Equipments { get; set; }
+        public virtual Equipment Equipment { get; set; }
+        public virtual ICollection<EquipmentAttachmentIssueDetailSubscription> EquipmentAttachmentIssueDetailSubscriptions { get; set; }
 
     }
 }

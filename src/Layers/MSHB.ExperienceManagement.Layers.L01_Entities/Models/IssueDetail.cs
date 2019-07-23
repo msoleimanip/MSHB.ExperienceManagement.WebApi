@@ -24,6 +24,7 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public virtual Issue Issues { get; set; }
         public virtual ICollection<IssueDetailAttachment> IssueDetailAttachments { get; set; }
         public virtual ICollection<IssueDetailComment> IssueDetailComments { get; set; }
+        public virtual ICollection<EquipmentAttachmentIssueDetailSubscription> EquipmentAttachmentIssueDetailSubscriptions { get; set; }
 
 
 

@@ -35,6 +35,8 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<UserIssueSubscription> UserIssueSubscriptions { get; set; } /* User Popular user issues */
         public virtual DbSet<FileAddress> FileAddresses { get; set; }
         public virtual DbSet<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
+        public virtual DbSet<EquipmentAttachmentIssueDetailSubscription> EquipmentAttachmentIssueDetailSubscriptions { get; set; }
+        
         public virtual DbSet<ReportStructure> ReportStructures { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
@@ -147,6 +149,19 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
                            .WithMany(t => t.EquipmentIssueSubscriptions)
                            .HasForeignKey(t => t.EquipmentId)
                            .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<EquipmentAttachmentIssueDetailSubscription>()
+                           .HasOne(d => d.IssueDetail)
+                           .WithMany(t => t.EquipmentAttachmentIssueDetailSubscriptions)
+                           .HasForeignKey(t => t.IssueDetailId)
+                           .OnDelete(DeleteBehavior.ClientSetNull);
+
+            modelBuilder.Entity<EquipmentAttachmentIssueDetailSubscription>()
+                           .HasOne(d => d.EquipmentAttachment)
+                           .WithMany(t => t.EquipmentAttachmentIssueDetailSubscriptions)
+                           .HasForeignKey(t => t.EquipmentAttachmentId)
+                           .OnDelete(DeleteBehavior.ClientSetNull);
+
 
             modelBuilder.Entity<IssueDetailComment>()
                            .HasOne(d => d.User)
