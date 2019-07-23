@@ -265,5 +265,30 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
             return parentNode;
         }
+
+        public Task<bool> AddEquipmentAttachmentAsync(User user, AddEquipmentAttachmentFormModel equipmentAttachmentForm)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<EquipmentAttachmentViewModel> GetEquipmentAttachmentAsync(User user, long id)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentForUserAsync(User user)
+        {
+            throw new NotImplementedException();
+        }
+
+        public Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentByEquipmentIdAsync(User user, long id)
+        {
+            throw new NotImplementedException();
+        }
     }
 }

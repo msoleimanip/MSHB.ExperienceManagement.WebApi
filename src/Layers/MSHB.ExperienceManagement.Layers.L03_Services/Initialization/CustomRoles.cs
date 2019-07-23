@@ -51,6 +51,16 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Equipment-AddEquipment", "Equipment-AddEquipment"),
                 DefineIntRole("Equipment-EditEquipment", "Equipment-EditEquipment"),
                 DefineIntRole("Equipment-DeleteEquipment", "Equipment-DeleteEquipment"),
+                DefineIntRole("Equipment-AddEquipmentAttachment", "Equipment-AddEquipmentAttachment"),
+                DefineIntRole("Equipment-EditEquipmentAttachment", "Equipment-EditEquipmentAttachment"),
+                DefineIntRole("Equipment-GetEquipmentAttachment", "Equipment-GetEquipmentAttachment"),
+                DefineIntRole("Equipment-GetEquipmentAttachmentForUser", "Equipment-GetEquipmentAttachmentForUser"),
+                DefineIntRole("Equipment-GetEquipmentAttachmentByEquipmentId", "Equipment-GetEquipmentAttachmentByEquipmentId"),
+
+                
+
+
+
 
                 DefineIntRole("Account", "Account"),
                 DefineIntRole("Account-RefreshToken", "Account-RefreshToken"),

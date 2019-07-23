@@ -50,8 +50,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         public async Task<IActionResult> GetUserEquipmentForUser([FromQuery] Guid userId)
         {
-            var organizations = await _equipmentService.GetUserEquipmentForUserAsync(HttpContext.GetUser(), userId);
-            return Ok(GetRequestResult(organizations));
+            var equipments = await _equipmentService.GetUserEquipmentForUserAsync(HttpContext.GetUser(), userId);
+            return Ok(GetRequestResult(equipments));
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
@@ -80,6 +80,45 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         {
             var equipments = await _equipmentService.DeleteEquipmentAsync(HttpContext.GetUser(), equipmentIds);
             return Ok(GetRequestResult(equipments));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Equipment-AddEquipmentAttachment")]
+        [ValidateModelAttribute]
+        public async Task<IActionResult> AddEquipmentAttachment([FromBody] AddEquipmentAttachmentFormModel equipmentAttachmentForm)
+        {
+            var equipments = await _equipmentService.AddEquipmentAttachmentAsync(HttpContext.GetUser(), equipmentAttachmentForm);
+            return Ok(GetRequestResult(equipments));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Equipment-EditEquipmentAttachment")]
+        [ValidateModelAttribute]
+        public async Task<IActionResult> EditEquipmentAttachment([FromBody] EditEquipmentAttachmentFormModel equipmentAttachmentForm)
+        {
+            var equipments = await _equipmentService.EditEquipmentAttachmentAsync(HttpContext.GetUser(), equipmentAttachmentForm);
+            return Ok(GetRequestResult(equipments));
+        }
+        [HttpGet("[action]")]
+        [Authorize(Roles = "Equipment-GetEquipmentAttachment")]
+        public async Task<IActionResult> GetEquipmentAttachment([FromQuery] long Id)
+        {
+            return Ok(GetRequestResult(await _equipmentService.GetEquipmentAttachmentAsync(HttpContext.GetUser(), Id)));
+        }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Equipment-GetEquipmentAttachmentForUser")]
+        [ValidateModelAttribute]
+        public async Task<IActionResult> GetEquipmentAttachmentForUser()
+        {
+            var equipmentAtts = await _equipmentService.GetEquipmentAttachmentForUserAsync(HttpContext.GetUser());
+            return Ok(GetRequestResult(equipmentAtts));
+        }
+
+        [HttpGet("[action]")]
+        [Authorize(Roles = "Equipment-GetEquipmentAttachmentByEquipmentId")]
+        public async Task<IActionResult> GetEquipmentAttachmentByEquipmentId([FromQuery] long Id)
+        {
+            return Ok(GetRequestResult(await _equipmentService.GetEquipmentAttachmentByEquipmentIdAsync(HttpContext.GetUser(), Id)));
         }
     }
 }
