@@ -27,6 +27,9 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
         public static readonly ExperienceManagementErrorMessage AddDuplicateEquipmentError =
           new ExperienceManagementErrorMessage("AEE-1009", "امکان اضافه کردن تجهیزات با نام تکراری مهیا نیست.");
 
-
+        public static ExperienceManagementErrorMessage AddDuplicateEquipmentAttachmentError =
+          new ExperienceManagementErrorMessage("AEE-1010", "امکان اضافه کردن افزونه تجهیزات با نام تکراری مهیا نیست.");
+        public static ExperienceManagementErrorMessage AddEquipmentAttachmentError =
+          new ExperienceManagementErrorMessage("AEE-1011", "هنگام اضافه کردن افزونه تجهیزات خطایی رخ داده است.");
     }
 }

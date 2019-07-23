@@ -206,7 +206,8 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
             modelBuilder.Entity<FileAddress>().HasKey(x => x.FileId);
            modelBuilder.Entity<FileAddress>().Property(x => x.FileId).HasDefaultValueSql("NEWID()");
             modelBuilder.Entity<FileAddress>().HasIndex(x => x.FileId);
-
+            modelBuilder.Entity<EquipmentAttachment>().HasIndex(x => new {x.EquipmentId,x.EquipmentAttachmentName,x.EquipmentAttachmentType });
+            modelBuilder.Entity<EquipmentAttachment>().HasIndex(x => x.EquipmentId);
 
             modelBuilder.Entity<ReportStructure>().HasIndex(x => x.ReportId);
             modelBuilder.Entity<ReportStructure>()

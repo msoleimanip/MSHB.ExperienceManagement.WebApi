@@ -17,7 +17,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<bool> EditEquipmentAsync(User user, EditEquipmentFormModel equipmentForm);
         Task<bool> DeleteEquipmentAsync(User user, List<long> equipmentIds);
         Task<List<JsTreeNode>> GetUserEquipmentForUserAsync(User user, Guid userId);
-        Task<bool> AddEquipmentAttachmentAsync(User user, AddEquipmentAttachmentFormModel equipmentAttachmentForm);
+        Task<EquipmentAttachmentViewModel> AddEquipmentAttachmentAsync(User user, AddEquipmentAttachmentFormModel equipmentAttachmentForm);
         Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm);
         Task<EquipmentAttachmentViewModel> GetEquipmentAttachmentAsync(User user, long id);
         Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentForUserAsync(User user);

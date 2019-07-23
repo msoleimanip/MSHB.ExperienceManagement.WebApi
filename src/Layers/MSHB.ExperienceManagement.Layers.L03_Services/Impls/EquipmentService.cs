@@ -31,14 +31,14 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             Equipment equipment;
             try
             {
-                 equipment = await _context.Equipments.FindAsync(Id);
-                
+                equipment = await _context.Equipments.FindAsync(Id);
+
             }
             catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.GetEquipmentError, ex);
             }
-            
+
             if (equipment != null)
             {
                 return new EquipmentViewModel()
@@ -58,12 +58,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
             if (user.IsAdmin())
             {
-                 equipments = await _context.Equipments.ToListAsync();
-             
+                equipments = await _context.Equipments.ToListAsync();
+
             }
             else
             {
-                 equipments = await _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.Equipment).ToListAsync();             
+                equipments = await _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.Equipment).ToListAsync();
 
             }
             var equipmentnodes = new List<JsTreeNode>();
@@ -72,7 +72,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 if (or.ParentId == null)
                 {
                     JsTreeNode parentNode = new JsTreeNode();
-                    parentNode.id = or.Id.ToString();                  
+                    parentNode.id = or.Id.ToString();
                     parentNode.text = or.EquipmentName;
                     parentNode = FillChild(equipments, parentNode, or.Id);
                     equipmentnodes.Add(parentNode);
@@ -102,34 +102,34 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         public async Task<long> AddEquipmentAsync(User user, AddEquipmentFormModel equipmentForm)
         {
             try
-            {               
-                    Equipment parent = null;
-                    if (equipmentForm.ParentId != null)
-                        parent = _context.Equipments.FirstOrDefault(c => c.ParentId == equipmentForm.ParentId);
-                    var isDuplicateEquipment = _context.Equipments.Any(c => c.EquipmentName == equipmentForm.EquipmentName);
-                    if (!isDuplicateEquipment)
+            {
+                Equipment parent = null;
+                if (equipmentForm.ParentId != null)
+                    parent = _context.Equipments.FirstOrDefault(c => c.ParentId == equipmentForm.ParentId);
+                var isDuplicateEquipment = _context.Equipments.Any(c => c.EquipmentName == equipmentForm.EquipmentName);
+                if (!isDuplicateEquipment)
+                {
+                    var org = new Equipment()
                     {
-                        var org = new Equipment()
-                        {
-                            Description = equipmentForm.Description,
-                            EquipmentName = equipmentForm.EquipmentName,
-                            ParentId = equipmentForm.ParentId
-                        };
-                        await _context.Equipments.AddAsync(org);
-                        await _context.SaveChangesAsync();
-                        return org.Id;
-                    }
-                    throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddDuplicateEquipmentError);
-               
-                
+                        Description = equipmentForm.Description,
+                        EquipmentName = equipmentForm.EquipmentName,
+                        ParentId = equipmentForm.ParentId
+                    };
+                    await _context.Equipments.AddAsync(org);
+                    await _context.SaveChangesAsync();
+                    return org.Id;
+                }
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddDuplicateEquipmentError);
+
+
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddEquipmentError, ex);
             }
 
-           
-        }     
+
+        }
 
         public async Task<bool> EditEquipmentAsync(User user, EditEquipmentFormModel equipmentForm)
         {
@@ -159,7 +159,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentError, ex);
             }
-           
+
         }
 
         public async Task<bool> DeleteEquipmentAsync(User user, List<long> equipmentIds)
@@ -193,11 +193,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.DeleteEquipmentError, ex);
-            }          
+            }
         }
         private async Task DeleteEquipmentByChildAsync(Equipment child, List<long> equipmentIds)
         {
-            
+
             var parentEquipment = _context.Equipments.Include(p => p.Children)
                        .SingleOrDefault(p => p.Id == child.Id);
 
@@ -214,12 +214,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
         public async Task<List<JsTreeNode>> GetUserEquipmentForUserAsync(User user, Guid userId)
         {
-            var userEquipmentIds = (await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c=>c.Id==userId))?.EquipmentUserSubscriptions.Select(c=>c.EquipmentId).ToList();
-            var equipments = new List<Equipment>();          
+            var userEquipmentIds = (await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c => c.Id == userId))?.EquipmentUserSubscriptions.Select(c => c.EquipmentId).ToList();
+            var equipments = new List<Equipment>();
             equipments = await _context.Equipments.ToListAsync();
-           
-            var equipmentUsers =  equipments.Where(x => userEquipmentIds.Contains(x.Id)).ToList();
-            
+
+            var equipmentUsers = equipments.Where(x => userEquipmentIds.Contains(x.Id)).ToList();
+
             var equipmentnodes = new List<JsTreeNode>();
             equipments.ForEach(eq =>
             {
@@ -241,13 +241,13 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             return equipmentnodes;
         }
 
-        private JsTreeNode FillChild(List<Equipment> equipments, JsTreeNode parentNode,long eqId ,List<Equipment> equipmentUsers)
+        private JsTreeNode FillChild(List<Equipment> equipments, JsTreeNode parentNode, long eqId, List<Equipment> equipmentUsers)
         {
             if (equipments.Count > 0)
             {
                 equipments.ForEach(eq =>
                 {
-                    
+
                     if (eq.ParentId == eqId)
                     {
                         JsTreeNode parentNodeChild = new JsTreeNode();
@@ -266,9 +266,62 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             return parentNode;
         }
 
-        public Task<bool> AddEquipmentAttachmentAsync(User user, AddEquipmentAttachmentFormModel equipmentAttachmentForm)
+        public async Task<EquipmentAttachmentViewModel> AddEquipmentAttachmentAsync(User user, AddEquipmentAttachmentFormModel equipmentAttachmentForm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Equipment equipment = null;
+                equipment = _context.Equipments.FirstOrDefault(c => c.Id == equipmentAttachmentForm.EquipmentId);
+                if (equipment != null)
+                {
+
+                    var isDuplicateEquipmentAtt = _context.EquipmentAttachments.Any(c => c.EquipmentId == equipmentAttachmentForm.EquipmentId && c.EquipmentAttachmentName == equipmentAttachmentForm.EquipmentAttachmentName && c.EquipmentAttachmentType == equipmentAttachmentForm.EquipmentAttachmentType);
+                    if (!isDuplicateEquipmentAtt)
+                    {
+                        var equipmentAtt = new EquipmentAttachment()
+                        {
+                            Description = equipmentAttachmentForm.Description,
+                            EquipmentAttachmentName = equipmentAttachmentForm.EquipmentAttachmentName,
+                            EquipmentAttachmentType = equipmentAttachmentForm.EquipmentAttachmentType,
+                            EquipmentId = equipmentAttachmentForm.EquipmentId,
+                        };
+                        if (equipmentAttachmentForm.UploadFileId != null)
+                        {
+                            var fileAddress = _context.FileAddresses.Find(equipmentAttachmentForm.UploadFileId);
+
+                            if (fileAddress is null)
+                            {
+                                throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistFileAddressError);
+                            }
+                            equipmentAtt.FileId = fileAddress.FileId;
+                            equipmentAtt.FileSize = fileAddress.FileSize;
+                            equipmentAtt.FileType = fileAddress.FileType;
+
+                        }
+                        await _context.EquipmentAttachments.AddAsync(equipmentAtt);
+                        await _context.SaveChangesAsync();
+                        return new EquipmentAttachmentViewModel() {
+                            EquipmentAttachmentId= equipmentAtt.Id,
+                            CreationDate=equipmentAtt.CreationDate,
+                            Description=equipmentAtt.Description,
+                            EquipmentAttachmentName=equipmentAtt.EquipmentAttachmentName,
+                            EquipmentId=equipmentAtt.EquipmentId,
+                            EquipmentAttachmentType=equipmentAtt.EquipmentAttachmentType,
+                            FileId=equipmentAtt.FileId,
+                            FileSize=equipmentAtt.FileSize,
+                            FileType=equipmentAtt.FileType
+                        };
+                    }
+                    throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddDuplicateEquipmentAttachmentError);
+                }
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentNotExistError);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddEquipmentAttachmentError, ex);
+            }
         }
 
         public Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm)
