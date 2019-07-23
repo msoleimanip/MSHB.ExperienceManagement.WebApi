@@ -116,5 +116,12 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(resp));
         }
 
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        public async Task<IActionResult> IssueDetailsBestAnswer([FromBody] IssueDetailBestAnswerFormModel issueDetailsAnswer)
+        {
+            var resp = await _issueService.IssueDetailsBestAnswerAsync(HttpContext.GetUser(), issueDetailsAnswer);
+            return Ok(GetRequestResult(resp));
+        }
     }
 }

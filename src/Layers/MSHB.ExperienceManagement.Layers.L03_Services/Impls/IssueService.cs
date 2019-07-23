@@ -820,5 +820,35 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeLikeIssueError, ex);
             }
         }
+
+        public async Task<bool> IssueDetailsBestAnswerAsync(User user, IssueDetailBestAnswerFormModel issueDetailsAnswer)
+        {
+            try
+            {
+                var issueDetail = await _context.IssueDetails.FindAsync( issueDetailsAnswer.IssueDetailId);
+                if (issueDetail is null)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
+                }
+                var issue = await _context.Issues.FindAsync(issueDetail.IssueId);
+                if (issue is null)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
+                }
+
+                if (issue.UserId != user.Id)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.UserChangeAnswerIssueError);
+                }
+                issueDetail.IsCorrectAnswer = issueDetailsAnswer.IsAnswer;
+                _context.IssueDetails.Update(issueDetail);
+                await _context.SaveChangesAsync();
+                return issueDetailsAnswer.IsAnswer;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeAnswerIssueError, ex);
+            }
+        }
     }
 }

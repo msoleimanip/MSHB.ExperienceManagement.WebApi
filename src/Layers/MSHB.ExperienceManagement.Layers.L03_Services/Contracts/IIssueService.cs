@@ -23,5 +23,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<List<IssueDetailViewModel>> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm);
         Task<SearchIssueViewModel> SearchSmartIssueAsync(SearchSmartIssueFormModel searchIssueForm);
         Task<long> IssueDetailsLikeAsync(User user, IssueDetailsLikeFormModel issueDetailsLike);
+        Task<bool> IssueDetailsBestAnswerAsync(User user, IssueDetailBestAnswerFormModel issueDetailsAnswer);
     }
 }

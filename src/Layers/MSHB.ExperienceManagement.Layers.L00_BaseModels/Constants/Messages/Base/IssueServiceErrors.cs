@@ -50,5 +50,11 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
 
         public static ExperienceManagementErrorMessage ChangeLikeIssueError =
           new ExperienceManagementErrorMessage("UFE-1018", "موقع تغییر میزان محبوبیت خطایی رخ داده است.");
+
+        public static ExperienceManagementErrorMessage ChangeAnswerIssueError =
+          new ExperienceManagementErrorMessage("UFE-1019", "موقع تغییر وضعیت کیفیت پاسخ خطایی رخ داده است.");
+
+        public static ExperienceManagementErrorMessage UserChangeAnswerIssueError =
+          new ExperienceManagementErrorMessage("UFE-1020", "کاربر مورد نظر امکان تایید یا رد پاسخ را ندارد تنها طراح مسئله می تواند.");
     }
 }
