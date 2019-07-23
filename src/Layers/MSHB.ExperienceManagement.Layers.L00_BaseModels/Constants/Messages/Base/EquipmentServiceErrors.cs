@@ -37,5 +37,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
 
         public static ExperienceManagementErrorMessage GetEquipmentAttachmentByEquipmentIdError =
           new ExperienceManagementErrorMessage("AEE-1013", "موقع دریافت افزونه های تجهیز مورد نظر خطایی رخ داده است.");
+
+        public static ExperienceManagementErrorMessage GetEquipmentAttachmentForUserError =
+          new ExperienceManagementErrorMessage("AEE-1014", "موقع دریافت افزونه تجهیزات ارسالی خطایی رخ داده است..");
     }
 }

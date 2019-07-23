@@ -20,7 +20,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<EquipmentAttachmentViewModel> AddEquipmentAttachmentAsync(User user, AddEquipmentAttachmentFormModel equipmentAttachmentForm);
         Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm);
         Task<EquipmentAttachmentViewModel> GetEquipmentAttachmentAsync(User user, long id);
-        Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentForUserAsync(User user);
+        Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentForUserAsync(User user, EquipmentAttachmentUserFormModel equipmentAttachmentUserFormModel);
         Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentByEquipmentIdAsync(User user, long id);
     }
 }

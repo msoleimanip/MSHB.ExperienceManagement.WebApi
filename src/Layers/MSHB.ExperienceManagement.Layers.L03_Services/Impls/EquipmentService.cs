@@ -403,9 +403,29 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentForUserAsync(User user)
+        public async Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentForUserAsync(User user, EquipmentAttachmentUserFormModel equipmentAttachmentUserFormModel)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var equipmentAtts = await _context.EquipmentAttachments.Where(c=> equipmentAttachmentUserFormModel.EquipmentIds.Contains(c.EquipmentId)).ToListAsync();
+                
+                return equipmentAtts.Select(equipmentAtt => new EquipmentAttachmentViewModel
+                {
+                    EquipmentAttachmentId = equipmentAtt.Id,
+                    CreationDate = equipmentAtt.CreationDate,
+                    Description = equipmentAtt.Description,
+                    EquipmentAttachmentName = equipmentAtt.EquipmentAttachmentName,
+                    EquipmentId = equipmentAtt.EquipmentId,
+                    EquipmentAttachmentType = equipmentAtt.EquipmentAttachmentType,
+                    FileId = equipmentAtt.FileId,
+                    FileSize = equipmentAtt.FileSize,
+                    FileType = equipmentAtt.FileType
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.GetEquipmentAttachmentForUserError, ex);
+            }
         }
 
         public async Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentByEquipmentIdAsync(User user, long id)
