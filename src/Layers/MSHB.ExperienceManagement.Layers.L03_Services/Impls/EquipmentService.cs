@@ -324,9 +324,57 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm)
+        public async Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm)
         {
-            throw new NotImplementedException();
+            try
+            {
+                Equipment equipment = null;
+                equipment = _context.Equipments.FirstOrDefault(c => c.Id == equipmentAttachmentForm.EquipmentId);
+                if (equipment != null)
+                {
+
+                    var isDuplicateEquipmentAtt = _context.EquipmentAttachments.Any(c => c.Id!= equipmentAttachmentForm.EquipmentAttachmentId 
+                                                                                      && c.EquipmentId == equipmentAttachmentForm.EquipmentId && c.EquipmentAttachmentName == equipmentAttachmentForm.EquipmentAttachmentName && c.EquipmentAttachmentType == equipmentAttachmentForm.EquipmentAttachmentType);
+                    if (!isDuplicateEquipmentAtt)
+                    {
+                        var equipmentAtt = await _context.EquipmentAttachments.FindAsync(equipmentAttachmentForm.EquipmentAttachmentId);
+                        if (equipmentAtt!=null)
+                        {
+
+                            equipmentAtt.Description = equipmentAttachmentForm.Description;
+                            equipmentAtt.EquipmentAttachmentName = equipmentAttachmentForm.EquipmentAttachmentName;
+                            equipmentAtt.EquipmentAttachmentType = equipmentAttachmentForm.EquipmentAttachmentType;
+                            equipmentAtt.EquipmentId = equipmentAttachmentForm.EquipmentId;
+                            
+                            if (equipmentAttachmentForm.UploadFileId != null)
+                            {
+                                var fileAddress = _context.FileAddresses.Find(equipmentAttachmentForm.UploadFileId);
+
+                                if (fileAddress is null)
+                                {
+                                    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotExistFileAddressError);
+                                }
+                                equipmentAtt.FileId = fileAddress.FileId;
+                                equipmentAtt.FileSize = fileAddress.FileSize;
+                                equipmentAtt.FileType = fileAddress.FileType;
+
+                            }
+                            await _context.EquipmentAttachments.AddAsync(equipmentAtt);
+                            await _context.SaveChangesAsync();
+                            return true;
+                        }
+                        throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentAttachmentNotFoundError);
+                    }
+                    throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddDuplicateEquipmentAttachmentError);
+                }
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentNotExistError);
+
+
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.AddEquipmentAttachmentError, ex);
+            }
         }
 
         public Task<EquipmentAttachmentViewModel> GetEquipmentAttachmentAsync(User user, long id)
@@ -339,9 +387,29 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             throw new NotImplementedException();
         }
 
-        public Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentByEquipmentIdAsync(User user, long id)
+        public async Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentByEquipmentIdAsync(User user, long id)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var equipmentAttachments = await _context.EquipmentAttachments.Where(c => c.EquipmentId == id).ToListAsync();
+
+                return equipmentAttachments.Select(equipmentAtt => new EquipmentAttachmentViewModel
+                {
+                    EquipmentAttachmentId = equipmentAtt.Id,
+                    CreationDate = equipmentAtt.CreationDate,
+                    Description = equipmentAtt.Description,
+                    EquipmentAttachmentName = equipmentAtt.EquipmentAttachmentName,
+                    EquipmentId = equipmentAtt.EquipmentId,
+                    EquipmentAttachmentType = equipmentAtt.EquipmentAttachmentType,
+                    FileId = equipmentAtt.FileId,
+                    FileSize = equipmentAtt.FileSize,
+                    FileType = equipmentAtt.FileType
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(EquipmentServiceErrors.GetEquipmentAttachmentByEquipmentIdError, ex);
+            }
         }
     }
 }

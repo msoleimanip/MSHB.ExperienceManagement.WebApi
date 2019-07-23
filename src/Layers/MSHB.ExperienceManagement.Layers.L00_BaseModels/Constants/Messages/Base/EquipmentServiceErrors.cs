@@ -31,5 +31,11 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
           new ExperienceManagementErrorMessage("AEE-1010", "امکان اضافه کردن افزونه تجهیزات با نام تکراری مهیا نیست.");
         public static ExperienceManagementErrorMessage AddEquipmentAttachmentError =
           new ExperienceManagementErrorMessage("AEE-1011", "هنگام اضافه کردن افزونه تجهیزات خطایی رخ داده است.");
+
+        public static ExperienceManagementErrorMessage EditEquipmentAttachmentNotFoundError =
+          new ExperienceManagementErrorMessage("AEE-1012", "افزونه مورد نظر یافت نشد.");
+
+        public static ExperienceManagementErrorMessage GetEquipmentAttachmentByEquipmentIdError =
+          new ExperienceManagementErrorMessage("AEE-1013", "موقع دریافت افزونه های تجهیز مورد نظر خطایی رخ داده است.");
     }
 }
