@@ -77,6 +77,18 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                     Description = "Administrator"
                 };
 
+                var org = new Organization()
+                {
+                    CreationDate = DateTime.Now,
+                    OrganizationName = "کل رده ها",
+                    Description="",
+                };
+                var equipment = new Equipment()
+                {
+                    LastUpdateDate = DateTime.Now,
+                    EquipmentName = "کل تجهیزات",                   
+                    Description = "",
+                };
                 var adminUser = new User
                 {
                     Username = "admin",
@@ -92,6 +104,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
 
                 _context.GroupAuths.Add(groupAuth);
                 _context.Users.Add(adminUser);
+                _context.Organizations.Add(org);
+                _context.Equipments.Add(equipment);
 
                 foreach (var role in _context.Roles.ToList())
                 {

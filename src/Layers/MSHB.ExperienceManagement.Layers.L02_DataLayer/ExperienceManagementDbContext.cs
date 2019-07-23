@@ -26,6 +26,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<UserConfiguration> UserConfigurations { get; set; }
         public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Equipment> Equipments { get; set; }
+        public virtual DbSet<EquipmentAttachment> EquipmentAttachments { get; set; }  
         public virtual DbSet<EquipmentUserSubscription> EquipmentUserSubscriptions { get; set; }
         public virtual DbSet<Issue> Issues { get; set; }
         public virtual DbSet<IssueDetail> IssueDetails { get; set; }
@@ -181,6 +182,10 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
 
             modelBuilder.Entity<IssueDetailComment>()
                     .Property(c => c.CreationDate).HasDefaultValueSql("getdate()");
+            modelBuilder.Entity<EquipmentAttachment>()
+                    .Property(c => c.CreationDate).HasDefaultValueSql("getdate()");
+
+            
             modelBuilder.Entity<Organization>()
                     .Property(c => c.CreationDate).HasDefaultValueSql("getdate()");
 

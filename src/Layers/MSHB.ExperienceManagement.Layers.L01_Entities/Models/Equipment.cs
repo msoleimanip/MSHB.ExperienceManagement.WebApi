@@ -28,6 +28,8 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
 
         public virtual ICollection<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
 
+        public virtual ICollection<EquipmentAttachment> EquipmentAttachments { get; set; }
+
 
 
     }
