@@ -4,14 +4,16 @@ using MSHB.ExperienceManagement.Layers.L02_DataLayer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
 {
     [DbContext(typeof(ExperienceManagementDbContext))]
-    partial class ExperienceManagementDbContextModelSnapshot : ModelSnapshot
+    [Migration("20190723111500_mig6")]
+    partial class mig6
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -43,6 +45,24 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Log_T");
+                });
+
+            modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.City", b =>
+                {
+                    b.Property<long>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasMaxLength(100);
+
+                    b.Property<long?>("ParentId");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentId");
+
+                    b.ToTable("City_T");
                 });
 
             modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.Equipment", b =>
@@ -587,6 +607,13 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("UserToken_T");
+                });
+
+            modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.City", b =>
+                {
+                    b.HasOne("MSHB.ExperienceManagement.Layers.L01_Entities.Models.City", "Parent")
+                        .WithMany("Children")
+                        .HasForeignKey("ParentId");
                 });
 
             modelBuilder.Entity("MSHB.ExperienceManagement.Layers.L01_Entities.Models.Equipment", b =>

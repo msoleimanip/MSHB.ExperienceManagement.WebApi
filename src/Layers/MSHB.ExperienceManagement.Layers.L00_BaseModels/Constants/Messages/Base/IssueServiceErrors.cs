@@ -48,11 +48,7 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
         public static ExperienceManagementErrorMessage SearchIssuesError =
           new ExperienceManagementErrorMessage("UFE-1017", "خطا در دریافت مسئله ها.");
 
-
-
-
-
-
-
+        public static ExperienceManagementErrorMessage ChangeLikeIssueError =
+          new ExperienceManagementErrorMessage("UFE-1018", "موقع تغییر میزان محبوبیت خطایی رخ داده است.");
     }
 }

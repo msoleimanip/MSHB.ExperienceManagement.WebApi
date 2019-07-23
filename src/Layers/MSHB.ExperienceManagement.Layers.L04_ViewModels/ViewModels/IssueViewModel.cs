@@ -14,7 +14,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public DateTime? LastUpdateDate { get; set; }     
         public Guid?  FileId { get; set; }
         public int? AnswerCount { get; set; } = 0;
-        public int? SumLikes { get; set; } = 0;
+        public long SumLikes { get; set; } = 0;
         public bool? IsActive { get; set; } = false;
         public IssueType IssueType { get; set; }
         public Guid UserId { get; set; }

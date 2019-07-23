@@ -208,8 +208,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 var issueDetailsViewM = new IssueDetailViewModel()
                 {
-                    Caption = issueDetail.Caption,
-                    AnswerUseful = issueDetail.AnswerUseful,
+                    Caption = issueDetail.Caption,                 
                     CreationDate = issueDetail.CreationDate,
                     Text = issueDetail.Text,
                     IsCorrectAnswer = issueDetail.IsCorrectAnswer,
@@ -601,8 +600,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     var issuedetail = new IssueDetailViewModel()
                     {
-                        Caption = response.Caption,
-                        AnswerUseful = response.AnswerUseful,
+                        Caption = response.Caption,                      
                         CreationDate = response.CreationDate,
                         Text = response.Text,
                         IsCorrectAnswer = response.IsCorrectAnswer,
@@ -761,6 +759,65 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.SearchIssuesError, ex);
+            }
+        }
+
+        public async Task<long> IssueDetailsLikeAsync(User user, IssueDetailsLikeFormModel issueDetailsLike)
+        {
+            try
+            {
+                var issueDetail = await _context.IssueDetails.Include(c => c.IssueDetailLikes).FirstOrDefaultAsync(c => c.Id == issueDetailsLike.IssueDetailId);
+                if (issueDetail is null)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
+                }
+                if (issueDetail.UserId != user.Id)
+                {
+                    if (issueDetail.IssueDetailLikes!=null && issueDetail.IssueDetailLikes.Count>0)
+                    {
+                        var userLike = issueDetail.IssueDetailLikes.FirstOrDefault();
+                        if (userLike.IsLike != issueDetailsLike.IsLike)
+                        {
+                            if ( issueDetailsLike.IsLike == false)
+                            {
+                                issueDetail.Likes = issueDetail.Likes - 1;
+                            }
+                            else
+                            {
+                                issueDetail.Likes = issueDetail.Likes + 1;
+                            }
+                            userLike.IsLike = issueDetailsLike.IsLike;
+                            _context.IssueDetailLikes.Update(userLike);
+                           
+                        }
+                        
+                    }
+                    else
+                    {
+                        var userLike = new IssueDetailLike()
+                        {
+                            IsLike = issueDetailsLike.IsLike,
+                            UserId = user.Id,
+                            IssueDetail = issueDetail
+                        };
+                        await _context.IssueDetailLikes.AddAsync(userLike);
+                        if (issueDetailsLike.IsLike)
+                        {
+                            issueDetail.Likes = issueDetail.Likes + 1;
+                        }
+                        else
+                        {
+                            issueDetail.Likes = issueDetail.Likes - 1;
+                        }
+                    }
+                    _context.IssueDetails.Update(issueDetail);
+                    await _context.SaveChangesAsync();
+                }
+                return issueDetail.Likes;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeLikeIssueError, ex);
             }
         }
     }

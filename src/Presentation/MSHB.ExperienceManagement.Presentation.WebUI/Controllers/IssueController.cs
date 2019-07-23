@@ -8,6 +8,7 @@ using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Presentation.WebCore;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
+using MSHB.ExperienceManagement.Presentation.WebUI.filters;
 
 namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 {
@@ -24,6 +25,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> AddIssue([FromBody] AddIssueFormModel issueForm)
         {
             var resp = await _issueService.AddIssueAsync(HttpContext.GetUser(), issueForm);
@@ -31,6 +33,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> AddIssueDetails([FromBody] AddIssueDetailFormModel issueDetailForm)
         {
             var resp = await _issueService.AddIssueDetailAsync(HttpContext.GetUser(), issueDetailForm);
@@ -39,6 +42,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         
          [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> ActivateIssue([FromBody] ActivateIssueFormModel issueActivate)
         {
             var resp = await _issueService.ActivateIssueAsync(HttpContext.GetUser(), issueActivate);
@@ -46,6 +50,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> EditIssue([FromBody]  EditIssueFormModel issueForm)
         {
             var resp = await _issueService.EditIssueAsync(HttpContext.GetUser(), issueForm);
@@ -54,6 +59,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> EditIssueDetails( [FromBody] EditIssueDetailFormModel issueDetailForm)
         {
             var resp = await _issueService.EditIssueDetailAsync(HttpContext.GetUser(), issueDetailForm);
@@ -62,6 +68,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
         
          [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> DeleteIssueDetail( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
         {
             var resp = await _issueService.DeleteIssueDetailAttachmentsAsync(HttpContext.GetUser(), issueDetailAttachmentForm);
@@ -70,6 +77,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> AddIssueDetailComment([FromBody] AddIssueDetailCommentFormModel issueForm)
         {
             var resp = await _issueService.AddIssueDetailCommentAsync(HttpContext.GetUser(), issueForm);
@@ -77,6 +85,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> GetIssuesForUser([FromBody] SearchIssueFormModel searchIssueForm)
         {
             return Ok(GetRequestResult(await _issueService.GetIssuesForUserAsync(searchIssueForm)));
@@ -84,6 +93,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> GetIssueDetails([FromBody] SearchIssueDetailFormModel searchIssueDetailForm)
         {
             return Ok(GetRequestResult(await _issueService.GetIssueDetailsAsync(searchIssueDetailForm)));
@@ -91,9 +101,19 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
         public async Task<IActionResult> SearchSmartIssue([FromBody] SearchSmartIssueFormModel searchIssueForm)
         {
             return Ok(GetRequestResult(await _issueService.SearchSmartIssueAsync( searchIssueForm)));
+        }
+
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        public async Task<IActionResult> IssueDetailsLike([FromBody] IssueDetailsLikeFormModel issueDetailsLike)
+        {
+            var resp = await _issueService.IssueDetailsLikeAsync(HttpContext.GetUser(), issueDetailsLike);
+            return Ok(GetRequestResult(resp));
         }
 
     }

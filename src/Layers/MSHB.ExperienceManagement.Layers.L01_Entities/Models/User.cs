@@ -88,6 +88,7 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public virtual ICollection<UserIssueSubscription> UserIssueSubscriptions { get; set; }
 
         public virtual ICollection<IssueDetailComment> IssueDetailComments { get; set; }
+        public virtual ICollection<IssueDetailLike> IssueDetailLikes { get; set; }
 
 
 

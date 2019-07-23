@@ -24,7 +24,6 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<AppLogItem> Logs { get; set; }
         public virtual DbSet<Organization> Organizations { get; set; }
         public virtual DbSet<UserConfiguration> UserConfigurations { get; set; }
-        public virtual DbSet<City> Cities { get; set; }
         public virtual DbSet<Equipment> Equipments { get; set; }
         public virtual DbSet<EquipmentAttachment> EquipmentAttachments { get; set; }  
         public virtual DbSet<EquipmentUserSubscription> EquipmentUserSubscriptions { get; set; }
@@ -35,11 +34,13 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<UserIssueSubscription> UserIssueSubscriptions { get; set; } /* User Popular user issues */
         public virtual DbSet<FileAddress> FileAddresses { get; set; }
         public virtual DbSet<EquipmentIssueSubscription> EquipmentIssueSubscriptions { get; set; }
-        public virtual DbSet<EquipmentAttachmentIssueDetailSubscription> EquipmentAttachmentIssueDetailSubscriptions { get; set; }       
+        public virtual DbSet<EquipmentAttachmentIssueDetailSubscription> EquipmentAttachmentIssueDetailSubscriptions { get; set; }
+        public virtual DbSet<IssueDetailLike> IssueDetailLikes { get; set; }
+        
         public virtual DbSet<ReportStructure> ReportStructures { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
-            @"Data Source=192.168.4.117;Initial Catalog=ExperienceManagement;User id=sa; Password=hamed224;");
+            @"Data Source=.;Initial Catalog=ExperienceManagement;User id=sa; Password=Aa123456;");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -131,6 +132,20 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
                             .HasForeignKey(t => t.UserId)
                             .OnDelete(DeleteBehavior.ClientSetNull);
 
+            modelBuilder.Entity<IssueDetailLike>()
+                            .HasOne(d => d.User)
+                            .WithMany(t => t.IssueDetailLikes)
+                            .HasForeignKey(t => t.UserId)
+                            .OnDelete(DeleteBehavior.ClientSetNull);
+            modelBuilder.Entity<IssueDetailLike>()
+                        .HasOne(d => d.IssueDetail)
+                        .WithMany(t => t.IssueDetailLikes)
+                        .HasForeignKey(t => t.IssueDetailId)
+                        .OnDelete(DeleteBehavior.ClientSetNull);
+
+
+
+
             modelBuilder.Entity<UserIssueSubscription>()
                            .HasOne(d => d.User)
                            .WithMany(t => t.UserIssueSubscriptions)
@@ -208,6 +223,8 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
             modelBuilder.Entity<FileAddress>().HasIndex(x => x.FileId);
             modelBuilder.Entity<EquipmentAttachment>().HasIndex(x => new {x.EquipmentId,x.EquipmentAttachmentName,x.EquipmentAttachmentType });
             modelBuilder.Entity<EquipmentAttachment>().HasIndex(x => x.EquipmentId);
+
+            modelBuilder.Entity<IssueDetailLike>().HasIndex(x => new {x.UserId,x.IssueDetailId}).IsUnique();
 
             modelBuilder.Entity<ReportStructure>().HasIndex(x => x.ReportId);
             modelBuilder.Entity<ReportStructure>()

@@ -14,10 +14,9 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public string Caption { get; set; }
         public string Text { get; set; }
         public DateTime? CreationDate { get; set; }
-        public DateTime? LastUpdateDate { get; set; }
-        public int AnswerUseful { get; set; } = 0;
-        public bool IsCorrectAnswer { get; set; } 
-        public int? Likes { get; set; }
+        public DateTime? LastUpdateDate { get; set; }       
+        public bool IsCorrectAnswer { get; set; }
+        public long Likes { get; set; } = 0;
         [ForeignKey("UserId")]
         public virtual User User { get; set; }
         [ForeignKey("IssueId")]
@@ -25,8 +24,8 @@ namespace MSHB.ExperienceManagement.Layers.L01_Entities.Models
         public virtual ICollection<IssueDetailAttachment> IssueDetailAttachments { get; set; }
         public virtual ICollection<IssueDetailComment> IssueDetailComments { get; set; }
         public virtual ICollection<EquipmentAttachmentIssueDetailSubscription> EquipmentAttachmentIssueDetailSubscriptions { get; set; }
-
-
+        public virtual ICollection<IssueDetailLike> IssueDetailLikes { get; set; }
+        
 
     }
 }

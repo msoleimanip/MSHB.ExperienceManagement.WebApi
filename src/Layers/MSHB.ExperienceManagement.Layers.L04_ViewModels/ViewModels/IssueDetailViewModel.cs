@@ -9,14 +9,13 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public long IssueDetailId { get; set; }
         public long IssueId { get; set; }
         public Guid UserId { get; set; }
-        public string UserName { get; set; }
+        public string UserName { get; set; }   
         public string Caption { get; set; }
         public string Text { get; set; }
         public DateTime? CreationDate { get; set; }
-        public DateTime? LastUpdateDate { get; set; }
-        public int AnswerUseful { get; set; } = 0;
+        public DateTime? LastUpdateDate { get; set; }      
         public bool IsCorrectAnswer { get; set; }
-        public int? Likes { get; set; }
+        public long Likes { get; set; }
         public List<IssueDetailAttachmentViewModel> IssueDetailAttachments { get; set; }
         public List<IssueDetailCommentViewModel> IssueDetailComments { get; set; }
         public List<EquipmentAttachmentViewModel> EquipmentAttachmentViewModels { get; set; }

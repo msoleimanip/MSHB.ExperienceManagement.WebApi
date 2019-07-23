@@ -324,7 +324,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<bool> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm)
+        public async Task<EquipmentAttachmentViewModel> EditEquipmentAttachmentAsync(User user, EditEquipmentAttachmentFormModel equipmentAttachmentForm)
         {
             try
             {
@@ -359,9 +359,20 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                                 equipmentAtt.FileType = fileAddress.FileType;
 
                             }
-                            await _context.EquipmentAttachments.AddAsync(equipmentAtt);
+                             _context.EquipmentAttachments.Update(equipmentAtt);
                             await _context.SaveChangesAsync();
-                            return true;
+                            return new EquipmentAttachmentViewModel()
+                            {
+                                EquipmentAttachmentId = equipmentAtt.Id,
+                                CreationDate = equipmentAtt.CreationDate,
+                                Description = equipmentAtt.Description,
+                                EquipmentAttachmentName = equipmentAtt.EquipmentAttachmentName,
+                                EquipmentId = equipmentAtt.EquipmentId,
+                                EquipmentAttachmentType = equipmentAtt.EquipmentAttachmentType,
+                                FileId = equipmentAtt.FileId,
+                                FileSize = equipmentAtt.FileSize,
+                                FileType = equipmentAtt.FileType
+                            };
                         }
                         throw new ExperienceManagementGlobalException(EquipmentServiceErrors.EditEquipmentAttachmentNotFoundError);
                     }
