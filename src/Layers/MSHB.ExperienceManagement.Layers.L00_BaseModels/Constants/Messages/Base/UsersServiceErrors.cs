@@ -30,17 +30,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
              new ExperienceManagementErrorMessage("AUE-1010", "نام کاربری و شناسه کاربری درست نمی باشد.");
         public static ExperienceManagementErrorMessage RefreshToken =
             new ExperienceManagementErrorMessage("AUE-1011", "مشکل در کد دریافت دوباره سطح دسترسی.");
-
-
-
-
-
-
-
-
-
-
-
+        public static ExperienceManagementErrorMessage DeActive =
+            new ExperienceManagementErrorMessage("AUE-1012", "کاربری شما توسط ادمین سیستم غیرفعال شده است");
     }
 
 }

@@ -38,7 +38,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
         
-
          [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> ActivateIssue([FromBody] ActivateIssueFormModel issueActivate)
         {
@@ -63,7 +62,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
         
          [HttpGet("[action]"), HttpPost("[action]")]
-        public async Task<IActionResult> AddIssueDetail( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
+        public async Task<IActionResult> DeleteIssueDetail( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
         {
             var resp = await _issueService.DeleteIssueDetailAttachmentsAsync(HttpContext.GetUser(), issueDetailAttachmentForm);
             return Ok(GetRequestResult(resp));
@@ -82,6 +81,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         {
             return Ok(GetRequestResult(await _issueService.GetIssuesForUserAsync(searchIssueForm)));
         }
+
+
         [HttpGet("[action]"), HttpPost("[action]")]
         public async Task<IActionResult> GetIssueDetails([FromBody] SearchIssueDetailFormModel searchIssueDetailForm)
         {
@@ -94,12 +95,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         {
             return Ok(GetRequestResult(await _issueService.SearchSmartIssueAsync( searchIssueForm)));
         }
-
-
-
-
-
-
 
     }
 }

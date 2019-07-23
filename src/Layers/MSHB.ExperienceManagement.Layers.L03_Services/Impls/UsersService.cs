@@ -32,11 +32,15 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             var passwordHash = _securityService.GetSha256Hash(password);
             var resp = await _context.Users.FirstOrDefaultAsync(x => x.Username == username && x.Password == passwordHash);
-            if (resp == null || !resp.IsActive)
+            if (resp == null)
             {
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.Unauthorized);
-
             }
+            if (!resp.IsActive)
+            {
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.DeActive);
+            }
+
             return resp;
         }
         public async Task<Guid> AddUserAsync(User user, AddUserFormModel userForm)
@@ -52,10 +56,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
                 }
-              
+
                 var userReg = new User()
                 {
-                   
+
                     GroupAuthId = userForm.GroupAuthId,
                     FirstName = userForm.FirstName,
                     Description = userForm.Description,
@@ -103,7 +107,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.GroupNotFoundError);
                 }
-               
+
 
                 if (userEdt.GroupAuthId != userForm.GroupAuthId)
                 {
@@ -119,7 +123,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     _context.UserRoles.AddRange(newUserRoles);
 
                 }
-            
+
                 userEdt.GroupAuthId = userForm.GroupAuthId;
                 userEdt.FirstName = userForm.FirstName;
                 userEdt.Description = userForm.Description;
@@ -127,7 +131,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 userEdt.IsPresident = userForm.IsPresident;
                 userEdt.LastName = userForm.LastName;
                 if (!string.IsNullOrEmpty(userForm.Password))
-                userEdt.Password = _securityService.GetSha256Hash(userForm.Password);
+                    userEdt.Password = _securityService.GetSha256Hash(userForm.Password);
                 userEdt.SerialNumber = Guid.NewGuid().ToString("N");
                 userEdt.Location = userForm.Location;
                 userEdt.PhoneNumber = userForm.PhoneNumber;
@@ -141,7 +145,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.AddUserError, ex);
             }
-        }   
+        }
         public async Task<UserViewModel> GetUserById(User user, Guid id)
         {
             var respUser = await _context.Users.FindAsync(id);
@@ -190,37 +194,37 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
                 queryable = queryable.Where(q => q.IsActive == searchUserForm.IsActive.Value);
             }
-            if (searchUserForm.SortModel!=null)         
-            switch (searchUserForm.SortModel.Col+"|"+searchUserForm.SortModel.Sort)
-            {
-                case "firstname|asc":
-                    queryable = queryable.OrderBy(x => x.FirstName);
-                    break;
-                case "firstname|desc":
-                    queryable = queryable.OrderByDescending(x => x.FirstName);
-                    break;
-                case "lastname|asc":
-                    queryable = queryable.OrderBy(x => x.LastName);
-                    break;
-                case "lastname|desc":
-                    queryable = queryable.OrderByDescending(x => x.LastName);
-                    break;
-                case "username|asc":
-                    queryable = queryable.OrderBy(x => x.Username);
-                    break;
-                case "username|desc":
-                    queryable = queryable.OrderByDescending(x => x.Username);
-                    break;
-                default:
-                    queryable = queryable.OrderBy(x => x.CreationDate);
-                    break;
-            }
+            if (searchUserForm.SortModel != null)
+                switch (searchUserForm.SortModel.Col + "|" + searchUserForm.SortModel.Sort)
+                {
+                    case "firstname|asc":
+                        queryable = queryable.OrderBy(x => x.FirstName);
+                        break;
+                    case "firstname|desc":
+                        queryable = queryable.OrderByDescending(x => x.FirstName);
+                        break;
+                    case "lastname|asc":
+                        queryable = queryable.OrderBy(x => x.LastName);
+                        break;
+                    case "lastname|desc":
+                        queryable = queryable.OrderByDescending(x => x.LastName);
+                        break;
+                    case "username|asc":
+                        queryable = queryable.OrderBy(x => x.Username);
+                        break;
+                    case "username|desc":
+                        queryable = queryable.OrderByDescending(x => x.Username);
+                        break;
+                    default:
+                        queryable = queryable.OrderBy(x => x.CreationDate);
+                        break;
+                }
             else
                 queryable = queryable.OrderBy(x => x.CreationDate);
             var resp = await queryable.Skip((searchUserForm.PageIndex - 1) * searchUserForm.PageSize).Take(searchUserForm.PageSize).ToListAsync();
             var count = await queryable.CountAsync();
             var searchViewModel = new SearchUserViewModel();
-            searchViewModel.searchUserViewModel= resp.Select(respUser => new UserViewModel()
+            searchViewModel.searchUserViewModel = resp.Select(respUser => new UserViewModel()
             {
                 Id = respUser.Id,
                 FirstName = respUser.FirstName,
@@ -291,7 +295,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
                 }
 
-                var Org = await _context.Organizations.FindAsync( userOrgAssignForm.OrganizationId);
+                var Org = await _context.Organizations.FindAsync(userOrgAssignForm.OrganizationId);
                 if (Org == null)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.OrgNotFoundError);
@@ -308,19 +312,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.AssignmentError, ex);
             }
-           
+
         }
 
         public async Task<bool> UserEquipmentAssignAsync(User user, UserEquipmentAssignFormModel userEquipmentAssignForm)
         {
             try
             {
-                var userEquipment = await _context.Users.Include(c=>c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c => c.Id == userEquipmentAssignForm.UserId);
+                var userEquipment = await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c => c.Id == userEquipmentAssignForm.UserId);
                 if (userEquipment == null)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
                 }
-                var notExistEquipment =  _context.Equipments.Any(c=>!userEquipmentAssignForm.EquipmentIds.Contains(c.Id));
+                var notExistEquipment = _context.Equipments.Any(c => !userEquipmentAssignForm.EquipmentIds.Contains(c.Id));
                 if (notExistEquipment == false)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.EquipmentNotFoundError);
@@ -336,7 +340,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 await _context.SaveChangesAsync();
 
-                    return true;
+                return true;
             }
             catch (Exception ex)
             {
@@ -371,7 +375,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var userEdt = await _context.Users.FirstOrDefaultAsync(c=>c.Id==userForm.UserId && c.Password == _securityService.GetSha256Hash(userForm.CurrentPassword));
+                var userEdt = await _context.Users.FirstOrDefaultAsync(c => c.Id == userForm.UserId && c.Password == _securityService.GetSha256Hash(userForm.CurrentPassword));
                 if (userEdt == null)
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
