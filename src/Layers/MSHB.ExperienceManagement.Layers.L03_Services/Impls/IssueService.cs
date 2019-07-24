@@ -4,6 +4,7 @@ using Microsoft.Extensions.Options;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.ContentType;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.exceptions;
+using MSHB.ExperienceManagement.Layers.L00_BaseModels.Extensions;
 using MSHB.ExperienceManagement.Layers.L00_BaseModels.Settings;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Enums;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
@@ -27,14 +28,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
     public class IssueService : IIssueService
     {
         private readonly ExperienceManagementDbContext _context;
-        private readonly IUsersService _userService;
+        
 
-        public IssueService(ExperienceManagementDbContext context, IUsersService userService)
+        public IssueService(ExperienceManagementDbContext context)
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
-            _userService = userService;
-            _userService.CheckArgumentIsNull(nameof(_userService));
 
         }
 
@@ -856,16 +855,23 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async  Task<List<IssueViewModel>> GetUserIssueDashboardAsync(User user)
+        public async Task<List<IssueViewModel>> GetUserIssueDashboardAsync(User user)
         {
             try
             {
-                var userInfo = await _userService.FindUserDetailsAsync(user.Id);
-                var userEqu = userInfo.EquipmentUserSubscriptions.Select(c => c.EquipmentId).ToList();
-                var issuesIds = await _context.EquipmentIssueSubscriptions.Where(c => userEqu.Contains(c.EquipmentId)).Select(c=>c.IssueId).ToListAsync();
+                var  response = new List<Issue>();
+                if (!user.IsAdmin())
+                {                                
+                    var userEqu = _context.EquipmentUserSubscriptions.Where(c=>c.UserId==user.Id).Select(c => c.EquipmentId).ToList();
+                    response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
+                       .Where(c => c.EquipmentIssueSubscriptions.Any(d=> userEqu.Contains(d.EquipmentId))).OrderByDescending(c => c.CreationDate).Take(12).ToListAsync();                    
+                }
+                else
+                {
+                    response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
+                         .OrderByDescending(c => c.CreationDate).Take(12).ToListAsync();
+                }
 
-                var response= await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
-                    .Where(c=> issuesIds.Contains(c.Id)).OrderByDescending(c=>c.CreationDate).Take(10).ToListAsync();
 
                 return response.Select(resp => new IssueViewModel()
                 {
@@ -901,12 +907,20 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var userInfo = await _userService.FindUserDetailsAsync(user.Id);
-                var userEqu = userInfo.EquipmentUserSubscriptions.Select(c => c.EquipmentId).ToList();
-                var issuesIds = await _context.EquipmentIssueSubscriptions.Where(c => userEqu.Contains(c.EquipmentId)).Select(c => c.IssueId).ToListAsync();
-
-                var response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
-                    .Where(c => issuesIds.Contains(c.Id)).OrderByDescending(c => c.IssueDetails.Sum(d=>d.Likes)).Take(10).ToListAsync();
+               
+                var response = new List<Issue>();
+                if (!user.IsAdmin())
+                {
+                    var userEqu = _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.EquipmentId).ToList();
+                    response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
+                       .Where(c => c.EquipmentIssueSubscriptions.Any(d => userEqu.Contains(d.EquipmentId))).OrderByDescending(c => c.IssueDetails.Sum(d => d.Likes)).Take(12).ToListAsync();
+                  
+                }
+                else
+                {
+                    response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
+                        .OrderByDescending(c => c.IssueDetails.Sum(d => d.Likes)).Take(12).ToListAsync();
+                }
 
                 return response.Select(resp => new IssueViewModel()
                 {
