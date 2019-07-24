@@ -272,7 +272,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             return await _context.Users.FindAsync(userId);
         }
-
+        public async Task<User> FindUserDetailsAsync(Guid userId)
+        {
+            return await _context.Users.Include(c=>c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c=>c.Id==userId);
+        }
         public async Task<User> FindUserAsync(string username, string password)
         {
             var passwordHash = _securityService.GetSha256Hash(password);

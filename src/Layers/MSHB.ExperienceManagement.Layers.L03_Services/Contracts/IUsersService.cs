@@ -14,6 +14,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<User> FindUserAsync(string username, string password);
         Task<User> FindUserLoginAsync(string username, string password);
         Task<User> FindUserAsync(Guid userId);
+        Task<User> FindUserDetailsAsync(Guid userId);
         Task UpdateUserLastActivityDateAsync(Guid userId);
         Task<Guid> AddUserAsync(User user, AddUserFormModel userForm);
         Task<bool> EditUserAsync(User user, EditUserFormModel userForm);      

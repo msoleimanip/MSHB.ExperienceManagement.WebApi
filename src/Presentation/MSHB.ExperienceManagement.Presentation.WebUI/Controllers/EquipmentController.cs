@@ -108,7 +108,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         [HttpGet("[action]"), HttpPost("[action]")]
         [Authorize(Roles = "Equipment-GetEquipmentAttachmentForUser")]
         [ValidateModelAttribute]
-        public async Task<IActionResult> GetEquipmentAttachmentForUser(EquipmentAttachmentUserFormModel equipmentAttachmentUserFormModel)
+        public async Task<IActionResult> GetEquipmentAttachmentForUser([FromBody]EquipmentAttachmentUserFormModel equipmentAttachmentUserFormModel)
         {
             var equipmentAtts = await _equipmentService.GetEquipmentAttachmentForUserAsync(HttpContext.GetUser(), equipmentAttachmentUserFormModel);
             return Ok(GetRequestResult(equipmentAtts));

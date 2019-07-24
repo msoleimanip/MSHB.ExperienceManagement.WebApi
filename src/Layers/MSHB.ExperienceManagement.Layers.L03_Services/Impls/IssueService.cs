@@ -27,11 +27,14 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
     public class IssueService : IIssueService
     {
         private readonly ExperienceManagementDbContext _context;
+        private readonly IUsersService _userService;
 
-        public IssueService(ExperienceManagementDbContext context)
+        public IssueService(ExperienceManagementDbContext context, IUsersService userService)
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
+            _userService = userService;
+            _userService.CheckArgumentIsNull(nameof(_userService));
 
         }
 
@@ -189,7 +192,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     });
                 }
 
-                if (issueDetailForm.EquipmentAttachmentIds !=null && issueDetailForm.EquipmentAttachmentIds.Count>0)
+                if (issueDetailForm.EquipmentAttachmentIds != null && issueDetailForm.EquipmentAttachmentIds.Count > 0)
                 {
                     issueDetailForm.EquipmentAttachmentIds.ForEach(async EqId =>
                     {
@@ -208,7 +211,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 var issueDetailsViewM = new IssueDetailViewModel()
                 {
-                    Caption = issueDetail.Caption,                 
+                    Caption = issueDetail.Caption,
                     CreationDate = issueDetail.CreationDate,
                     Text = issueDetail.Text,
                     IsCorrectAnswer = issueDetail.IsCorrectAnswer,
@@ -220,7 +223,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     LastUpdateDate = issueDetail.LastUpdateDate,
                     IssueDetailComments = new List<IssueDetailCommentViewModel>(),
                     IssueDetailAttachments = new List<IssueDetailAttachmentViewModel>(),
-                    EquipmentAttachmentViewModels= new List<EquipmentAttachmentViewModel>()
+                    EquipmentAttachmentViewModels = new List<EquipmentAttachmentViewModel>()
 
                 };
                 issueDetail.IssueDetailComments?.ToList().ForEach(c =>
@@ -251,7 +254,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     issueDetailsViewM.IssueDetailAttachments.Add(IssueDetailAtt);
 
                 });
-                issueDetail.EquipmentAttachmentIssueDetailSubscriptions?.ToList().ForEach(c =>
+                var EqIds = issueDetail.EquipmentAttachmentIssueDetailSubscriptions.Select(c => c.Id).ToList();
+                var resp = await _context.EquipmentAttachmentIssueDetailSubscriptions.Include(c=>c.EquipmentAttachment).Where(c => EqIds.Contains(c.Id)).ToListAsync();
+                resp?.ToList().ForEach(c =>
                 {
                     var equipmentAttachment = new EquipmentAttachmentViewModel()
                     {
@@ -372,7 +377,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.UserNotFoundError);
                 }
-                var issueDetail = await _context.IssueDetails.Include(c=>c.EquipmentAttachmentIssueDetailSubscriptions).FirstOrDefaultAsync(c => c.Id == issueDetailForm.IssueDetailId);
+                var issueDetail = await _context.IssueDetails.Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).FirstOrDefaultAsync(c => c.Id == issueDetailForm.IssueDetailId);
                 if (issueDetail is null)
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
@@ -584,7 +589,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c=>c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
+                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
                 if (searchIssueDetailForm.IssueDetailsId.HasValue)
                 {
                     querable = querable.Where(c => c.Id == searchIssueDetailForm.IssueDetailsId);
@@ -600,7 +605,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     var issuedetail = new IssueDetailViewModel()
                     {
-                        Caption = response.Caption,                      
+                        Caption = response.Caption,
                         CreationDate = response.CreationDate,
                         Text = response.Text,
                         IsCorrectAnswer = response.IsCorrectAnswer,
@@ -773,12 +778,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 }
                 if (issueDetail.UserId != user.Id)
                 {
-                    if (issueDetail.IssueDetailLikes!=null && issueDetail.IssueDetailLikes.Count>0)
+                    if (issueDetail.IssueDetailLikes != null && issueDetail.IssueDetailLikes.Count > 0)
                     {
                         var userLike = issueDetail.IssueDetailLikes.FirstOrDefault();
                         if (userLike.IsLike != issueDetailsLike.IsLike)
                         {
-                            if ( issueDetailsLike.IsLike == false)
+                            if (issueDetailsLike.IsLike == false)
                             {
                                 issueDetail.Likes = issueDetail.Likes - 1;
                             }
@@ -788,9 +793,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                             }
                             userLike.IsLike = issueDetailsLike.IsLike;
                             _context.IssueDetailLikes.Update(userLike);
-                           
+
                         }
-                        
+
                     }
                     else
                     {
@@ -825,7 +830,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var issueDetail = await _context.IssueDetails.FindAsync( issueDetailsAnswer.IssueDetailId);
+                var issueDetail = await _context.IssueDetails.FindAsync(issueDetailsAnswer.IssueDetailId);
                 if (issueDetail is null)
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
@@ -848,6 +853,88 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             catch (Exception ex)
             {
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.ChangeAnswerIssueError, ex);
+            }
+        }
+
+        public async  Task<List<IssueViewModel>> GetUserIssueDashboardAsync(User user)
+        {
+            try
+            {
+                var userInfo = await _userService.FindUserDetailsAsync(user.Id);
+                var userEqu = userInfo.EquipmentUserSubscriptions.Select(c => c.EquipmentId).ToList();
+                var issuesIds = await _context.EquipmentIssueSubscriptions.Where(c => userEqu.Contains(c.EquipmentId)).Select(c=>c.IssueId).ToListAsync();
+
+                var response= await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
+                    .Where(c=> issuesIds.Contains(c.Id)).OrderByDescending(c=>c.CreationDate).Take(10).ToListAsync();
+
+                return response.Select(resp => new IssueViewModel()
+                {
+                    Id = resp.Id,
+                    AnswerCount = resp.AnswerCounts,
+                    CreationDate = resp.CreationDate,
+                    Description = resp.Description,
+                    Equipments = resp.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel()
+                    {
+                        Description = x.Equipment.Description,
+                        EquipmentName = x.Equipment.EquipmentName,
+                        Id = x.EquipmentId
+                    }).ToList(),
+                    IsActive = resp.IsActive,
+                    IssueType = resp.IssueType,
+                    LastUpdateDate = resp.LastUpdateDate,
+                    Title = resp.Title,
+                    SumLikes = resp.IssueDetails.Sum(c => c.Likes),
+                    UserId = resp.UserId,
+                    UserName = resp.User.Username,
+                    FileId = resp.FileId
+
+                }).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.SearchIssuesError, ex);
+            }
+        }
+
+        public async Task<List<IssueViewModel>> GetUserLikesDashboardAsync(User user)
+        {
+            try
+            {
+                var userInfo = await _userService.FindUserDetailsAsync(user.Id);
+                var userEqu = userInfo.EquipmentUserSubscriptions.Select(c => c.EquipmentId).ToList();
+                var issuesIds = await _context.EquipmentIssueSubscriptions.Where(c => userEqu.Contains(c.EquipmentId)).Select(c => c.IssueId).ToListAsync();
+
+                var response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
+                    .Where(c => issuesIds.Contains(c.Id)).OrderByDescending(c => c.IssueDetails.Sum(d=>d.Likes)).Take(10).ToListAsync();
+
+                return response.Select(resp => new IssueViewModel()
+                {
+                    Id = resp.Id,
+                    AnswerCount = resp.AnswerCounts,
+                    CreationDate = resp.CreationDate,
+                    Description = resp.Description,
+                    Equipments = resp.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel()
+                    {
+                        Description = x.Equipment.Description,
+                        EquipmentName = x.Equipment.EquipmentName,
+                        Id = x.EquipmentId
+                    }).ToList(),
+                    IsActive = resp.IsActive,
+                    IssueType = resp.IssueType,
+                    LastUpdateDate = resp.LastUpdateDate,
+                    Title = resp.Title,
+                    SumLikes = resp.IssueDetails.Sum(c => c.Likes),
+                    UserId = resp.UserId,
+                    UserName = resp.User.Username,
+                    FileId = resp.FileId
+
+                }).ToList();
+            }
+
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.SearchIssuesError, ex);
             }
         }
     }
