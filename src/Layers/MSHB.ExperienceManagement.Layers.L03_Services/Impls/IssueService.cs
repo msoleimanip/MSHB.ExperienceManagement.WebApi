@@ -870,7 +870,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 else
                 {
                     response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
-                         .OrderByDescending(c => c.CreationDate).Take(12).ToListAsync();
+                         .OrderByDescending(c => c.CreationDate).Take(8).ToListAsync();
                 }
 
 
@@ -914,7 +914,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     var userEqu = _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.EquipmentId).ToList();
                     response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
-                       .Where(c => c.EquipmentIssueSubscriptions.Any(d => userEqu.Contains(d.EquipmentId))).OrderByDescending(c => c.IssueDetails.Sum(d => d.Likes)).Take(12).ToListAsync();
+                       .Where(c => c.EquipmentIssueSubscriptions.Any(d => userEqu.Contains(d.EquipmentId))).OrderByDescending(c => c.IssueDetails.Sum(d => d.Likes)).Take(8).ToListAsync();
                   
                 }
                 else
