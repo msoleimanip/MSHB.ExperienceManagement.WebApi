@@ -418,7 +418,24 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var equipmentAtts = await _context.EquipmentAttachments.Where(c=> equipmentAttachmentUserFormModel.EquipmentIds.Contains(c.EquipmentId)).ToListAsync();
+                var equipments= await _context.Equipments.ToListAsync();
+                var equipmentTemps = equipments.Where(c => equipmentAttachmentUserFormModel.EquipmentIds.Contains(c.Id)).ToList();
+                
+                var equipmentnodes = new List<Equipment>();
+
+                equipmentTemps.ForEach(or =>
+                    {
+                        equipmentnodes.Add(or);
+                        if (or.ParentId != null)
+                        {                           
+                            var parentNode = FillParent(equipments,or);
+                            if (parentNode!=null)
+                            equipmentnodes.Add(parentNode);
+                        }
+
+                    });
+
+                var equipmentAtts = await _context.EquipmentAttachments.Where(c=> equipmentnodes.Contains(c.Equipment)).ToListAsync();
                 
                 return equipmentAtts.Select(equipmentAtt => new EquipmentAttachmentViewModel
                 {
@@ -437,6 +454,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             {
                 throw new ExperienceManagementGlobalException(EquipmentServiceErrors.GetEquipmentAttachmentForUserError, ex);
             }
+        }
+
+        private Equipment FillParent(List<Equipment> equipments, Equipment eq)
+        {
+            Equipment parentNode=null;
+            if (eq.Parent!= null)
+            {
+                parentNode = eq.Parent;            
+                FillParent(equipments, eq.Parent);
+                 
+            }
+            return parentNode;
+
         }
 
         public async Task<List<EquipmentAttachmentViewModel>> GetEquipmentAttachmentByEquipmentIdAsync(User user, long id)

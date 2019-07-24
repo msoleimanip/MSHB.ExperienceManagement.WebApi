@@ -104,7 +104,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         [ValidateModelAttribute]
         public async Task<IActionResult> SearchSmartIssue([FromBody] SearchSmartIssueFormModel searchIssueForm)
         {
-            return Ok(GetRequestResult(await _issueService.SearchSmartIssueAsync( searchIssueForm)));
+            return Ok(GetRequestResult(await _issueService.SearchSmartIssueAsync(HttpContext.GetUser(), searchIssueForm)));
         }
 
 

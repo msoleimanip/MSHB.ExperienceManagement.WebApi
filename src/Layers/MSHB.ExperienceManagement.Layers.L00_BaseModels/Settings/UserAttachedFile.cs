@@ -4,5 +4,9 @@
     {
         public string PhysicalPath { get; set; }
         public string MaxSizeInMb { get; set; }
+        public string AvatarImagePath { get; set; }
+
+
+        
     }
 }

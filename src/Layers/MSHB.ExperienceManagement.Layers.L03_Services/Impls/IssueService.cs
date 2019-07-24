@@ -678,11 +678,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<SearchIssueViewModel> SearchSmartIssueAsync(SearchSmartIssueFormModel searchIssueForm)
+        public async Task<SearchIssueViewModel> SearchSmartIssueAsync(User user, SearchSmartIssueFormModel searchIssueForm)
         {
             try
             {
-                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c => c.IssueDetails).Include(c => c.User).AsQueryable();
+                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c => c.IssueDetails).Include(c => c.User).Where(c=> c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts>0).AsQueryable();
 
                 if (!string.IsNullOrEmpty(searchIssueForm.SearchContent))
                 {
@@ -720,9 +720,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     else if (searchIssueForm.SortType.Value == SortType.RecentActivity)
                         queryable = queryable.OrderByDescending(q => q.IssueDetails.OrderByDescending(c => c.LastUpdateDate));
                 }
-                if (searchIssueForm.UserId.HasValue)
+                if (!user.IsAdmin())
                 {
-                    queryable = queryable.Where(q => q.UserId == searchIssueForm.UserId);
+                    var userEqu = await _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.EquipmentId).ToListAsync();
+                    queryable = queryable.Where(c => c.EquipmentIssueSubscriptions.Any(x => userEqu.Contains(x.EquipmentId)));
                 }
                 if (searchIssueForm.EquipmentIds.Count > 0)
                 {
