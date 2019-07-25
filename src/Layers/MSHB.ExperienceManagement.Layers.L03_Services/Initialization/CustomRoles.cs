@@ -57,9 +57,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Equipment-GetEquipmentAttachmentForUser", "Equipment-GetEquipmentAttachmentForUser"),
                 DefineIntRole("Equipment-GetEquipmentAttachmentByEquipmentId", "Equipment-GetEquipmentAttachmentByEquipmentId"),
 
-                
-
-
 
 
                 DefineIntRole("Account", "Account"),
@@ -74,6 +71,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
 
                 DefineIntRole("Report", "Report"),
                 DefineIntRole("Report-GetReportStructure", "Report-GetReportStructure"),
+                DefineIntRole("Report-AddOrUpdateReportStructure", "Report-AddOrUpdateReportStructure"),
+
 
                 DefineIntRole("Dashboard", "Dashboard"),
                 

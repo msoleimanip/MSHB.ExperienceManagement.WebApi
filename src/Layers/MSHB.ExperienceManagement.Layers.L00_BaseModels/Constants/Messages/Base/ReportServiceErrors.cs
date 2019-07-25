@@ -7,12 +7,13 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
     public class ReportServiceErrors
     {
        
-        public static readonly ExperienceManagementErrorMessage GetReportStructure =
+        public static readonly ExperienceManagementErrorMessage GetReportStructureError =
           new ExperienceManagementErrorMessage("GRD-1001", "خطا در دریافت ساختار گزارش");
-        public static readonly ExperienceManagementErrorMessage ReportStructureNotFound =
+        public static readonly ExperienceManagementErrorMessage ReportStructureNotFoundError =
          new ExperienceManagementErrorMessage("GRD-1002", "گزارشی که به دنبال آن هستید در سیستم وجود ندارد");
 
-
+        public static ExperienceManagementErrorMessage UpdateReportStructureError =
+         new ExperienceManagementErrorMessage("GRD-1003", "خطا در ثبت ساختار گزارشی که به دنبال تغییر آن هستید");
 
     }
 }

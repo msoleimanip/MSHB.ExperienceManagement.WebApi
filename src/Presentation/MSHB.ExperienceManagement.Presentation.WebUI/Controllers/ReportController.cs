@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using MSHB.ExperienceManagement.Layers.L03_Services.Contracts;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
+using MSHB.ExperienceManagement.Presentation.WebCore;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 
 namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
@@ -32,6 +33,14 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         {
             return Ok(GetRequestResult(await _reportService.GetReportStructureAsync(reportStructureFormModel)));
 
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-AddOrUpdateReportStructure")]
+        public async Task<IActionResult> UpdateReportStructure([FromBody] UpdateReportStructureFormModel form)
+        {
+            var result =
+                await _reportService.AddOrUpdateReportStructureAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
         }
     }
 }

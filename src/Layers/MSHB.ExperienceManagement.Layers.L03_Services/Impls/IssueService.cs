@@ -253,25 +253,30 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     issueDetailsViewM.IssueDetailAttachments.Add(IssueDetailAtt);
 
                 });
-                var EqIds = issueDetail.EquipmentAttachmentIssueDetailSubscriptions.Select(c => c.Id).ToList();
-                var resp = await _context.EquipmentAttachmentIssueDetailSubscriptions.Include(c=>c.EquipmentAttachment).Where(c => EqIds.Contains(c.Id)).ToListAsync();
-                resp?.ToList().ForEach(c =>
+                
+                if (issueDetail.EquipmentAttachmentIssueDetailSubscriptions!=null)
                 {
-                    var equipmentAttachment = new EquipmentAttachmentViewModel()
+                    var EqIds = issueDetail.EquipmentAttachmentIssueDetailSubscriptions.Select(c => c.Id).ToList();
+                    var resp = await _context.EquipmentAttachmentIssueDetailSubscriptions.Include(c => c.EquipmentAttachment).Where(c => EqIds.Contains(c.Id)).ToListAsync();
+                    resp?.ToList().ForEach(c =>
                     {
-                        EquipmentAttachmentId = c.Id,
-                        CreationDate = c.EquipmentAttachment.CreationDate,
-                        Description = c.EquipmentAttachment.Description,
-                        EquipmentAttachmentName = c.EquipmentAttachment.EquipmentAttachmentName,
-                        EquipmentId = c.EquipmentAttachment.EquipmentId,
-                        EquipmentAttachmentType = c.EquipmentAttachment.EquipmentAttachmentType,
-                        FileId = c.EquipmentAttachment.FileId,
-                        FileSize = c.EquipmentAttachment.FileSize,
-                        FileType = c.EquipmentAttachment.FileType
-                    };
-                    issueDetailsViewM.EquipmentAttachmentViewModels.Add(equipmentAttachment);
+                        var equipmentAttachment = new EquipmentAttachmentViewModel()
+                        {
+                            EquipmentAttachmentId = c.Id,
+                            CreationDate = c.EquipmentAttachment.CreationDate,
+                            Description = c.EquipmentAttachment.Description,
+                            EquipmentAttachmentName = c.EquipmentAttachment.EquipmentAttachmentName,
+                            EquipmentId = c.EquipmentAttachment.EquipmentId,
+                            EquipmentAttachmentType = c.EquipmentAttachment.EquipmentAttachmentType,
+                            FileId = c.EquipmentAttachment.FileId,
+                            FileSize = c.EquipmentAttachment.FileSize,
+                            FileType = c.EquipmentAttachment.FileType
+                        };
+                        issueDetailsViewM.EquipmentAttachmentViewModels.Add(equipmentAttachment);
 
-                });
+                    });
+                }
+                
 
                 return issueDetailsViewM;
 

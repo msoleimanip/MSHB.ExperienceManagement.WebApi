@@ -1,4 +1,5 @@
-﻿using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
+﻿using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
+using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels;
 using System;
 using System.Collections.Generic;
@@ -10,5 +11,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
     public interface IReportService
     {
         Task<ReportStructureViewModel> GetReportStructureAsync(ReportStructureFormModel reportStructureFormModel);
+        Task<bool> AddOrUpdateReportStructureAsync(User user, UpdateReportStructureFormModel form);
     }
 }
