@@ -32,7 +32,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         public async Task<IActionResult> GetReportStructure([FromBody] ReportStructureFormModel reportStructureFormModel)
         {
             return Ok(GetRequestResult(await _reportService.GetReportStructureAsync(reportStructureFormModel)));
-
         }
         [HttpGet("[action]"), HttpPost("[action]")]
         [Authorize(Roles = "Report-AddOrUpdateReportStructure")]

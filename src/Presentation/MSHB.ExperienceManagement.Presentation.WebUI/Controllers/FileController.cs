@@ -39,6 +39,8 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         public async Task<IActionResult> Download(Guid fileId)
         {
             var response = await _fileService.DownloadAsync(HttpContext.GetUser(), fileId);
+            if (response.Memory is null)
+                return Ok();
             return File(response.Memory, response.ContentType, response.FileName);
 
 

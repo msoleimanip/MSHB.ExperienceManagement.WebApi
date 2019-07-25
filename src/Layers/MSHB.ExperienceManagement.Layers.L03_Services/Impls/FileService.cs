@@ -51,19 +51,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         downloadViewModel.FileName = Path.GetFileName(fileAddress.FilePath);
                         downloadViewModel.Memory = memory;
                     }
-                    else
-                    {
-                        var memory = new MemoryStream();
-                        var filePath = _siteSettings.Value.UserAttachedFile.AvatarImagePath;
-                        using (var stream = new FileStream(filePath, FileMode.Open))
-                        {
-                            await stream.CopyToAsync(memory);
-                        }
-                        memory.Position = 0;
-                        downloadViewModel.ContentType = ContentType.GetContentType(filePath);
-                        downloadViewModel.FileName = Path.GetFileName(filePath);
-                        downloadViewModel.Memory = memory;
-                    }
+                   
 
                 }
                 return downloadViewModel;
