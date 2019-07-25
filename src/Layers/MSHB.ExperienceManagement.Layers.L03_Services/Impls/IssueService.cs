@@ -589,10 +589,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<List<IssueDetailViewModel>> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm)
+        public async Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm)
         {
             try
             {
+                var searchIssueDetailsViewModel = new SearchIssueDetailsViewModel();
                 var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
                 if (searchIssueDetailForm.IssueDetailsId.HasValue)
                 {
@@ -603,6 +604,32 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
                 }
+                var result = _context.Issues.Include(c=>c.EquipmentIssueSubscriptions).FirstOrDefault(c=>c.Id==searchIssueDetailForm.IssueId);
+                var issueviewmodel = new IssueViewModel();
+                if (result != null)
+                {
+                    issueviewmodel.Id = result.Id;
+                    issueviewmodel.AnswerCount = result.AnswerCounts;
+                    issueviewmodel.CreationDate = result.CreationDate;
+                    issueviewmodel.Description = result.Description;
+                    issueviewmodel.Equipments = result.EquipmentIssueSubscriptions.Select(x => new EquipmentViewModel()
+                    {
+                        Description = x.Equipment.Description,
+                        EquipmentName = x.Equipment.EquipmentName,
+                        Id = x.EquipmentId
+                    }).ToList();
+                    issueviewmodel.IsActive = result.IsActive;
+                    issueviewmodel.SumLikes = resp.Sum(c => c.Likes);
+                    issueviewmodel.IssueType = result.IssueType;
+                    issueviewmodel.LastUpdateDate = result.LastUpdateDate;
+                    issueviewmodel.Title = result.Title;
+                    issueviewmodel.UserId = result.UserId;
+                    issueviewmodel.UserName = result.User.Username;
+                    issueviewmodel.FileId = result.FileId;
+                }
+                
+               
+                
                 var issueDetailViewModel = new List<IssueDetailViewModel>();
                 resp.ForEach(response =>
                 {
@@ -673,8 +700,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     issueDetailViewModel.Add(issuedetail);
 
                 });
-
-                return issueDetailViewModel;
+                searchIssueDetailsViewModel.issueDetailViewModel = issueDetailViewModel;
+                searchIssueDetailsViewModel.IssueViewModel = issueviewmodel;
+                return searchIssueDetailsViewModel;
             }
             catch (Exception ex)
             {
