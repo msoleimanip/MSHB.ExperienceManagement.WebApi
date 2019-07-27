@@ -15,5 +15,7 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
         public static ExperienceManagementErrorMessage UpdateReportStructureError =
          new ExperienceManagementErrorMessage("GRD-1003", "خطا در ثبت ساختار گزارشی که به دنبال تغییر آن هستید");
 
+        public static ExperienceManagementErrorMessage IssueOfUsersReportError =
+         new ExperienceManagementErrorMessage("GRD-1004", "خطا در ارائه گزارش مسائل کاربران");
     }
 }

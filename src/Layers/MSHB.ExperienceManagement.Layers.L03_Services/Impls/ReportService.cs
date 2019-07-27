@@ -87,5 +87,44 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.GetReportStructureError, ex);
             }
         }
+
+        public async Task<IssueOfUsersViewModel> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form)
+        {
+            try
+            {
+                //var resp = await _context.ReportStructures.FirstOrDefaultAsync(c => c.Id == form.ReportStructureModelId);
+                //if (resp is null && form.ReportStructureModelId != 0)
+                //{
+                //    throw new ExperienceManagementGlobalException(ReportServiceErrors.ReportStructureNotFoundError);
+                //}
+                //if (resp != null)
+                //{
+                //    resp.Configuration = form.Configuration;
+                //    resp.LastUpdatedDateTime = DateTime.Now;
+                //    resp.ReportId = form.ReportId;
+                //    _context.ReportStructures.Update(resp);
+                //}
+                //else
+                //{
+                //    var report = new ReportStructure()
+                //    {
+                //        Configuration = form.Configuration,
+                //        CreationDate = DateTime.Now,
+                //        LastUpdatedDateTime = DateTime.Now,
+                //        ReportId = form.ReportId
+                //    };
+                //    await _context.ReportStructures.AddAsync(report);
+                //}
+                //await _context.SaveChangesAsync();
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUsersReportError);
+                //return true;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUsersReportError, ex);
+            }
+        }
     }
 }

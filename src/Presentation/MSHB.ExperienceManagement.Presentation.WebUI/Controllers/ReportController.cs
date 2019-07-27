@@ -41,5 +41,16 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
                 await _reportService.AddOrUpdateReportStructureAsync(HttpContext.GetUser(), form);
             return Ok(GetRequestResult(result));
         }
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-IssueOfUsersReport")]
+        public async Task<IActionResult> IssueOfUsersReport([FromBody] IssueOfUsersFormModel form)
+        {
+            var result =
+                await _reportService.IssueOfUsersReportAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
+        }
+
+      
     }
 }

@@ -12,5 +12,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
     {
         Task<ReportStructureViewModel> GetReportStructureAsync(ReportStructureFormModel reportStructureFormModel);
         Task<bool> AddOrUpdateReportStructureAsync(User user, UpdateReportStructureFormModel form);
+        Task<IssueOfUsersViewModel> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form);
     }
 }
