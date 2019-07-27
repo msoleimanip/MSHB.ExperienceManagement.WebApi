@@ -153,12 +153,11 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
 
 
-        [HttpGet("[action]"), HttpPost("[action]")]
-        [ValidateModelAttribute]
+        [HttpGet("[action]"), HttpPost("[action]")]     
         [Authorize(Roles = "Account-GetOrganizationUsers")]
-        public async Task<IActionResult> GetOrganizationUsers([FromQuery] long orgId)
+        public async Task<IActionResult> GetOrganizationUsers([FromBody] List<long> orgIds)
         {
-            var userEquipmentAssign = await _usersService.GetOrganizationUsersAsync(HttpContext.GetUser(), orgId);
+            var userEquipmentAssign = await _usersService.GetOrganizationUsersAsync(HttpContext.GetUser(), orgIds);
             return Ok(GetRequestResult(userEquipmentAssign));
         }
 

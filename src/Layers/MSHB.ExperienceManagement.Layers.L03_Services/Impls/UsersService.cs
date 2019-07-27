@@ -394,33 +394,29 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async  Task<List<UserViewModel>> GetOrganizationUsersAsync(User user, long orgId)
+        public async  Task<List<UserOrgViewModel>> GetOrganizationUsersAsync(User user, List<long> orgIds)
         {
 
             try
             {
-                var respUsers = await _context.Users.Where(c=>c.OrganizationId==orgId).ToListAsync();
-                var userViewMOdels = new List<UserViewModel>();
+                var respUsers = new List<User>();
+                if (orgIds.Count==0)
+                {
+                     respUsers = await _context.Users.ToListAsync();
+                }
+                else
+                {
+                    respUsers = await _context.Users.Where(c => c.OrganizationId != null &&  orgIds.Contains((long) c.OrganizationId)).ToListAsync();
+                    
+                }
+
+                var userViewMOdels = new List<UserOrgViewModel>();
                 respUsers.ForEach(c => {
-                    var uVM=new UserViewModel()
+                    var uVM=new UserOrgViewModel()
                     {
                         Id = c.Id,
-                        FirstName = c.FirstName,
-                        LastName = c.LastName,
-                        Username = c.Username,
-                        Description = c.Description,
-                        Location = c.Location,
-                        PhoneNumber = c.PhoneNumber,
-                        IsActive = c.IsActive,
-                        IsPresident = c.IsPresident,
-                        GroupAuthId = c.GroupAuthId,
-                        OrganizationId = c.OrganizationId,
-                        UserConfigurationId = c.UserConfigurationId,
-                        LastLockoutDate = c.LastLockoutDate,
-                        LastPasswordChangedDate = c.LastPasswordChangedDate,
-                        CreationDate = c.CreationDate,
-                        LastVisit = c.LastVisit,
-                        LastLoggedIn = c.LastLoggedIn
+                        FullName = c.FirstName +" "+ c.LastName,                       
+                        Username = c.Username                      
                     };
                     userViewMOdels.Add(uVM);
                 });
@@ -433,5 +429,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
            
         }
+        
+
+
     }
 }

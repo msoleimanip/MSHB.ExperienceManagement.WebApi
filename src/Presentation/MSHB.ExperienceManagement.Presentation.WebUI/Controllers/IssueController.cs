@@ -9,11 +9,13 @@ using MSHB.ExperienceManagement.Presentation.WebCore;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms;
 using MSHB.ExperienceManagement.Presentation.WebUI.filters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize(Roles = "Issue")]
     public class IssueController : BaseController
     {
         private IIssueService _issueService;
