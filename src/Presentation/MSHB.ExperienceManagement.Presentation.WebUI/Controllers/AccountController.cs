@@ -152,7 +152,17 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(await _usersService.GetUserById(HttpContext.GetUser(), Id)));
         }
 
-       
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        [Authorize(Roles = "Account-GetOrganizationUsers")]
+        public async Task<IActionResult> GetOrganizationUsers([FromQuery] long orgId)
+        {
+            var userEquipmentAssign = await _usersService.GetOrganizationUsersAsync(HttpContext.GetUser(), orgId);
+            return Ok(GetRequestResult(userEquipmentAssign));
+        }
+
+
 
     }
 

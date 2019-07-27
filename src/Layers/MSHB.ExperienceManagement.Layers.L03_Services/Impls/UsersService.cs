@@ -393,5 +393,45 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.ChangePasswordError, ex);
             }
         }
+
+        public async  Task<List<UserViewModel>> GetOrganizationUsersAsync(User user, long orgId)
+        {
+
+            try
+            {
+                var respUsers = await _context.Users.Where(c=>c.OrganizationId==orgId).ToListAsync();
+                var userViewMOdels = new List<UserViewModel>();
+                respUsers.ForEach(c => {
+                    var uVM=new UserViewModel()
+                    {
+                        Id = c.Id,
+                        FirstName = c.FirstName,
+                        LastName = c.LastName,
+                        Username = c.Username,
+                        Description = c.Description,
+                        Location = c.Location,
+                        PhoneNumber = c.PhoneNumber,
+                        IsActive = c.IsActive,
+                        IsPresident = c.IsPresident,
+                        GroupAuthId = c.GroupAuthId,
+                        OrganizationId = c.OrganizationId,
+                        UserConfigurationId = c.UserConfigurationId,
+                        LastLockoutDate = c.LastLockoutDate,
+                        LastPasswordChangedDate = c.LastPasswordChangedDate,
+                        CreationDate = c.CreationDate,
+                        LastVisit = c.LastVisit,
+                        LastLoggedIn = c.LastLoggedIn
+                    };
+                    userViewMOdels.Add(uVM);
+                });
+                return userViewMOdels;
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(UsersServiceErrors.GetOrganizationUsers, ex);
+            }
+           
+        }
     }
 }
