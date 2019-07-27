@@ -22,19 +22,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             _context = context;
             _context.CheckArgumentIsNull(nameof(_context));
-            
+
         }
 
         public async Task<bool> AddOrUpdateReportStructureAsync(User user, UpdateReportStructureFormModel form)
         {
             try
             {
-                var resp = await _context.ReportStructures.FirstOrDefaultAsync(c => c.Id == form.ReportStructureModelId);
-                if (resp is null && form.ReportStructureModelId!=0)
+                var resp = await _context.ReportStructures.FirstOrDefaultAsync(c => c.Id == form.ReportStructureModelId || c.ReportId == form.ReportId);
+                if (resp is null && form.ReportStructureModelId != 0)
                 {
                     throw new ExperienceManagementGlobalException(ReportServiceErrors.ReportStructureNotFoundError);
                 }
-                if (resp!=null)
+                if (resp != null)
                 {
                     resp.Configuration = form.Configuration;
                     resp.LastUpdatedDateTime = DateTime.Now;
@@ -54,7 +54,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 }
                 await _context.SaveChangesAsync();
                 return true;
-                
+
             }
             catch (Exception ex)
             {
@@ -93,23 +93,23 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var resp = await _context.Users.Include(c=>c.Organization).Include(c=>c.Issues).Include(c=>c.IssueDetails).Where(c => form.Users.Contains(c.Id)).ToListAsync();
+                var resp = await _context.Users.Include(c => c.Organization).Include(c => c.Issues).Include(c => c.IssueDetails).Where(c => form.Users.Contains(c.Id)).ToListAsync();
 
                 var issueOfUsersViewModels = new List<IssueOfUsersViewModel>();
-                resp?.ToList().ForEach(async c =>
-                {
-                    var issueEq = await _context.EquipmentIssueSubscriptions.Include(f=>f.Equipment).Where(d => c.Issues.Contains(d.Issue)).Select(e => e.Equipment.EquipmentName).ToListAsync();  
-                    var issueOfUsersViewModel = new IssueOfUsersViewModel()
-                    {
-                        FullName = c.FirstName + " " + c.LastName,
-                        OrganizationName = c.Organization.OrganizationName,
-                        TotalIssueCount = c.Issues.Count,
-                        TotalIssueUserDetails=c.IssueDetails.Count,
-                        TotalIssueEquipment=string.Join(",",issueEq)
-                    };
-                    issueOfUsersViewModels.Add(issueOfUsersViewModel);
 
-                });
+                resp?.ToList().ForEach(c =>
+               {
+                   var issueOfUsersViewModel = new IssueOfUsersViewModel()
+                   {
+                       FullName = c.FirstName + " " + c.LastName,
+                       OrganizationName = c.Organization.OrganizationName,
+                       TotalIssueCount = c.Issues.Count,
+                       TotalIssueUserDetails = c.IssueDetails.Count,
+
+                   };
+                   issueOfUsersViewModels.Add(issueOfUsersViewModel);
+
+               });
 
 
                 return issueOfUsersViewModels;

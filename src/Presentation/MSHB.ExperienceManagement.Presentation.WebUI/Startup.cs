@@ -41,7 +41,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
         {
             Configuration = configuration;
         }
-        
+
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -68,6 +68,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             services.AddTransient<IEquipmentService, EquipmentService>();
             services.AddTransient<IIssueService, IssueService>();
             services.AddTransient<IFileService, FileService>();
+            services.AddTransient<IReportService, ReportService>();
             services.AddSingleton<IFileProvider>(
                new PhysicalFileProvider(
                    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
@@ -189,82 +190,82 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI
             try
             {
 
-         
-            
-         
-            loggerFactory.AddLog4Net();
-            loggerFactory.AddDbLogger(serviceProvider: app.ApplicationServices, scopeFactory: app.ApplicationServices.GetRequiredService<IServiceScopeFactory>(), minLevel: LogLevel.Warning);
-            app.UseGlobalExceptionHandler(loggerFactory);
-
-            app.UseAngularAntiforgeryToken();
-            //app.UseExceptionHandler(appBuilder =>
-            //{
-            //    appBuilder.Use(async (context, next) =>
-            //    {
-            //        var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
-            //        if (error != null && error.Error is SecurityTokenExpiredException)
-            //        {
-            //            context.Response.StatusCode = 401;
-            //            context.Response.ContentType = "application/json";
-            //            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-            //            {
-            //                State = 401,
-            //                Msg = "token expired"
-            //            }));
-            //        }
-            //        else if (error != null && error.Error != null)
-            //        {
-            //            context.Response.StatusCode = 500;
-            //            context.Response.ContentType = "application/json";
-            //            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
-            //            {
-            //                State = 500,
-            //                Msg = error.Error.Message
-            //            }));
-            //        }
-            //        else
-            //        {
-            //            await next();
-            //        }
-            //    });
-            //});
-            app.UseAuthentication();
-
-          
 
 
-            app.UseFileServer();
-        
-            app.UseResponseCompression();
+
+                loggerFactory.AddLog4Net();
+                loggerFactory.AddDbLogger(serviceProvider: app.ApplicationServices, scopeFactory: app.ApplicationServices.GetRequiredService<IServiceScopeFactory>(), minLevel: LogLevel.Warning);
+                app.UseGlobalExceptionHandler(loggerFactory);
+
+                app.UseAngularAntiforgeryToken();
+                //app.UseExceptionHandler(appBuilder =>
+                //{
+                //    appBuilder.Use(async (context, next) =>
+                //    {
+                //        var error = context.Features[typeof(IExceptionHandlerFeature)] as IExceptionHandlerFeature;
+                //        if (error != null && error.Error is SecurityTokenExpiredException)
+                //        {
+                //            context.Response.StatusCode = 401;
+                //            context.Response.ContentType = "application/json";
+                //            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                //            {
+                //                State = 401,
+                //                Msg = "token expired"
+                //            }));
+                //        }
+                //        else if (error != null && error.Error != null)
+                //        {
+                //            context.Response.StatusCode = 500;
+                //            context.Response.ContentType = "application/json";
+                //            await context.Response.WriteAsync(JsonConvert.SerializeObject(new
+                //            {
+                //                State = 500,
+                //                Msg = error.Error.Message
+                //            }));
+                //        }
+                //        else
+                //        {
+                //            await next();
+                //        }
+                //    });
+                //});
+                app.UseAuthentication();
 
 
-            app.UseSwagger();
 
-            app.UseSwaggerUI(c =>
-            {
-                c.SwaggerEndpoint("/swagger/V1/swagger.json", "MSHB.ExperienceManagement API V1");
 
-            });
+                app.UseFileServer();
 
-            app.UseStatusCodePages();
-            app.UseDefaultFiles(); // so index.html is not required
-            app.UseStaticFiles();
+                app.UseResponseCompression();
 
-            app.UseMvc(routes =>
-            {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
-               
 
-            });
-        }
+                app.UseSwagger();
+
+                app.UseSwaggerUI(c =>
+                {
+                    c.SwaggerEndpoint("/swagger/V1/swagger.json", "MSHB.ExperienceManagement API V1");
+
+                });
+
+                app.UseStatusCodePages();
+                app.UseDefaultFiles(); // so index.html is not required
+                app.UseStaticFiles();
+
+                app.UseMvc(routes =>
+                {
+                    routes.MapRoute(
+                        name: "default",
+                        template: "{controller=Home}/{action=Index}/{id?}");
+
+
+                });
+            }
             catch (Exception e)
             {
 
                 Console.WriteLine(e);
                 throw;
             }
-}
+        }
     }
 }

@@ -26,7 +26,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             _reportService.CheckArgumentIsNull(nameof(_reportService));
 
         }
-      
+
         [HttpGet("[action]"), HttpPost("[action]")]
         [Authorize(Roles = "Report-GetReportStructure")]
         public async Task<IActionResult> GetReportStructure([FromBody] ReportStructureFormModel reportStructureFormModel)
@@ -44,13 +44,13 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
 
         [HttpGet("[action]"), HttpPost("[action]")]
         [Authorize(Roles = "Report-IssueOfUsersReport")]
-        public async Task<IActionResult> IssueOfUsersReport([FromBody] IssueOfUsersFormModel form)
+        public async Task<IActionResult> IssueOfUsersReport([FromBody]IssueOfUsersFormModel form)
         {
             var result =
                 await _reportService.IssueOfUsersReportAsync(HttpContext.GetUser(), form);
             return Ok(GetRequestResult(result));
         }
 
-      
+
     }
 }
