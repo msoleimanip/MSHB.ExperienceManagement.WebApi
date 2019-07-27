@@ -88,7 +88,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<IssueOfUsersViewModel> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form)
+        public Task<List<IssueOfUsersViewModel>> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form)
         {
             try
             {
@@ -116,8 +116,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 //    await _context.ReportStructures.AddAsync(report);
                 //}
                 //await _context.SaveChangesAsync();
-                throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUsersReportError);
                 //return true;
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUsersReportError);
 
             }
             catch (Exception ex)
