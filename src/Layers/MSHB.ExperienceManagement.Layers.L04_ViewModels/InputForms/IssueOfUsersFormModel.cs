@@ -7,7 +7,8 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.InputForms
 {
     public class IssueOfUsersFormModel
     {
-        //[Required(ErrorMessage = "بایستی حداقل یک کاربر انتخاب شود"), MinLength(1)]
         public List<Guid> Users { get; set; }
+        public DateTime? StartTime { get; set; }
+        public DateTime? EndTime { get; set; }
     }
 }
