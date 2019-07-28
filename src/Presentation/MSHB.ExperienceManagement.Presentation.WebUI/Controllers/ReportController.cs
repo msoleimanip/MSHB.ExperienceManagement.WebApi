@@ -69,7 +69,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         }
         [HttpGet("[action]"), HttpPost("[action]")]
         [Authorize(Roles = "Report-TotalIssueReport")]
-        public async Task<IActionResult> TotalIssueReport([FromBody]IssueOfEquipmentFormModel form)
+        public async Task<IActionResult> TotalIssueReport([FromBody]TotalIssueFormModel form)
         {
             var result =
                 await _reportService.TotalIssueReportAsync(HttpContext.GetUser(), form);

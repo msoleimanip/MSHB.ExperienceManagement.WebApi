@@ -15,7 +15,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<List<IssueOfUsersViewModel>> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form);
         Task<List<IssueOfEquipmentViewModel>> IssueOfEquipmentsReportAsync(User user, IssueOfEquipmentFormModel form);
         Task<List<IssueOfUserLikesViewModel>> IssueOfUserLikesReportAsync(User user, IssueOfUsersFormModel form);
-        Task<List<TotalIssueViewModel>> TotalIssueReportAsync(User user, IssueOfEquipmentFormModel form);
+        Task<List<TotalIssueViewModel>> TotalIssueReportAsync(User user, TotalIssueFormModel form);
         Task<List<TotalIssueViewModel>> UserIssuesReportAsync(User user, IssueOfEquipmentFormModel form);
         Task<List<IssuesOfOrganizationViewModel>> IssuesOfOrganizationReportAsync(User user, IssueOfOrganizationFormModel form);
     }

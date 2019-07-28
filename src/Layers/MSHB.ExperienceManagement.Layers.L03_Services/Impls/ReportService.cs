@@ -124,24 +124,24 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var resp = await _context.Users.Include(c => c.Issues).Include(c => c.Organization).Where(c => c.OrganizationId != null && form.OrgIds.Contains((long)c.OrganizationId)).ToListAsync();
+                var resp = await _context.Users.Include(c => c.Issues).Include(c=>c.IssueDetails).Include(c => c.Organization).Where(c => c.OrganizationId != null && form.OrgIds.Contains((long)c.OrganizationId)).GroupBy(c=>c.OrganizationId).ToListAsync();
 
                 var issueOfOrganizationsViewModels = new List<IssuesOfOrganizationViewModel>();
-                var result = resp.GroupBy(c => c.OrganizationId);
+                
+                
+                resp?.ToList().ForEach(c =>
+                {
+                    
+                    var issuesOfOrganization = new IssuesOfOrganizationViewModel()
+                    {
+                        TotalUsers = c.Select(d => d.Id).Distinct().Count(),
+                        OrganizationName = c.FirstOrDefault().Organization.OrganizationName,
+                        TotalIssueCount = c.Select(d => d.Issues).Distinct().Count(),
+                        TotalIssueDetails = c.Select(d => d.IssueDetails).Distinct().Count(),
+                    };
+                    issueOfOrganizationsViewModels.Add(issuesOfOrganization);
 
-                //result?.ToList().ForEach(c =>
-                //{
-                //    var issueOfUsersViewModel = new IssuesOfOrganizationViewModel()
-                //    {
-                //        TotalUsers=
-                //        OrganizationName = c.,
-                //        TotalIssueCount = c.Issues.Count,
-                       
-
-                //    };
-                //    issueOfOrganizationsViewModels.Add(issueOfUsersViewModel);
-
-                //});
+                });
 
 
                 return issueOfOrganizationsViewModels;
@@ -153,13 +153,87 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.IssuesOfOrganizationReportError, ex);
             }
         }
-        public Task<List<TotalIssueViewModel>> TotalIssueReportAsync(User user, IssueOfEquipmentFormModel form)
+        public async Task<List<TotalIssueViewModel>> TotalIssueReportAsync(User user, TotalIssueFormModel form)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var queryable =  _context.Issues.Include(c=>c.User).Include(c => c.IssueDetails).Where(c => c.IssueType == form.IssueType).AsQueryable();
+
+                if (form.StartTime.HasValue)
+                    queryable = queryable.Where(c => c.CreationDate >= form.StartTime);
+                if (form.EndTime.HasValue)
+                    queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
+                var resp = await queryable.ToListAsync();
+                var totalIssueViewModels = new List<TotalIssueViewModel>();
+                resp?.ToList().ForEach(c =>
+                {
+
+                    var totalIssueViewModel = new TotalIssueViewModel()
+                    {
+                        CreationTime = c.CreationDate,
+                        FullName = c.User.FirstName + " " + c.User.LastName,
+                        IssueType = c.IssueType,
+                        LikesCount = c.IssueDetails.Sum(d => d.Likes),
+                        Title = c.Title,
+                        TotalIssueDetails = c.IssueDetails.Count(),
+                        UserName=c.User.Username,
+
+                    };
+                    totalIssueViewModels.Add(totalIssueViewModel);
+
+                });
+
+
+                return totalIssueViewModels;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.TotalIssueReportError, ex);
+            }
         }
-        public Task<List<TotalIssueViewModel>> UserIssuesReportAsync(User user, IssueOfEquipmentFormModel form)
+
+        public async Task<List<TotalIssueViewModel>> UserIssuesReportAsync(User user, IssueOfEquipmentFormModel form)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var eqIssue =await  _context.EquipmentIssueSubscriptions.Where(c=>form.EquipmentIds.Contains(c.EquipmentId)).Select(c=>c.IssueId).ToListAsync();
+                var queryable = _context.Issues.Include(c => c.User).Include(c => c.IssueDetails).Where(c => eqIssue.Contains(c.Id)).AsQueryable();
+
+                if (form.StartTime.HasValue)
+                    queryable = queryable.Where(c => c.CreationDate >= form.StartTime);
+                if (form.EndTime.HasValue)
+                    queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
+                var resp = await queryable.ToListAsync();
+                var totalIssueViewModels = new List<TotalIssueViewModel>();
+                resp?.ToList().ForEach(c =>
+                {
+
+                    var totalIssueViewModel = new TotalIssueViewModel()
+                    {
+                        CreationTime = c.CreationDate,
+                        FullName = c.User.FirstName + " " + c.User.LastName,
+                        IssueType = c.IssueType,
+                        LikesCount = c.IssueDetails.Sum(d => d.Likes),
+                        Title = c.Title,
+                        TotalIssueDetails = c.IssueDetails.Count(),
+                        UserName = c.User.Username,
+
+                    };
+                    totalIssueViewModels.Add(totalIssueViewModel);
+
+                });
+
+
+                return totalIssueViewModels;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.UserIssuesReportError, ex);
+            }
         }
         public Task<List<IssueOfEquipmentViewModel>> IssueOfEquipmentsReportAsync(User user, IssueOfEquipmentFormModel form)
         {

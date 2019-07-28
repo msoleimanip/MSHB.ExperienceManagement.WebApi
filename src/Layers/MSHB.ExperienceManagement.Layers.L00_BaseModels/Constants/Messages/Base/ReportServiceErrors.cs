@@ -20,5 +20,11 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
 
         public static ExperienceManagementErrorMessage IssuesOfOrganizationReportError =
          new ExperienceManagementErrorMessage("GRD-1005", "خطا در ارائه گزارش مسائل رده های انتخابی");
+
+        public static ExperienceManagementErrorMessage TotalIssueReportError =
+         new ExperienceManagementErrorMessage("GRD-1006", "خطا در دریافت گزارش کل مسائل");
+
+        public static ExperienceManagementErrorMessage UserIssuesReportError =
+         new ExperienceManagementErrorMessage("GRD-1007", "خطا در دریافت گزارش کل مسائل تجهیزهای مورد نظر و کاربران");
     }
 }

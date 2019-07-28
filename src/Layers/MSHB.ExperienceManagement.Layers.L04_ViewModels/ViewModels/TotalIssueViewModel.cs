@@ -11,8 +11,8 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public string Title { get; set; }
         public string UserName { get; set; }
         public string FullName { get; set; }
-        public string LikesCount { get; set; }
-        public DateTime CreationTime { get; set; }
+        public long LikesCount { get; set; }
+        public DateTime? CreationTime { get; set; }
         public IssueType IssueType { get; set; }
     }
 }
