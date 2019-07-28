@@ -26,5 +26,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
 
         public static ExperienceManagementErrorMessage UserIssuesReportError =
          new ExperienceManagementErrorMessage("GRD-1007", "خطا در دریافت گزارش کل مسائل تجهیزهای مورد نظر و کاربران");
+
+        public static ExperienceManagementErrorMessage IssueOfUserLikesReportError =
+         new ExperienceManagementErrorMessage("GRD-1008", "خطا در گزارش میزان محبوبت های درج شده برای کاربران");
     }
 }

@@ -290,9 +290,47 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.UserIssuesReportError, ex);
             }
         }
-        public Task<List<IssueOfUserLikesViewModel>> IssueOfUserLikesReportAsync(User user, IssueOfUsersFormModel form)
+        public async Task<List<IssueOfUserLikesViewModel>> IssueOfUserLikesReportAsync(User user, IssueOfUsersFormModel form)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var queryable = _context.Issues.Include(c => c.User).Include(c => c.User.Organization).Include(c => c.IssueDetails).Where(c => c.User.Id != null && form.Users.Contains(c.User.Id)).AsQueryable();
+
+                if (form.StartTime.HasValue)
+                    queryable = queryable.Where(c => c.CreationDate >= form.StartTime);
+                if (form.EndTime.HasValue)
+                    queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
+
+
+                var resp = await queryable.GroupBy(c => new { c.UserId,c.IssueType }).ToListAsync();
+
+                var issueOfUsersViewModels = new List<IssueOfUserLikesViewModel>();
+
+                resp?.ToList().ForEach(c =>
+                {
+                    var issueOfUsersViewModel = new IssueOfUserLikesViewModel()
+                    {
+
+                        IssueType = c.Key.IssueType,
+                        TotalIssueCount = c.Count(),
+                        TotalUserLikes = c.Sum(d => d.IssueDetails.Sum(f=>f.Likes)),
+                        TotalUserDetails = c.Sum(d => d.IssueDetails.Count),
+
+
+                    };
+                    issueOfUsersViewModels.Add(issueOfUsersViewModel);
+
+                });
+
+
+                return issueOfUsersViewModels;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUserLikesReportError, ex);
+            }
         }
     }
 }
