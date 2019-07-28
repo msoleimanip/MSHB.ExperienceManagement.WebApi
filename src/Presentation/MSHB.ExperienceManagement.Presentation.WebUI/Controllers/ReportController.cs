@@ -50,7 +50,47 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
                 await _reportService.IssueOfUsersReportAsync(HttpContext.GetUser(), form);
             return Ok(GetRequestResult(result));
         }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-IssueOfEquipmentsReport")]
+        public async Task<IActionResult> IssueOfEquipmentsReport([FromBody]IssueOfEquipmentFormModel form)
+        {
+            var result =
+                await _reportService.IssueOfEquipmentsReportAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
+        }
 
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-IssueOfUserLikesReport")]
+        public async Task<IActionResult> IssueOfUserLikesReport([FromBody]IssueOfUsersFormModel form)
+        {
+            var result =
+                await _reportService.IssueOfUserLikesReportAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-TotalIssueReport")]
+        public async Task<IActionResult> TotalIssueReport([FromBody]IssueOfEquipmentFormModel form)
+        {
+            var result =
+                await _reportService.TotalIssueReportAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-UserIssuesReport")]
+        public async Task<IActionResult> UserIssuesReport([FromBody]IssueOfEquipmentFormModel form)
+        {
+            var result =
+                await _reportService.UserIssuesReportAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
+        }
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [Authorize(Roles = "Report-IssuesOfOrganizationReport")]
+        public async Task<IActionResult>IssuesOfOrganizationReport([FromBody]IssueOfOrganizationFormModel form)
+        {
+            var result =
+                await _reportService.IssuesOfOrganizationReportAsync(HttpContext.GetUser(), form);
+            return Ok(GetRequestResult(result));
+        }
 
     }
 }

@@ -17250,23 +17250,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\me\\.nuget\\packages\\": {},
+    "C:\\Users\\User\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Presentation\\MSHB.ExperienceManagement.Presentation.WebUI\\MSHB.ExperienceManagement.Presentation.WebUI.csproj",
+      "projectUniqueName": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Presentation\\MSHB.ExperienceManagement.Presentation.WebUI\\MSHB.ExperienceManagement.Presentation.WebUI.csproj",
       "projectName": "MSHB.ExperienceManagement.Presentation.WebUI",
-      "projectPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Presentation\\MSHB.ExperienceManagement.Presentation.WebUI\\MSHB.ExperienceManagement.Presentation.WebUI.csproj",
-      "packagesPath": "C:\\Users\\me\\.nuget\\packages\\",
-      "outputPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Presentation\\MSHB.ExperienceManagement.Presentation.WebUI\\obj\\",
+      "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Presentation\\MSHB.ExperienceManagement.Presentation.WebUI\\MSHB.ExperienceManagement.Presentation.WebUI.csproj",
+      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
+      "outputPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Presentation\\MSHB.ExperienceManagement.Presentation.WebUI\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\me\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [
@@ -17279,14 +17279,14 @@
       "frameworks": {
         "netcoreapp2.2": {
           "projectReferences": {
-            "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L00_BaseModels\\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj": {
-              "projectPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L00_BaseModels\\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj"
+            "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L00_BaseModels\\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj": {
+              "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L00_BaseModels\\MSHB.ExperienceManagement.Layers.L00_BaseModels.csproj"
             },
-            "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L03_Services\\MSHB.ExperienceManagement.Layers.L03_Services.csproj": {
-              "projectPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L03_Services\\MSHB.ExperienceManagement.Layers.L03_Services.csproj"
+            "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L03_Services\\MSHB.ExperienceManagement.Layers.L03_Services.csproj": {
+              "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L03_Services\\MSHB.ExperienceManagement.Layers.L03_Services.csproj"
             },
-            "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L04_ViewModels\\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj": {
-              "projectPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L04_ViewModels\\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj"
+            "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L04_ViewModels\\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj": {
+              "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L04_ViewModels\\MSHB.ExperienceManagement.Layers.L04_ViewModels.csproj"
             }
           }
         }

@@ -34,7 +34,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("GroupAuthentication-GetRoles", "GroupAuthentication-GetRoles"),
                 DefineIntRole("GroupAuthentication-GetGroupAuthenticationById", "GroupAuthentication-GetGroupAuthenticationById"),
 
-
                 DefineIntRole("Organization", "Organization"),
                 DefineIntRole("Organization-Get", "Organization-Get"),
                 DefineIntRole("Organization-GetOrganizationByUser", "Organization-GetOrganizationByUser"),
@@ -42,7 +41,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Organization-AddOrganization", "Organization-AddOrganization"),
                 DefineIntRole("Organization-EditOrganization", "Organization-EditOrganization"),               
                 DefineIntRole("Organization-DeleteOrganization", "Organization-DeleteOrganization"),
-
 
                 DefineIntRole("Equipment", "Equipment"),
                 DefineIntRole("Equipment-Get", "Equipment-Get"),
@@ -57,8 +55,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Equipment-GetEquipmentAttachmentForUser", "Equipment-GetEquipmentAttachmentForUser"),
                 DefineIntRole("Equipment-GetEquipmentAttachmentByEquipmentId", "Equipment-GetEquipmentAttachmentByEquipmentId"),
 
-
-
                 DefineIntRole("Account", "Account"),
                 DefineIntRole("Account-RefreshToken", "Account-RefreshToken"),
                 DefineIntRole("Account-AddUser", "Account-AddUser"),
@@ -68,18 +64,17 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Account-GetUsers", "Account-GetUsers"),
                 DefineIntRole("Account-UserCityAssign", "Account-UserCityAssign"),
                 DefineIntRole("Account-GetUserById", "Account-GetUserById"),
-                DefineIntRole("Account-GetOrganizationUsers", "Account-GetOrganizationUsers"),
-
-
-                
+                DefineIntRole("Account-GetOrganizationUsers", "Account-GetOrganizationUsers"),              
 
                 DefineIntRole("Report", "Report"),
                 DefineIntRole("Report-GetReportStructure", "Report-GetReportStructure"),
                 DefineIntRole("Report-AddOrUpdateReportStructure", "Report-AddOrUpdateReportStructure"),
                 DefineIntRole("Report-IssueOfUsersReport", "Report-IssueOfUsersReport"),
-
-                
-
+                DefineIntRole("Report-IssueOfEquipmentsReport", "Report-IssueOfEquipmentsReport"),
+                DefineIntRole("Report-IssueOfUserLikesReport", "Report-IssueOfUserLikesReport"),
+                DefineIntRole("Report-IssuesOfOrganizationReport", "Report-IssuesOfOrganizationReport"),
+                DefineIntRole("Report-UserIssuesReport", "Report-UserIssuesReport"),
+                DefineIntRole("Report-TotalIssueReport", "Report-TotalIssueReport"),               
 
                 DefineIntRole("Dashboard", "Dashboard"),
                 

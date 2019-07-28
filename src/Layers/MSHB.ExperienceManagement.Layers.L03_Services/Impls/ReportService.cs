@@ -24,7 +24,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _context.CheckArgumentIsNull(nameof(_context));
 
         }
-
         public async Task<bool> AddOrUpdateReportStructureAsync(User user, UpdateReportStructureFormModel form)
         {
             try
@@ -62,7 +61,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.UpdateReportStructureError, ex);
             }
         }
-
         public async Task<ReportStructureViewModel> GetReportStructureAsync(ReportStructureFormModel reportStructureFormModel)
         {
             try
@@ -88,7 +86,6 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.GetReportStructureError, ex);
             }
         }
-
         public async Task<List<IssueOfUsersViewModel>> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form)
         {
             try
@@ -120,6 +117,57 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUsersReportError, ex);
             }
+        }
+
+
+        public async Task<List<IssuesOfOrganizationViewModel>> IssuesOfOrganizationReportAsync(User user, IssueOfOrganizationFormModel form)
+        {
+            try
+            {
+                var resp = await _context.Users.Include(c => c.Issues).Include(c => c.Organization).Where(c => c.OrganizationId != null && form.OrgIds.Contains((long)c.OrganizationId)).ToListAsync();
+
+                var issueOfOrganizationsViewModels = new List<IssuesOfOrganizationViewModel>();
+                var result = resp.GroupBy(c => c.OrganizationId);
+
+                //result?.ToList().ForEach(c =>
+                //{
+                //    var issueOfUsersViewModel = new IssuesOfOrganizationViewModel()
+                //    {
+                //        TotalUsers=
+                //        OrganizationName = c.,
+                //        TotalIssueCount = c.Issues.Count,
+                       
+
+                //    };
+                //    issueOfOrganizationsViewModels.Add(issueOfUsersViewModel);
+
+                //});
+
+
+                return issueOfOrganizationsViewModels;
+
+            }
+            catch (Exception ex)
+            {
+
+                throw new ExperienceManagementGlobalException(ReportServiceErrors.IssuesOfOrganizationReportError, ex);
+            }
+        }
+        public Task<List<TotalIssueViewModel>> TotalIssueReportAsync(User user, IssueOfEquipmentFormModel form)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<List<TotalIssueViewModel>> UserIssuesReportAsync(User user, IssueOfEquipmentFormModel form)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<List<IssueOfEquipmentViewModel>> IssueOfEquipmentsReportAsync(User user, IssueOfEquipmentFormModel form)
+        {
+            throw new NotImplementedException();
+        }
+        public Task<List<IssueOfUserLikesViewModel>> IssueOfUserLikesReportAsync(User user, IssueOfUsersFormModel form)
+        {
+            throw new NotImplementedException();
         }
     }
 }
