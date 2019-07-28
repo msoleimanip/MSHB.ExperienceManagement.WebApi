@@ -24,6 +24,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             _context.CheckArgumentIsNull(nameof(_context));
 
         }
+
         public async Task<bool> AddOrUpdateReportStructureAsync(User user, UpdateReportStructureFormModel form)
         {
             try
@@ -86,6 +87,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.GetReportStructureError, ex);
             }
         }
+
         public async Task<List<IssueOfUsersViewModel>> IssueOfUsersReportAsync(User user, IssueOfUsersFormModel form)
         {
             try
@@ -102,46 +104,38 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 var issueOfUsersViewModels = new List<IssueOfUsersViewModel>();
 
-                resp?.ToList().ForEach(c =>
+                resp.ForEach(c =>
                {
                    var issueOfUsersViewModel = new IssueOfUsersViewModel()
                    {
                        FullName = c.FirstOrDefault().User.FirstName + " " + c.FirstOrDefault().User.LastName,
                        OrganizationName = c.FirstOrDefault().User.Organization.OrganizationName,
                        TotalIssueCount = c.Count(),
-                       TotalIssueUserDetails = c.Sum(d=>d.IssueDetails.Count),
-
+                       TotalIssueUserDetails = c.Sum(d => d.IssueDetails.Count),
                    };
                    issueOfUsersViewModels.Add(issueOfUsersViewModel);
-
                });
 
-
                 return issueOfUsersViewModels;
-
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUsersReportError, ex);
             }
         }
-
 
         public async Task<List<IssuesOfOrganizationViewModel>> IssuesOfOrganizationReportAsync(User user, IssueOfOrganizationFormModel form)
         {
             try
             {
-
-                var queryable =  _context.Issues.Include(c => c.User).Include(c => c.User.Organization).Include(c => c.IssueDetails).Where(c => c.User.OrganizationId != null && form.OrgIds.Contains((long)c.User.OrganizationId)).AsQueryable();
+                var queryable = _context.Issues.Include(c => c.User).Include(c => c.User.Organization).Include(c => c.IssueDetails).Where(c => c.User.OrganizationId != null && form.OrgIds.Contains((long)c.User.OrganizationId)).AsQueryable();
 
                 if (form.StartTime.HasValue)
                     queryable = queryable.Where(c => c.CreationDate >= form.StartTime);
                 if (form.EndTime.HasValue)
                     queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
 
-
-                var resp= await queryable.GroupBy(c => c.User.OrganizationId).ToListAsync();
+                var resp = await queryable.GroupBy(c => c.User.OrganizationId).ToListAsync();
 
                 var issueOfOrganizationsViewModels = new List<IssuesOfOrganizationViewModel>();
 
@@ -159,16 +153,14 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 });
 
-
                 return issueOfOrganizationsViewModels;
-
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.IssuesOfOrganizationReportError, ex);
             }
         }
+
         public async Task<List<TotalIssueViewModel>> TotalIssueReportAsync(User user, TotalIssueFormModel form)
         {
             try
@@ -180,10 +172,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 if (form.EndTime.HasValue)
                     queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
                 var resp = await queryable.ToListAsync();
-                var totalIssueViewModels = new List<TotalIssueViewModel>();
-                resp?.ToList().ForEach(c =>
-                {
 
+                var totalIssueViewModels = new List<TotalIssueViewModel>();
+                resp?.ForEach(c =>
+                {
                     var totalIssueViewModel = new TotalIssueViewModel()
                     {
                         CreationTime = c.CreationDate,
@@ -193,19 +185,14 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         Title = c.Title,
                         TotalIssueDetails = c.IssueDetails.Count(),
                         UserName = c.User.Username,
-
                     };
                     totalIssueViewModels.Add(totalIssueViewModel);
-
                 });
 
-
                 return totalIssueViewModels;
-
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.TotalIssueReportError, ex);
             }
         }
@@ -222,10 +209,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 if (form.EndTime.HasValue)
                     queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
                 var resp = await queryable.ToListAsync();
-                var totalIssueViewModels = new List<TotalIssueViewModel>();
-                resp?.ToList().ForEach(c =>
-                {
 
+                var totalIssueViewModels = new List<TotalIssueViewModel>();
+
+                resp?.ForEach(c =>
+                {
                     var totalIssueViewModel = new TotalIssueViewModel()
                     {
                         CreationTime = c.CreationDate,
@@ -235,22 +223,18 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         Title = c.Title,
                         TotalIssueDetails = c.IssueDetails.Count(),
                         UserName = c.User.Username,
-
                     };
                     totalIssueViewModels.Add(totalIssueViewModel);
-
                 });
 
-
                 return totalIssueViewModels;
-
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.UserIssuesReportError, ex);
             }
         }
+
         public async Task<List<IssueOfEquipmentViewModel>> IssueOfEquipmentsReportAsync(User user, IssueOfEquipmentFormModel form)
         {
             try
@@ -262,12 +246,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 if (form.EndTime.HasValue)
                     queryable = queryable.Where(c => c.Issue.CreationDate <= form.EndTime);
 
-                var resp = await queryable.GroupBy(c => new { c.EquipmentId,c.Issue.IssueType }).ToListAsync();
+                var resp = await queryable.GroupBy(c => new { c.EquipmentId, c.Issue.IssueType }).ToListAsync();
 
                 var issueOfEquipmentViewModels = new List<IssueOfEquipmentViewModel>();
-                resp?.ToList().ForEach(c =>
+                resp?.ForEach(c =>
                 {
-
                     var issueOfEquipmentViewModel = new IssueOfEquipmentViewModel()
                     {
                         TotalUserDetails = c.Select(d => d.Issue.UserId).Distinct().Count(),
@@ -277,19 +260,16 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     };
                     issueOfEquipmentViewModels.Add(issueOfEquipmentViewModel);
-
                 });
 
-
                 return issueOfEquipmentViewModels;
-
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.UserIssuesReportError, ex);
             }
         }
+
         public async Task<List<IssueOfUserLikesViewModel>> IssueOfUserLikesReportAsync(User user, IssueOfUsersFormModel form)
         {
             try
@@ -302,33 +282,26 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     queryable = queryable.Where(c => c.CreationDate <= form.EndTime);
 
 
-                var resp = await queryable.GroupBy(c => new { c.UserId,c.IssueType }).ToListAsync();
+                var resp = await queryable.GroupBy(c => new { c.UserId, c.IssueType }).ToListAsync();
 
                 var issueOfUsersViewModels = new List<IssueOfUserLikesViewModel>();
 
-                resp?.ToList().ForEach(c =>
+                resp?.ForEach(c =>
                 {
                     var issueOfUsersViewModel = new IssueOfUserLikesViewModel()
                     {
-
                         IssueType = c.Key.IssueType,
                         TotalIssueCount = c.Count(),
-                        TotalUserLikes = c.Sum(d => d.IssueDetails.Sum(f=>f.Likes)),
+                        TotalUserLikes = c.Sum(d => d.IssueDetails.Sum(f => f.Likes)),
                         TotalUserDetails = c.Sum(d => d.IssueDetails.Count),
-
-
                     };
                     issueOfUsersViewModels.Add(issueOfUsersViewModel);
-
                 });
 
-
                 return issueOfUsersViewModels;
-
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(ReportServiceErrors.IssueOfUserLikesReportError, ex);
             }
         }
