@@ -239,7 +239,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var queryable = _context.EquipmentIssueSubscriptions.Include(c => c.Equipment).Include(c => c.Issue).Where(c => form.EquipmentIds.Contains(c.EquipmentId)).AsQueryable();
+                var queryable = _context.EquipmentIssueSubscriptions.Include(c => c.Equipment).Include(c => c.Issue).Include(c => c.Issue.IssueDetails).Where(c => form.EquipmentIds.Contains(c.EquipmentId)).AsQueryable();
 
                 if (form.StartTime.HasValue)
                     queryable = queryable.Where(c => c.Issue.CreationDate >= form.StartTime);
@@ -256,7 +256,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         TotalUserDetails = c.Select(d => d.Issue.UserId).Distinct().Count(),
                         EquipmentName = c.FirstOrDefault().Equipment.EquipmentName,
                         TotalIssueCount = c.Select(d => d.Issue).Distinct().Count(),
-                        IssueType = c.Key.IssueType
+                        IssueType = c.Key.IssueType,
+                        TotalIssueDetails= c.Select(d => d.Issue.IssueDetails).Distinct().Count(),
 
                     };
                     issueOfEquipmentViewModels.Add(issueOfEquipmentViewModel);
