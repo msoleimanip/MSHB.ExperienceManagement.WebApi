@@ -20,4 +20,8 @@
     <ProjectReference Include="..\MSHB.ExperienceManagement.Layers.L01_Entities\MSHB.ExperienceManagement.Layers.L01_Entities.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Scripts\" />
+  </ItemGroup>
+
 </Project>
