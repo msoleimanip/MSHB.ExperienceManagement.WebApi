@@ -76,11 +76,11 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             return Ok(GetRequestResult(result));
         }
         [HttpGet("[action]"), HttpPost("[action]")]
-        [Authorize(Roles = "Report-UserIssuesReport")]
-        public async Task<IActionResult> UserIssuesReport([FromBody]IssueOfEquipmentFormModel form)
+        [Authorize(Roles = "Report-UsersActivationReport")]
+        public async Task<IActionResult> UsersActivationReport([FromBody]IssueOfEquipmentFormModel form)
         {
             var result =
-                await _reportService.UserIssuesReportAsync(HttpContext.GetUser(), form);
+                await _reportService.UsersActivationReportAsync(HttpContext.GetUser(), form);
             return Ok(GetRequestResult(result));
         }
         [HttpGet("[action]"), HttpPost("[action]")]

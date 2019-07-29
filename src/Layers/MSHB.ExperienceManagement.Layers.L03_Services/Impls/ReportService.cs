@@ -197,7 +197,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<List<TotalIssueViewModel>> UserIssuesReportAsync(User user, IssueOfEquipmentFormModel form)
+        public async Task<List<TotalIssueViewModel>> UsersActivationReportAsync(User user, IssueOfEquipmentFormModel form)
         {
             try
             {

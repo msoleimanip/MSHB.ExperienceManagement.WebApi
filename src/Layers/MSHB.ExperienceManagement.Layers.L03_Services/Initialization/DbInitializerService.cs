@@ -81,12 +81,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 {
                     CreationDate = DateTime.Now,
                     OrganizationName = "کل رده ها",
-                    Description="",
+                    Description = "",
                 };
                 var equipment = new Equipment()
                 {
                     LastUpdateDate = DateTime.Now,
-                    EquipmentName = "کل تجهیزات",                   
+                    EquipmentName = "کل تجهیزات",
                     Description = "",
                 };
                 var adminUser = new User
@@ -99,7 +99,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                     LastLoggedIn = null,
                     Password = _securityService.GetSha256Hash("1234"),
                     SerialNumber = Guid.NewGuid().ToString("N"),
-                    GroupAuth = groupAuth
+                    GroupAuth = groupAuth,
+                    Organization = org
                 };
 
                 _context.GroupAuths.Add(groupAuth);
@@ -120,6 +121,74 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
 
 
 
+            }
+
+            if (!_context.ReportStructures.Any())
+            {
+                ReportStructure report_IssueOfUsers = new ReportStructure()
+                {
+                    ReportId = "IssueOfUsers",
+                    Configuration = "",
+                    LastUpdatedDateTime = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ProtoType = string.Empty
+                };
+
+                ReportStructure report_IssueOfEquipments = new ReportStructure()
+                {
+                    ReportId = "IssueOfEquipments",
+                    Configuration = "",
+                    LastUpdatedDateTime = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ProtoType = string.Empty
+                };
+
+                ReportStructure report_IssueOfUserLikes = new ReportStructure()
+                {
+                    ReportId = "IssueOfUserLikes",
+                    Configuration = "",
+                    LastUpdatedDateTime = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ProtoType = string.Empty
+                };
+
+                ReportStructure report_TotalIssue = new ReportStructure()
+                {
+                    ReportId = "TotalIssue",
+                    Configuration = "",
+                    LastUpdatedDateTime = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ProtoType = string.Empty
+                };
+
+                ReportStructure report_IssuesOfOrganization = new ReportStructure()
+                {
+                    ReportId = "IssuesOfOrganization",
+                    Configuration = "",
+                    LastUpdatedDateTime = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ProtoType = string.Empty
+                };
+
+
+                ReportStructure report_UsersActivation = new ReportStructure()
+                {
+                    ReportId = "UsersActivation",
+                    Configuration = "",
+                    LastUpdatedDateTime = DateTime.Now,
+                    CreationDate = DateTime.Now,
+                    ProtoType = string.Empty
+                };
+
+
+                _context.Add(report_IssueOfUsers);
+                _context.Add(report_IssueOfEquipments);
+                _context.Add(report_IssueOfUserLikes);
+                _context.Add(report_TotalIssue);
+                _context.Add(report_IssuesOfOrganization);
+                _context.Add(report_UsersActivation);
+
+                _context.SaveChanges();
             }
 
         }

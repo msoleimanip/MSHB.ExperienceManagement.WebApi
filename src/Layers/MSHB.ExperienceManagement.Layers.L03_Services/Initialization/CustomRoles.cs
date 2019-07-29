@@ -64,7 +64,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Account-GetUsers", "Account-GetUsers"),
                 DefineIntRole("Account-UserCityAssign", "Account-UserCityAssign"),
                 DefineIntRole("Account-GetUserById", "Account-GetUserById"),
-                DefineIntRole("Account-GetOrganizationUsers", "Account-GetOrganizationUsers"),              
+                DefineIntRole("Account-GetOrganizationUsers", "Account-GetOrganizationUsers"),
+
+                 DefineIntRole("Issue", "Issue"),
 
                 DefineIntRole("Report", "Report"),
                 DefineIntRole("Report-GetReportStructure", "Report-GetReportStructure"),
@@ -73,7 +75,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Report-IssueOfEquipmentsReport", "Report-IssueOfEquipmentsReport"),
                 DefineIntRole("Report-IssueOfUserLikesReport", "Report-IssueOfUserLikesReport"),
                 DefineIntRole("Report-IssuesOfOrganizationReport", "Report-IssuesOfOrganizationReport"),
-                DefineIntRole("Report-UserIssuesReport", "Report-UserIssuesReport"),
+                DefineIntRole("Report-UsersActivationReport", "Report-UsersActivationReport"),
                 DefineIntRole("Report-TotalIssueReport", "Report-TotalIssueReport"),               
 
                 DefineIntRole("Dashboard", "Dashboard"),
