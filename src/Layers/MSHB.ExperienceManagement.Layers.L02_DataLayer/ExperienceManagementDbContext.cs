@@ -39,7 +39,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
         public virtual DbSet<ReportStructure> ReportStructures { get; set; }
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         => optionsBuilder.UseSqlServer(
-            @"Data Source=192.168.4.118;Initial Catalog=ExperienceManagement;User id=sa; Password=Aa123456;");
+            @"Data Source=.;Initial Catalog=ExperienceManagement;User id=sa; Password=Aa123456;");
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 

@@ -65,6 +65,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Initialization
                 DefineIntRole("Account-UserCityAssign", "Account-UserCityAssign"),
                 DefineIntRole("Account-GetUserById", "Account-GetUserById"),
                 DefineIntRole("Account-GetOrganizationUsers", "Account-GetOrganizationUsers"),
+                DefineIntRole("Account-UserOrganizationAssign", "Account-UserOrganizationAssign"),
+                DefineIntRole("Account-UserEquipmentAssign", "Account-UserEquipmentAssign"),
+                
+                
 
                  DefineIntRole("Issue", "Issue"),
 
