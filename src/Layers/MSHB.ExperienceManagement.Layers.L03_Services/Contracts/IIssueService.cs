@@ -21,7 +21,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<IssueDetailCommentViewModel> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm);     
         Task<List<IssueViewModel>> GetUserIssueDashboardAsync(User user);
         Task<SearchIssueViewModel> GetIssuesForUserAsync(SearchIssueFormModel searchIssueForm);
-        Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm);
+        Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(User user,SearchIssueDetailFormModel searchIssueDetailForm);
         Task<List<IssueViewModel>> GetUserLikesDashboardAsync(User user);
         Task<SearchIssueViewModel> SearchSmartIssueAsync(User user, SearchSmartIssueFormModel searchIssueForm);
         Task<long> IssueDetailsLikeAsync(User user, IssueDetailsLikeFormModel issueDetailsLike);

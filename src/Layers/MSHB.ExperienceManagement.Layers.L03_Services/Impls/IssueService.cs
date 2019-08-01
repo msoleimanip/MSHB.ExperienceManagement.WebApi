@@ -589,12 +589,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(SearchIssueDetailFormModel searchIssueDetailForm)
+        public async Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(User user,SearchIssueDetailFormModel searchIssueDetailForm)
         {
             try
             {
                 var searchIssueDetailsViewModel = new SearchIssueDetailsViewModel();
-                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
+                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c=>c.IssueDetailLikes).Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
                 if (searchIssueDetailForm.IssueDetailsId.HasValue)
                 {
                     querable = querable.Where(c => c.Id == searchIssueDetailForm.IssueDetailsId);
@@ -642,6 +642,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         IsCorrectAnswer = response.IsCorrectAnswer,
                         IssueId = response.IssueId,
                         Likes = response.Likes,
+                        IsUserLike= response.IssueDetailLikes.Any(d=>d.UserId==user.Id),
                         IssueDetailId = response.Id,
                         UserId = response.UserId,
                         UserName = response.User.Username,

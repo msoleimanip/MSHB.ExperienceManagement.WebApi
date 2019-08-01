@@ -16,6 +16,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public DateTime? LastUpdateDate { get; set; }      
         public bool IsCorrectAnswer { get; set; }
         public long Likes { get; set; }
+        public bool? IsUserLike { get; set; }
         public List<IssueDetailAttachmentViewModel> IssueDetailAttachments { get; set; }
         public List<IssueDetailCommentViewModel> IssueDetailComments { get; set; }
         public List<EquipmentAttachmentViewModel> EquipmentAttachmentViewModels { get; set; }
