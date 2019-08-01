@@ -56,5 +56,8 @@ namespace MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Bas
 
         public static ExperienceManagementErrorMessage UserChangeAnswerIssueError =
           new ExperienceManagementErrorMessage("UFE-1020", "کاربر مورد نظر امکان تایید یا رد پاسخ را ندارد تنها طراح مسئله می تواند.");
+
+        public static ExperienceManagementErrorMessage IssueDetailsCountError =
+          new ExperienceManagementErrorMessage("UFE-1021", "امکان ویرایش دیگر وجود ندارد زیرا که نظری برای این مسئله ثبت شده است.");
     }
 }

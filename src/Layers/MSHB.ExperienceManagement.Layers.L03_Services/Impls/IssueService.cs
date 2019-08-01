@@ -298,6 +298,10 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
                 }
+                if (issue.AnswerCounts>1)
+                {
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailsCountError);
+                }
                 FileAddress fileAddress;
                 if (issueForm.ImageId != null)
                 {
