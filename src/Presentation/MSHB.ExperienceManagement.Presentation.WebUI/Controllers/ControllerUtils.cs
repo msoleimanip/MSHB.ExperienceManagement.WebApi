@@ -78,7 +78,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebCore
             var totalMiliseconds = hours + minutes + seconds;
             return TimeSpan.FromMilliseconds(totalMiliseconds);
 
-
         }
 
 
