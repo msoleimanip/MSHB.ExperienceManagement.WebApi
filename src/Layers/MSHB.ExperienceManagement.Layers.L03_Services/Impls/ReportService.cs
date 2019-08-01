@@ -12,6 +12,10 @@ using MSHB.ExperienceManagement.Layers.L00_BaseModels.Constants.Messages.Base;
 using MSHB.ExperienceManagement.Shared.Common.GuardToolkit;
 using MSHB.ExperienceManagement.Layers.L01_Entities.Models;
 using System.Linq;
+using MSHB.ExperienceManagement.Shared.Common.DateToolkit;
+using MSHB.ExperienceManagement.Shared.Common.EnumToolkit;
+using MSHB.ExperienceManagement.Layers.L01_Entities.Enums;
+using DNTPersianUtils.Core;
 
 namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 {
@@ -144,7 +148,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     var issuesOfOrganization = new IssuesOfOrganizationViewModel()
                     {
-                        TotalUsers = c.Select(d => d.Id).Distinct().Count(),
+                        TotalUsers = c.Select(d => d.UserId).Distinct().Count(),
                         OrganizationName = c.FirstOrDefault().User.Organization.OrganizationName,
                         TotalIssueCount = c.Distinct().Count(),
                         TotalIssueDetails = c.Select(d => d.IssueDetails).Distinct().Count(),
@@ -178,9 +182,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     var totalIssueViewModel = new TotalIssueViewModel()
                     {
-                        CreationTime = c.CreationDate,
+                        CreationTime = c.CreationDate.ToShortPersianDateTimeString(),
                         FullName = c.User.FirstName + " " + c.User.LastName,
-                        IssueType = c.IssueType,
+                        IssueType = EnumHelper<IssueType>.GetDisplayValue(c.IssueType),
                         LikesCount = c.IssueDetails.Sum(d => d.Likes),
                         Title = c.Title,
                         TotalIssueDetails = c.IssueDetails.Count(),
@@ -216,9 +220,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     var totalIssueViewModel = new TotalIssueViewModel()
                     {
-                        CreationTime = c.CreationDate,
+                        CreationTime = c.CreationDate.ToShortPersianDateTimeString(),
                         FullName = c.User.FirstName + " " + c.User.LastName,
-                        IssueType = c.IssueType,
+                        IssueType = EnumHelper<IssueType>.GetDisplayValue(c.IssueType),
                         LikesCount = c.IssueDetails.Sum(d => d.Likes),
                         Title = c.Title,
                         TotalIssueDetails = c.IssueDetails.Count(),
@@ -256,7 +260,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         TotalUserDetails = c.Select(d => d.Issue.UserId).Distinct().Count(),
                         EquipmentName = c.FirstOrDefault().Equipment.EquipmentName,
                         TotalIssueCount = c.Select(d => d.Issue).Distinct().Count(),
-                        IssueType = c.Key.IssueType,
+                        IssueType = EnumHelper<IssueType>.GetDisplayValue(c.Key.IssueType),
                         TotalIssueDetails= c.Select(d => d.Issue.IssueDetails).Distinct().Count(),
 
                     };
@@ -291,10 +295,11 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     var issueOfUsersViewModel = new IssueOfUserLikesViewModel()
                     {
-                        IssueType = c.Key.IssueType,
+                        IssueType = EnumHelper<IssueType>.GetDisplayValue(c.Key.IssueType),
                         TotalIssueCount = c.Count(),
                         TotalUserLikes = c.Sum(d => d.IssueDetails.Sum(f => f.Likes)),
                         TotalUserDetails = c.Sum(d => d.IssueDetails.Count),
+                        UserName=c.First().User.Username,
                     };
                     issueOfUsersViewModels.Add(issueOfUsersViewModel);
                 });

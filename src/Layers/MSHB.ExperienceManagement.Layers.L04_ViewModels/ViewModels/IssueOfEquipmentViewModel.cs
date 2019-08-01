@@ -11,6 +11,6 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public long TotalIssueDetails { get; set; }
         public long TotalUserDetails { get; set; }
         public string EquipmentName { get; set; }
-        public IssueType IssueType { get; set; }
+        public string IssueType { get; set; }
     }
 }

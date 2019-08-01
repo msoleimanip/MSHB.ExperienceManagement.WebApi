@@ -10,6 +10,8 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public long TotalIssueCount { get; set; }
         public long TotalUserDetails { get; set; }
         public long TotalUserLikes { get; set; }
-        public IssueType IssueType { get; set; }
+        public string IssueType { get; set; }
+        public string UserName { set; get; }
+
     }
 }

@@ -12,7 +12,7 @@ namespace MSHB.ExperienceManagement.Layers.L04_ViewModels.ViewModels
         public string UserName { get; set; }
         public string FullName { get; set; }
         public long LikesCount { get; set; }
-        public DateTime? CreationTime { get; set; }
-        public IssueType IssueType { get; set; }
+        public string CreationTime { get; set; }
+        public string IssueType { get; set; }
     }
 }

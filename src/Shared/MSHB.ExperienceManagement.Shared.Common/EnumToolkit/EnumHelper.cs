@@ -36,5 +36,7 @@ namespace MSHB.ExperienceManagement.Shared.Common.EnumToolkit
 
             return (descriptionAttributes.Length > 0) ? descriptionAttributes[0].Name : value.ToString();
         }
+
+        
     }
 }
