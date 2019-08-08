@@ -187,7 +187,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
             if (!string.IsNullOrEmpty(searchUserForm.Username))
             {
-                queryable = queryable.Where(q => q.LastName.Contains(searchUserForm.Username));
+                queryable = queryable.Where(q => q.Username.Contains(searchUserForm.Username));
             }
 
             if (searchUserForm.IsActive.HasValue)
