@@ -41,7 +41,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             var response = await _fileService.DownloadAsync(HttpContext.GetUser(), fileId);
             if (response.Memory is null)
                 return Ok();
-            return File(response.Memory, response.ContentType, response.FileName);
+            return File(response.Memory, response.ContentType, response.FileName,true);
 
 
         }
