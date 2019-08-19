@@ -66,17 +66,19 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 equipments = await _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.Equipment).ToListAsync();
 
             }
+            var param = equipments.Select(c => c.Id).ToList();
             var equipmentnodes = new List<JsTreeNode>();
             equipments.ForEach(or =>
-            {
-                if (or.ParentId == null)
+            {                
+                if (or.ParentId==null || (or.ParentId.HasValue && !(param.Contains(or.ParentId.Value))))
                 {
                     JsTreeNode parentNode = new JsTreeNode();
                     parentNode.id = or.Id.ToString();
                     parentNode.text = or.EquipmentName;
-                    parentNode = FillChild(equipments, parentNode, or.Id);
+                    parentNode = FillChild(or.Children.ToList(), parentNode, or.Id);
                     equipmentnodes.Add(parentNode);
                 }
+               
 
             });
             return equipmentnodes;
@@ -93,7 +95,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         parentNodeChild.id = or.Id.ToString();
                         parentNodeChild.text = or.EquipmentName;
                         parentNode.children.Add(parentNodeChild);
-                        FillChild(equipments, parentNodeChild, or.Id);
+                        FillChild(or.Children.ToList(), parentNodeChild, or.Id);
                     }
                 });
             }

@@ -98,7 +98,7 @@ namespace MSHB.ExperienceManagement.Layers.L02_DataLayer
                 entity.Property(ut => ut.RefreshTokenIdHashSource).HasMaxLength(450);
             });
 
-           
+         
             modelBuilder.Entity<User>()
                          .HasOne(d => d.GroupAuth)
                          .WithMany(t => t.Users)

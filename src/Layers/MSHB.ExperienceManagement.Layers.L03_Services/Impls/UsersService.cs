@@ -274,7 +274,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         }
         public async Task<User> FindUserDetailsAsync(Guid userId)
         {
-            return await _context.Users.Include(c=>c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c=>c.Id==userId);
+            return await _context.Users.Include(c => c.EquipmentUserSubscriptions).FirstOrDefaultAsync(c => c.Id == userId);
         }
         public async Task<User> FindUserAsync(string username, string password)
         {
@@ -332,12 +332,18 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(UsersServiceErrors.EquipmentNotFoundError);
                 }
-                _context.EquipmentUserSubscriptions.RemoveRange(userEquipment.EquipmentUserSubscriptions);
-                userEquipmentAssignForm.EquipmentIds.ForEach(async ueq =>
+
+                var EqUserSubScriptions = userEquipment.EquipmentUserSubscriptions.ToList();
+                _context.EquipmentUserSubscriptions.RemoveRange(EqUserSubScriptions);
+                await _context.SaveChangesAsync();
+                var equipments = await _context.Equipments.Where(c => userEquipmentAssignForm.EquipmentIds.Contains(c.Id)).ToListAsync();
+                equipments.ForEach(async eq =>
                 {
-                    var userEqSubscription = new EquipmentUserSubscription();
-                    userEqSubscription.UserId = userEquipment.Id;
-                    userEqSubscription.EquipmentId = ueq;
+                    var userEqSubscription = new EquipmentUserSubscription
+                    {
+                        UserId = userEquipment.Id,
+                        Equipment = eq
+                    };
                     await _context.EquipmentUserSubscriptions.AddAsync(userEqSubscription);
                 });
 
@@ -394,29 +400,30 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async  Task<List<UserOrgViewModel>> GetOrganizationUsersAsync(User user, List<long> orgIds)
+        public async Task<List<UserOrgViewModel>> GetOrganizationUsersAsync(User user, List<long> orgIds)
         {
 
             try
             {
                 var respUsers = new List<User>();
-                if (orgIds.Count==0)
+                if (orgIds.Count == 0)
                 {
-                     respUsers = await _context.Users.ToListAsync();
+                    respUsers = await _context.Users.ToListAsync();
                 }
                 else
                 {
-                    respUsers = await _context.Users.Where(c => c.OrganizationId != null &&  orgIds.Contains((long) c.OrganizationId)).ToListAsync();
-                    
+                    respUsers = await _context.Users.Where(c => c.OrganizationId != null && orgIds.Contains((long)c.OrganizationId)).ToListAsync();
+
                 }
 
                 var userViewMOdels = new List<UserOrgViewModel>();
-                respUsers.ForEach(c => {
-                    var uVM=new UserOrgViewModel()
+                respUsers.ForEach(c =>
+                {
+                    var uVM = new UserOrgViewModel()
                     {
                         Id = c.Id,
-                        FullName = c.FirstName +" "+ c.LastName,                       
-                        Username = c.Username                      
+                        FullName = c.FirstName + " " + c.LastName,
+                        Username = c.Username
                     };
                     userViewMOdels.Add(uVM);
                 });
@@ -427,9 +434,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                 throw new ExperienceManagementGlobalException(UsersServiceErrors.GetOrganizationUsers, ex);
             }
-           
+
         }
-        
+
 
 
     }
