@@ -28,7 +28,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
     public class IssueService : IIssueService
     {
         private readonly ExperienceManagementDbContext _context;
-        
+
 
         public IssueService(ExperienceManagementDbContext context)
         {
@@ -253,8 +253,8 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     issueDetailsViewM.IssueDetailAttachments.Add(IssueDetailAtt);
 
                 });
-                
-                if (issueDetail.EquipmentAttachmentIssueDetailSubscriptions!=null)
+
+                if (issueDetail.EquipmentAttachmentIssueDetailSubscriptions != null)
                 {
                     var EqIds = issueDetail.EquipmentAttachmentIssueDetailSubscriptions.Select(c => c.Id).ToList();
                     var resp = await _context.EquipmentAttachmentIssueDetailSubscriptions.Include(c => c.EquipmentAttachment).Where(c => EqIds.Contains(c.Id)).ToListAsync();
@@ -276,7 +276,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
 
                     });
                 }
-                
+
 
                 return issueDetailsViewM;
 
@@ -298,7 +298,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
                 }
-                if (issue.AnswerCounts>1)
+                if (issue.AnswerCounts > 1)
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailsCountError);
                 }
@@ -454,23 +454,29 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm)
+        public async Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailAttachmentFormModel issueDetailAttachmentForm)
         {
             try
             {
-                var issueDetailAttachment = await _context.IssueDetailAttachments.FindAsync(issueDetailAttachmentForm.IssueDetailAttachId);
+                var IssueDetail = await _context.IssueDetails.Include(x => x.IssueDetailAttachments).FirstOrDefaultAsync(x => x.Id == issueDetailAttachmentForm.IssueDetailId);
+                if (IssueDetail is null)
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailNotFoundError);
+
+                var issueDetailAttachment = IssueDetail.IssueDetailAttachments.FirstOrDefault(x => x.FileId == issueDetailAttachmentForm.FileId);
                 if (issueDetailAttachment is null)
-                {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueDetailAttachmentNotFoundError);
-                }
 
                 _context.IssueDetailAttachments.Remove(issueDetailAttachment);
+
+                var file = _context.FileAddresses.FirstOrDefault(x => x.FileId == issueDetailAttachmentForm.FileId);
+                if (file != null)
+                    _context.FileAddresses.Remove(file);
+
                 await _context.SaveChangesAsync();
                 return true;
             }
             catch (Exception ex)
             {
-
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.DeleteIssueDetailAttachmentsError, ex);
             }
         }
@@ -593,12 +599,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
             }
         }
 
-        public async Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(User user,SearchIssueDetailFormModel searchIssueDetailForm)
+        public async Task<SearchIssueDetailsViewModel> GetIssueDetailsAsync(User user, SearchIssueDetailFormModel searchIssueDetailForm)
         {
             try
             {
                 var searchIssueDetailsViewModel = new SearchIssueDetailsViewModel();
-                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c=>c.IssueDetailLikes).Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
+                var querable = _context.IssueDetails.Include(c => c.User).Include(c => c.IssueDetailComments).Include(c => c.IssueDetailAttachments).Include(c => c.IssueDetailLikes).Include(c => c.EquipmentAttachmentIssueDetailSubscriptions).Where(c => c.IssueId == searchIssueDetailForm.IssueId).AsQueryable();
                 if (searchIssueDetailForm.IssueDetailsId.HasValue)
                 {
                     querable = querable.Where(c => c.Id == searchIssueDetailForm.IssueDetailsId);
@@ -608,7 +614,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 {
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
                 }
-                var result = _context.Issues.Include(c=>c.EquipmentIssueSubscriptions).FirstOrDefault(c=>c.Id==searchIssueDetailForm.IssueId);
+                var result = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).FirstOrDefault(c => c.Id == searchIssueDetailForm.IssueId);
                 var issueviewmodel = new IssueViewModel();
                 if (result != null)
                 {
@@ -631,9 +637,9 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                     issueviewmodel.UserName = result.User.Username;
                     issueviewmodel.FileId = result.FileId;
                 }
-                
-               
-                
+
+
+
                 var issueDetailViewModel = new List<IssueDetailViewModel>();
                 resp.ForEach(response =>
                 {
@@ -646,7 +652,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                         IsCorrectAnswer = response.IsCorrectAnswer,
                         IssueId = response.IssueId,
                         Likes = response.Likes,
-                        IsUserLike= response.IssueDetailLikes.Any(d=>d.UserId==user.Id),
+                        IsUserLike = response.IssueDetailLikes.Any(d => d.UserId == user.Id),
                         IssueDetailId = response.Id,
                         UserId = response.UserId,
                         UserName = response.User.Username,
@@ -720,7 +726,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c => c.IssueDetails).Include(c => c.User).Where(c=> c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts>0).AsQueryable();
+                var queryable = _context.Issues.Include(c => c.EquipmentIssueSubscriptions).Include(c => c.IssueDetails).Include(c => c.User).Where(c => c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts > 0).AsQueryable();
 
                 if (!string.IsNullOrEmpty(searchIssueForm.SearchContent))
                 {
@@ -898,12 +904,12 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var  response = new List<Issue>();
+                var response = new List<Issue>();
                 if (!user.IsAdmin())
-                {                                
-                    var userEqu = _context.EquipmentUserSubscriptions.Where(c=>c.UserId==user.Id).Select(c => c.EquipmentId).ToList();
+                {
+                    var userEqu = _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.EquipmentId).ToList();
                     response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
-                       .Where(c => c.EquipmentIssueSubscriptions.Any(d=> userEqu.Contains(d.EquipmentId)) && c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts > 0).OrderByDescending(c => c.CreationDate).Take(8).ToListAsync();                    
+                       .Where(c => c.EquipmentIssueSubscriptions.Any(d => userEqu.Contains(d.EquipmentId)) && c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts > 0).OrderByDescending(c => c.CreationDate).Take(8).ToListAsync();
                 }
                 else
                 {
@@ -946,14 +952,14 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-               
+
                 var response = new List<Issue>();
                 if (!user.IsAdmin())
                 {
                     var userEqu = _context.EquipmentUserSubscriptions.Where(c => c.UserId == user.Id).Select(c => c.EquipmentId).ToList();
                     response = await _context.Issues.Include(c => c.IssueDetails).Include(c => c.User)
-                       .Where(c => c.EquipmentIssueSubscriptions.Any(d => userEqu.Contains(d.EquipmentId))&& c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts > 0).OrderByDescending(c => c.IssueDetails.Sum(d => d.Likes)).Take(8).ToListAsync();
-                  
+                       .Where(c => c.EquipmentIssueSubscriptions.Any(d => userEqu.Contains(d.EquipmentId)) && c.IsActive.HasValue && c.IsActive.Value && c.AnswerCounts > 0).OrderByDescending(c => c.IssueDetails.Sum(d => d.Likes)).Take(8).ToListAsync();
+
                 }
                 else
                 {

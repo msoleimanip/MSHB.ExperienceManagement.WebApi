@@ -17,7 +17,7 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Contracts
         Task<IssueDetailViewModel> AddIssueDetailAsync(User user, AddIssueDetailFormModel issueDetailForm);
         Task<bool> ActivateIssueAsync(User user, ActivateIssueFormModel issueActivate);
         Task<bool> EditIssueDetailAsync(User user, EditIssueDetailFormModel issueDetailForm);
-        Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailFormModel issueDetailAttachmentForm);
+        Task<bool> DeleteIssueDetailAttachmentsAsync(User user, DeleteIssueDetailAttachmentFormModel issueDetailAttachmentForm);
         Task<IssueDetailCommentViewModel> AddIssueDetailCommentAsync(User user, AddIssueDetailCommentFormModel issueForm);     
         Task<List<IssueViewModel>> GetUserIssueDashboardAsync(User user);
         Task<SearchIssueViewModel> GetIssuesForUserAsync(SearchIssueFormModel searchIssueForm);

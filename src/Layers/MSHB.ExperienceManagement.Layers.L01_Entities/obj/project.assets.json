@@ -14226,23 +14226,23 @@
     ]
   },
   "packageFolders": {
-    "C:\\Users\\User\\.nuget\\packages\\": {},
+    "C:\\Users\\me\\.nuget\\packages\\": {},
     "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder": {}
   },
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L01_Entities\\MSHB.ExperienceManagement.Layers.L01_Entities.csproj",
+      "projectUniqueName": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L01_Entities\\MSHB.ExperienceManagement.Layers.L01_Entities.csproj",
       "projectName": "MSHB.ExperienceManagement.Layers.L01_Entities",
-      "projectPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L01_Entities\\MSHB.ExperienceManagement.Layers.L01_Entities.csproj",
-      "packagesPath": "C:\\Users\\User\\.nuget\\packages\\",
-      "outputPath": "C:\\Csharp\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L01_Entities\\obj\\",
+      "projectPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L01_Entities\\MSHB.ExperienceManagement.Layers.L01_Entities.csproj",
+      "packagesPath": "C:\\Users\\me\\.nuget\\packages\\",
+      "outputPath": "D:\\MSHB\\MSHB.ExperienceManagement.WebApi\\src\\Layers\\MSHB.ExperienceManagement.Layers.L01_Entities\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files\\dotnet\\sdk\\NuGetFallbackFolder"
       ],
       "configFilePaths": [
-        "C:\\Users\\User\\AppData\\Roaming\\NuGet\\NuGet.Config",
+        "C:\\Users\\me\\AppData\\Roaming\\NuGet\\NuGet.Config",
         "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
       ],
       "originalTargetFrameworks": [

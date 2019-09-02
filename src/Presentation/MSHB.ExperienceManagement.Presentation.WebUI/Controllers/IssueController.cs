@@ -71,7 +71,7 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         
          [HttpGet("[action]"), HttpPost("[action]")]
         [ValidateModelAttribute]
-        public async Task<IActionResult> DeleteIssueDetail( [FromBody] DeleteIssueDetailFormModel issueDetailAttachmentForm)
+        public async Task<IActionResult> DeleteIssueDetailAttachment( [FromBody] DeleteIssueDetailAttachmentFormModel issueDetailAttachmentForm)
         {
             var resp = await _issueService.DeleteIssueDetailAttachmentsAsync(HttpContext.GetUser(), issueDetailAttachmentForm);
             return Ok(GetRequestResult(resp));
@@ -124,6 +124,6 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
         {
             var resp = await _issueService.IssueDetailsBestAnswerAsync(HttpContext.GetUser(), issueDetailsAnswer);
             return Ok(GetRequestResult(resp));
-        }
+        }      
     }
 }
