@@ -10,3 +10,15 @@ C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.csproj.CopyComplete
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.dll
 C:\Csharp\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.pdb
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\bin\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.deps.json
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\bin\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.dll
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\bin\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.pdb
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\bin\Release\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L01_Entities.dll
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\bin\Release\netcoreapp2.2\MSHB.ExperienceManagement.Layers.L01_Entities.pdb
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.csprojAssemblyReference.cache
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.csproj.CoreCompileInputs.cache
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.AssemblyInfoInputs.cache
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.AssemblyInfo.cs
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.csproj.CopyComplete
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.dll
+D:\MSHB\MSHB.ExperienceManagement.WebApi\src\Shared\MSHB.ExperienceManagement.Shared.Common\obj\Release\netcoreapp2.2\MSHB.ExperienceManagement.Shared.Common.pdb

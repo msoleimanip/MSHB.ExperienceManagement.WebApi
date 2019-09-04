@@ -996,5 +996,25 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
                 throw new ExperienceManagementGlobalException(IssueServiceErrors.SearchIssuesError, ex);
             }
         }
+
+        public async Task<bool> DeleteIssueAsync(User user, DeleteIssueFormModel deleteIssueFormModel)
+        {
+            try
+            {
+                var issue = await _context.Issues.FindAsync(deleteIssueFormModel.IssueId);
+                if (issue is null)
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
+
+                if (!user.IsAdmin() && issue.UserId != user.Id)
+                    throw new ExperienceManagementGlobalException(IssueServiceErrors.NotAccessError);
+
+
+                return true;
+            }
+            catch (Exception ex)
+            {
+                throw new ExperienceManagementGlobalException(IssueServiceErrors.DeleteIssueError, ex);
+            }
+        }
     }
 }

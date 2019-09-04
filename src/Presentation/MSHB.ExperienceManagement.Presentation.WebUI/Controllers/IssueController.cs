@@ -78,6 +78,16 @@ namespace MSHB.ExperienceManagement.Presentation.WebUI.Controllers
             
         }
 
+
+        [HttpGet("[action]"), HttpPost("[action]")]
+        [ValidateModelAttribute]
+        public async Task<IActionResult> DeleteIssue([FromBody] DeleteIssueFormModel deleteIssueFormModel)
+        {
+            var resp = await _issueService.DeleteIssueAsync(HttpContext.GetUser(), deleteIssueFormModel);
+            return Ok(GetRequestResult(resp));
+
+        }
+
         [HttpGet("[action]"), HttpPost("[action]")]
         [ValidateModelAttribute]
         public async Task<IActionResult> AddIssueDetailComment([FromBody] AddIssueDetailCommentFormModel issueForm)

@@ -6,7 +6,6 @@
     "ModelStateError": "لطفا مقادیر را به درستی وارد کنید",
     "TreeNotSelectedError": "تجهیز میبایستی انتخاب شده باشد.",
     "TreeHasChildError": "تجهیز انتخاب شده نبایستی زیرشاخه داشته باشد.",
-    "TreeSelectCaption": "اقامتگاه انتخاب شده",
     "IssueType": "نوع مسئله",
     "InputGenderTypeError": "جنسیت میبایستی انتخاب شود.",
     "BtnClose": "انصراف",
@@ -25,8 +24,14 @@
     "UploadError": "در هنگام باگذاری خطایی رخ داده است",
     "AddSuccessfully": "با موفقیت اضافه شد",
     "BtnAccept": "تائید اطـلاعات",
-    "UnSelectAllText":"عدم انتخاب همه",
-    "SelectAllText":"انتخاب همه"
+    "UnSelectAllText": "عدم انتخاب همه",
+    "SelectAllText": "انتخاب همه",
+    "Unauthorized": "شما از سیستم خارج شده اید",
+    "EditSuccessfully": "آیتم مورد نظر با موفقیت به روز رسانی شد",
+    "FilePreviewError": "خطای سرور در هنگام دانلود",
+    "DeleteFileSuccessfully": "فایل مورد نظر با موفقیت حذف شد",
+    "Play": "پخش ویدیو",
+    "Delete": "حـذف"
   },
   "IssueType": {
     "Question": "سـوال: طرح سوال برای رفع مشکل جاری",
@@ -46,7 +51,10 @@
   "EquipmentAttachmentType": {
     "Document": "اسناد",
     "Tool": "ابزار",
-    "Position": "محیط و موقعیت"
+    "Position": "محیط و موقعیت",
+    "Catalog": "کاتالوگ",
+    "Materials": "مواد",
+    "Accessory": "لوازم جانبی"
   },
   "Menu": {
     "SiteName": "سامانه جامع انتقال تجربه",
@@ -63,7 +71,14 @@
     "CurrentOperations": "عملیات جاری",
     "IssueManagement": "مسائل من",
     "IssueSearch": "جستجو مسائل",
-    "Authentication": "مدیریت دسترسی ها"
+    "Authentication": "مدیریت دسترسی ها",
+    "Reports": "گـزارشات",
+    "UserIssueReports": "مسائل به تفکیک کاربر",
+    "EquipmentIssueReports": "مسائل مربوط به تجهیزات",
+    "IssueOfUserLikesReport": "لایک ها مربوط به کاربران",
+    "TotalIssueReport": "جزییات تمامی مسائل",
+    "IssuesOfOrganizationReport": "مسائل بر اساس رده ها",
+    "UsersActivationReport": "فعالیت های ثبت مسائل"
   },
   "Login": {
     "Username": "نام کاربری",
@@ -153,11 +168,13 @@
     "Location": "استان",
     "GroupAuthId": "گروه دسترسی",
     "OrgPermissionTitle": "صفحه تغییر دسترسی رده ای",
+    "EquipmentPermissionTitle": "صفحه تغییر دسترسی تجهیزات",
     "UserCreateTitle": "صفحه ایجاد کاربر جدید",
     "UserEditTitle": "صفحه ویرایش اطلاعات",
     "BtnChangePermission": "تایید و ثبت تغییرات",
     "BtnClose": "انصراف",
     "OrgazinationList": "نمودار تمامی رده ها ",
+    "EquipmentList": "نمودار تمامی تجهیزات ",
     "TreeTitle": "رده ها",
     "InputUsernameError": "نام کاربری می باسیتی وارد شود",
     "InputPasswordError": "رمز عبور می باسیتی وارد شود",
@@ -170,7 +187,12 @@
     "BtnActiveTitle": "تغییر وضعیت کاربر",
     "AddSuccessfully": "کاربر با موفقیت اضافه شد",
     "EditSuccessfully": "کاربر با موفقیت یرایش شد",
-    "ModelStateError": "لطفا مقادیر را به درستی وارد کنید"
+    "ModelStateError": "لطفا مقادیر را به درستی وارد کنید",
+    "IsPresident": "نوع کاربر",
+    "InputIsPresidentError": "نوع کاربر میبایستی انتخاب شود",
+    "UserActivationTitle": "صفحه تغییر وضعیت کاربر",
+    "ChangeActivationSuccessfully": "تغییر وضعیت کاربر با موفقیت انجام شد",
+    "UpdatePermissionSuccessfully": "دسترسی تجهیزات کاربر مورد نظر ویرایش گردید"
   },
   "Authentication": {
     "Title": "مدیریت گروه ها",
@@ -185,8 +207,6 @@
     "InputNameError": "نام گروه میبایستی وارد شود.",
     "RoleIds": "دسترسی ها",
     "InputRoleIdsError": "میبایستی از شناسه ها انتخاب گردد.",
-    "UnSelectAllText": "عدم انتخاب همه",
-    "SelectAllText": "انتخاب همه",
     "AddSuccessfully": "گروه با موفقیت اضافه شد"
   },
   "Issue": {
@@ -246,14 +266,18 @@
     "ClickOnImage": "بر روی عکس کلیک کنید",
     "BtnAddComment": "درج",
     "AddDetails": "صفحه درج جواب",
+    "EditDetails": "صفحه ویرایش جواب",
     "DeleteTitle": "صفحه تائید حذف",
     "DeActiveTitle": "صفحه تغییر وضعیت",
     "DeActiveConfirm": "آیا از غیر فعالسازی این مورد اطمینان دارید؟",
     "ActiveConfirm": "آیا از فعالسازی این مورد اطمینان دارید؟",
     "ChangeSuccessfully": "تغییر با موفقیت انجام شد.",
     "equipmentAttachmentsCount": "تعداد افزونه ها",
-    "EquipmentAtachment":"افزونه ها"
-
+    "EquipmentAtachment": "افزونه ها",
+    "AddCommentSuccessfully": "نکته جدید با موفقیت ثبت شد",
+    "IssueNotCompeleted": "مسئله مورد نظر بصورت ناقص پیاده سازی شده است",
+    "IsYourAnswer": "این پاسخ متعلق به شماست",
+    "DeleteQuestion": "آیا از این فایل اطمینان دارید؟"
   },
   "Dashboard": {
     "SearchText": "چی دوست داری پیدا کنی ؟",
@@ -262,5 +286,16 @@
     "Text3": "تکست سوم",
     "Text4": "سامانه انتقال تجریبات (سجــات)",
     "ShowDetails": "مشاهده جزییات"
+  },
+  "Report": {
+    "View": "تهیه گزارش",
+    "Design": "طراحی گزارش",
+    "Users": "لیست کاربران",
+    "Search": "جـستجـو",
+    "UsersCountIsZero": "کاربری انتخاب نشده است",
+    "StartTime": "تاریخ شروع",
+    "EndTime": "تاریخ پایان",
+    "SelectIssueType": "نوع مسئله میبایستی انتخاب شود",
+    "IdsCountIsZero": "از نمودار موردی انتخاب نشده است"
   }
 }

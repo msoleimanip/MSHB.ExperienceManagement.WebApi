@@ -307,6 +307,7 @@ body {
   padding-bottom: 1px;
   border-bottom: 1px solid #dfdfdf;
   text-align: center;
+  min-height: 175px;
 }
 
 .term-box article .img-layer:before {
@@ -360,7 +361,6 @@ body {
 }
 
 .term-box article .img-layer .description ul {
- 
   display: table;
   margin: 45px auto 30px;
 }
@@ -420,7 +420,7 @@ body {
 }
 
 .term-box article .footer {
-  padding: 15px;
+  padding: 0px 15px 10px 15px;
   position: relative;
 }
 
@@ -444,7 +444,7 @@ body {
 }
 
 .term-box article .footer .time i {
-  font-size: 21px;
+  font-size: 15px;
   color: #99a3a5;
   margin-left: 3px;
   top: 3px;
@@ -463,6 +463,8 @@ body {
   -moz-border-radius: 20px;
   -webkit-border-radius: 20px;
   margin: 0;
+  width: 100%;
+  text-align: center;
 }
 
 .term-box article .footer a:hover {
@@ -511,7 +513,7 @@ body {
 }
 
 .term-box article .footer .time i {
-  font-size: 21px;
+  font-size: 15px;
   color: #99a3a5;
   margin-left: 3px;
   top: 3px;
@@ -520,6 +522,9 @@ body {
 
 .img-layer .img {
   max-width: 100%;
+  margin-top: 10px;
+  border-radius: 25%;
+  max-height: 120px;
 }
 
 ul {
@@ -944,7 +949,7 @@ a:active {
 }
 
 .easy-autocomplete-container ul .eac-category {
-  font-color: #aaa;
+  color: #aaa;
   font-style: italic;
 }
 
@@ -964,6 +969,10 @@ a:active {
 
 .form-control {
   font-size: 13px;
+}
+
+.btn-cursor {
+  cursor: pointer;
 }
 
 /* Table Sorting */
@@ -1029,6 +1038,8 @@ th[sortable].desc:before {
 .img-circle {
   border-radius: 50%;
   box-shadow: -0.5px 0 0 0 #e1e1e1, -0.5px 0 0 1px #e1e1e1;
+  height: 120px;
+  width: 120px;
 }
 
 .issue-badge {
@@ -1073,6 +1084,26 @@ th[sortable].desc:before {
 
   .pl {
     float: left;
+  }
+
+  .txt-header {
+    font-size: 1rem !important;
+  }
+
+  .box-answer {
+    font-size: 0.7rem !important;
+  }
+
+  .btn-like {
+    float: left !important;
+    width: 56px !important;
+    height: 25px !important;
+    margin-top: -4px !important;
+  }
+
+  .img-answer-loading {
+    margin: 0px 0px 8px 0px !important;
+    width: 20px !important;
   }
 }
 
@@ -1119,6 +1150,65 @@ th[sortable].desc:before {
 .btn-wide {
   width: 100%;
 }
+
+.custom-select {
+  height: auto !important;
+}
+
+.paging-space {
+  margin: 10px 0px 20px 0px;
+  float: left;
+}
+
+.comment-input {
+  background-color: #ffffff;
+  padding: 0px 10px 0px 10px;
+  border-radius: 20px;
+  margin-bottom: 5px;
+}
+
+.dir-ltr {
+  direction: ltr !important;
+}
+
+.btn-calendar {
+  width: 2.75rem;
+  background-image: url("../../../images/calendar.png") !important;
+  background-repeat: no-repeat;
+  background-size: 23px;
+  background-position: center;
+}
+
+.btn-like {
+  float: left;
+  width: 65px;
+  height: 25px;
+  margin-top: 5px;
+}
+
+.btn-like > span {
+  float: left;
+}
+
+.btn-like > img {
+  float: left;
+}
+
+.btn-like > label {
+  float: right;
+  margin: -2px 0px 0px 0px;
+}
+
+.img-answer {
+  float: left;
+  border-radius: 50%;
+}
+
+.img-answer-loading {
+  margin: 11px 1px 0px 0px;
+  float: left;
+}
+
 
 /* Begin Uploader */
 
