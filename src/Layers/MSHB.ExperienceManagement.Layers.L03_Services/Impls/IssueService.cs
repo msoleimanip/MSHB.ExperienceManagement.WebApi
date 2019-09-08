@@ -1001,13 +1001,22 @@ namespace MSHB.ExperienceManagement.Layers.L03_Services.Impls
         {
             try
             {
-                var issue = await _context.Issues.FindAsync(deleteIssueFormModel.IssueId);
+                var issue = await _context.Issues.Include(x => x.IssueDetails).FirstOrDefaultAsync(x => x.Id == deleteIssueFormModel.IssueId);
                 if (issue is null)
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.IssueNotFoundError);
 
                 if (!user.IsAdmin() && issue.UserId != user.Id)
                     throw new ExperienceManagementGlobalException(IssueServiceErrors.NotAccessError);
 
+
+                _context.EquipmentIssueSubscriptions.RemoveRange(issue.EquipmentIssueSubscriptions);
+
+                var detailsSub = _context.EquipmentAttachmentIssueDetailSubscriptions.Where(x => issue.IssueDetails.Select(i => i.Id).Contains(x.IssueDetailId));
+                _context.EquipmentAttachmentIssueDetailSubscriptions.RemoveRange(detailsSub);
+
+                _context.Issues.Remove(issue);
+
+                await _context.SaveChangesAsync();
 
                 return true;
             }
